@@ -2,9 +2,9 @@
 
 namespace Fintech\Airtime;
 
-use Illuminate\Support\ServiceProvider;
-use Fintech\Airtime\Commands\InstallCommand;
 use Fintech\Airtime\Commands\AirtimeCommand;
+use Fintech\Airtime\Commands\InstallCommand;
+use Illuminate\Support\ServiceProvider;
 
 class AirtimeServiceProvider extends ServiceProvider
 {

@@ -2,9 +2,9 @@
 
 namespace Fintech\Airtime\Tests;
 
+use Fintech\Airtime\AirtimeServiceProvider;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Fintech\Airtime\AirtimeServiceProvider;
 
 class TestCase extends Orchestra
 {
