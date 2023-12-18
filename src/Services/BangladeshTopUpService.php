@@ -2,26 +2,22 @@
 
 namespace Fintech\Airtime\Services;
 
-
 use Fintech\Airtime\Interfaces\BangladeshTopUpRepository;
 
 /**
  * Class BangladeshTopUpService
- * @package Fintech\Airtime\Services
- *
  */
 class BangladeshTopUpService
 {
     /**
      * BangladeshTopUpService constructor.
-     * @param BangladeshTopUpRepository $bangladeshTopUpRepository
      */
-    public function __construct(BangladeshTopUpRepository $bangladeshTopUpRepository) {
+    public function __construct(BangladeshTopUpRepository $bangladeshTopUpRepository)
+    {
         $this->bangladeshTopUpRepository = $bangladeshTopUpRepository;
     }
 
     /**
-     * @param array $filters
      * @return mixed
      */
     public function list(array $filters = [])

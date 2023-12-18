@@ -17,8 +17,8 @@ if (Config::get('fintech.airtime.enabled')) {
     Route::prefix('airtime')->name('airtime.')->group(function () {
 
         Route::apiResource('bangladesh-top-ups', \Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class);
-    Route::post('bangladesh-top-ups/{bangladesh_top_up}/restore', [\Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class, 'restore'])->name('bangladesh-top-ups.restore');
+        Route::post('bangladesh-top-ups/{bangladesh_top_up}/restore', [\Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class, 'restore'])->name('bangladesh-top-ups.restore');
 
-    //DO NOT REMOVE THIS LINE//
+        //DO NOT REMOVE THIS LINE//
     });
 }

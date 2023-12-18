@@ -3,13 +3,12 @@
 namespace Fintech\Airtime\Interfaces;
 
 use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Collection;
 use MongoDB\Laravel\Eloquent\Model as MongodbModel;
 
 /**
  * Interface BangladeshTopUpRepository
- * @package Fintech\Airtime\Interfaces
  */
 interface BangladeshTopUpRepository
 {
@@ -17,7 +16,6 @@ interface BangladeshTopUpRepository
      * return a list or pagination of items from
      * filtered options
      *
-     * @param array $filters
      * @return Paginator|Collection
      */
     public function list(array $filters = []);
@@ -25,7 +23,6 @@ interface BangladeshTopUpRepository
     /**
      * Create a new entry resource
      *
-     * @param array $attributes
      * @return EloquentModel|MongodbModel|null
      */
     public function create(array $attributes = []);
@@ -33,8 +30,6 @@ interface BangladeshTopUpRepository
     /**
      * find and update a resource attributes
      *
-     * @param int|string $id
-     * @param array $attributes
      * @return EloquentModel|MongodbModel|null
      */
     public function update(int|string $id, array $attributes = []);
@@ -42,22 +37,19 @@ interface BangladeshTopUpRepository
     /**
      * find and delete a entry from records
      *
-     * @param int|string $id
-     * @param bool $onlyTrashed
+     * @param  bool  $onlyTrashed
      * @return EloquentModel|MongodbModel|null
      */
     public function find(int|string $id, $onlyTrashed = false);
 
     /**
      * find and delete a entry from records
-     * @param int|string $id
      */
     public function delete(int|string $id);
 
     /**
      * find and restore a entry from records
      *
-     * @param int|string $id
      * @throws \InvalidArgumentException
      */
     public function restore(int|string $id);

@@ -2,28 +2,27 @@
 
 namespace Fintech\Airtime\Repositories\Mongodb;
 
-use Fintech\Core\Repositories\MongodbRepository;
 use Fintech\Airtime\Interfaces\BangladeshTopUpRepository as InterfacesBangladeshTopUpRepository;
+use Fintech\Core\Repositories\MongodbRepository;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-use MongoDB\Laravel\Eloquent\Model;
 use InvalidArgumentException;
+use MongoDB\Laravel\Eloquent\Model;
 
 /**
  * Class BangladeshTopUpRepository
- * @package Fintech\Airtime\Repositories\Mongodb
  */
 class BangladeshTopUpRepository extends MongodbRepository implements InterfacesBangladeshTopUpRepository
 {
     public function __construct()
     {
-       $model = app(config('fintech.airtime.bangladesh_top_up_model', \Fintech\Airtime\Models\BangladeshTopUp::class));
+        $model = app(config('fintech.airtime.bangladesh_top_up_model', \Fintech\Airtime\Models\BangladeshTopUp::class));
 
-       if (!$model instanceof Model) {
-           throw new InvalidArgumentException("Mongodb repository require model class to be `MongoDB\Laravel\Eloquent\Model` instance.");
-       }
+        if (! $model instanceof Model) {
+            throw new InvalidArgumentException("Mongodb repository require model class to be `MongoDB\Laravel\Eloquent\Model` instance.");
+        }
 
-       $this->model = $model;
+        $this->model = $model;
     }
 
     /**
