@@ -5,6 +5,7 @@ namespace Fintech\Airtime\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
+ * @method static \Fintech\Airtime\Services\BangladeshTopUpService bangladeshTopUp()
  * // Crud Service Method Point Do not Remove //
  *
  * @see \Fintech\Airtime\Airtime

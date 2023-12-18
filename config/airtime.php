@@ -24,6 +24,16 @@ return [
 
     'root_prefix' => 'test/',
 
+    
+    /*
+    |--------------------------------------------------------------------------
+    | BangladeshTopUp Model
+    |--------------------------------------------------------------------------
+    |
+    | This value will be used to across system where model is needed
+    */
+    'bangladesh_top_up_model' => \Fintech\Airtime\Models\BangladeshTopUp::class,
+
     //** Model Config Point Do not Remove **//
 
     /*
@@ -35,6 +45,8 @@ return [
     */
 
     'repositories' => [
+        \Fintech\Airtime\Interfaces\BangladeshTopUpRepository::class => \Fintech\Airtime\Repositories\Eloquent\BangladeshTopUpRepository::class,
+
         //** Repository Binding Config Point Do not Remove **//
     ],
 
