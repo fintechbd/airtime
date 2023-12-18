@@ -2,9 +2,9 @@
 
 namespace Fintech\Airtime\Seeders;
 
+use Fintech\Airtime\Facades\Airtime;
 use Fintech\Core\Facades\Core;
 use Illuminate\Database\Seeder;
-use Fintech\Airtime\Facades\Airtime;
 
 class BangladeshTopUpSeeder extends Seeder
 {
@@ -67,7 +67,7 @@ class BangladeshTopUpSeeder extends Seeder
 
     private function data()
     {
-        return array();
+        return [];
     }
 
     private function serviceType(): array
