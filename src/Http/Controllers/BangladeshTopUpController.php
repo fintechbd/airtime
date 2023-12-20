@@ -153,7 +153,7 @@ class BangladeshTopUpController extends Controller
                 if (! Transaction::userAccount()->update($depositedAccount->getKey(), $depositedUpdatedAccount)) {
                     throw new Exception(__('reload::messages.status_change_failed', [
                         'current_status' => $bangladeshTopUp->currentStatus(),
-                        'target_status' => $bangladeshTopUp->currentStatus(),
+                        'target_status' => OrderStatus::Success->value,
                     ]));
                 }
                 Airtime::bangladeshTopUp()->update($bangladeshTopUp->getKey(), ['order_data' => $order_data, 'order_number' => $order_data['purchase_number']]);
