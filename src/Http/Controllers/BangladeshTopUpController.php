@@ -128,7 +128,7 @@ class BangladeshTopUpController extends Controller
 
                 $bangladeshTopUp = Airtime::bangladeshTopUp()->create($inputs);
 
-                if (!$bangladeshTopUp) {
+                if (! $bangladeshTopUp) {
                     throw (new StoreOperationException)->setModel(config('fintech.airtime.bangladesh_top_up_model'));
                 }
 
@@ -153,6 +153,7 @@ class BangladeshTopUpController extends Controller
                 Airtime::bangladeshTopUp()->update($bangladeshTopUp->getKey(), ['order_data' => $order_data, 'order_number' => $order_data['purchase_number']]);
                 Transaction::orderQueue()->removeFromQueueUserWise($user_id ?? $depositor->getKey());
                 DB::commit();
+
                 return $this->created([
                     'message' => __('core::messages.resource.created', ['model' => 'Bangladesh Top Up']),
                     'id' => $bangladeshTopUp->id,
@@ -163,6 +164,7 @@ class BangladeshTopUpController extends Controller
         } catch (Exception $exception) {
             Transaction::orderQueue()->removeFromQueueUserWise($user_id ?? $depositor->getKey());
             DB::rollBack();
+
             return $this->failed($exception->getMessage());
         }
     }
@@ -181,7 +183,7 @@ class BangladeshTopUpController extends Controller
 
             $bangladeshTopUp = Airtime::bangladeshTopUp()->find($id);
 
-            if (!$bangladeshTopUp) {
+            if (! $bangladeshTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.bangladesh_top_up_model'), $id);
             }
 
@@ -212,13 +214,13 @@ class BangladeshTopUpController extends Controller
 
             $bangladeshTopUp = Airtime::bangladeshTopUp()->find($id);
 
-            if (!$bangladeshTopUp) {
+            if (! $bangladeshTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.bangladesh_top_up_model'), $id);
             }
 
             $inputs = $request->validated();
 
-            if (!Airtime::bangladeshTopUp()->update($id, $inputs)) {
+            if (! Airtime::bangladeshTopUp()->update($id, $inputs)) {
 
                 throw (new UpdateOperationException)->setModel(config('fintech.airtime.bangladesh_top_up_model'), $id);
             }
@@ -252,11 +254,11 @@ class BangladeshTopUpController extends Controller
 
             $bangladeshTopUp = Airtime::bangladeshTopUp()->find($id);
 
-            if (!$bangladeshTopUp) {
+            if (! $bangladeshTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.bangladesh_top_up_model'), $id);
             }
 
-            if (!Airtime::bangladeshTopUp()->destroy($id)) {
+            if (! Airtime::bangladeshTopUp()->destroy($id)) {
 
                 throw (new DeleteOperationException())->setModel(config('fintech.airtime.bangladesh_top_up_model'), $id);
             }
@@ -288,11 +290,11 @@ class BangladeshTopUpController extends Controller
 
             $bangladeshTopUp = Airtime::bangladeshTopUp()->find($id, true);
 
-            if (!$bangladeshTopUp) {
+            if (! $bangladeshTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.bangladesh_top_up_model'), $id);
             }
 
-            if (!Airtime::bangladeshTopUp()->restore($id)) {
+            if (! Airtime::bangladeshTopUp()->restore($id)) {
 
                 throw (new RestoreOperationException())->setModel(config('fintech.airtime.bangladesh_top_up_model'), $id);
             }
