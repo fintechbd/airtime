@@ -10,11 +10,13 @@ use Fintech\Airtime\Http\Requests\StoreBangladeshTopUpRequest;
 use Fintech\Airtime\Http\Requests\UpdateBangladeshTopUpRequest;
 use Fintech\Airtime\Http\Resources\BangladeshTopUpCollection;
 use Fintech\Airtime\Http\Resources\BangladeshTopUpResource;
+use Fintech\Business\Facades\Business;
 use Fintech\Core\Exceptions\DeleteOperationException;
 use Fintech\Core\Exceptions\RestoreOperationException;
 use Fintech\Core\Exceptions\StoreOperationException;
 use Fintech\Core\Exceptions\UpdateOperationException;
 use Fintech\Core\Traits\ApiResponseTrait;
+use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -44,8 +46,12 @@ class BangladeshTopUpController extends Controller
     {
         try {
             $inputs = $request->validated();
-
-            $bangladeshTopUpPaginate = Airtime::bangladeshTopUp()->list($inputs);
+            //$inputs['transaction_form_id'] = Transaction::transactionForm()->list(['code' => 'bangladesh_top_up'])->first()->getKey();
+            $inputs['transaction_form_code'] = 'bangladesh_top_up';
+            //$inputs['service_id'] = Business::serviceType()->list(['service_type_slug'=>'bangladesh_top_up']);
+            $inputs['service_type_slug'] = 'bangladesh_top_up';
+            //$bangladeshTopUpPaginate = Airtime::bangladeshTopUp()->list($inputs);
+            $bangladeshTopUpPaginate = Transaction::order()->list($inputs);
 
             return new BangladeshTopUpCollection($bangladeshTopUpPaginate);
 
