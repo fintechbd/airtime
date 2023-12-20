@@ -150,6 +150,12 @@ class BangladeshTopUpController extends Controller
 
                 $order_data['order_data']['previous_amount'] = $depositedAccount->user_account_data['available_amount'];
                 $order_data['order_data']['current_amount'] = ($order_data['order_data']['previous_amount'] + $inputs['converted_amount']);
+                if (! Transaction::userAccount()->update($depositedAccount->getKey(), $depositedUpdatedAccount)) {
+                    throw new Exception(__('reload::messages.status_change_failed', [
+                        'current_status' => $bangladeshTopUp->currentStatus(),
+                        'target_status' => $bangladeshTopUp->currentStatus(),
+                    ]));
+                }
                 Airtime::bangladeshTopUp()->update($bangladeshTopUp->getKey(), ['order_data' => $order_data, 'order_number' => $order_data['purchase_number']]);
                 Transaction::orderQueue()->removeFromQueueUserWise($user_id ?? $depositor->getKey());
                 DB::commit();
