@@ -145,15 +145,20 @@ class BangladeshTopUpController extends Controller
                 ])->first();
                 //update User Account
                 $depositedUpdatedAccount = $depositedAccount->toArray();
-                $depositedUpdatedAccount['user_account_data']['spent_amount'] = $depositedUpdatedAccount['user_account_data']['spent_amount'] + $userUpdatedBalance['spent_amount'];
-                $depositedUpdatedAccount['user_account_data']['available_amount'] = $userUpdatedBalance['current_amount'];
-
-                $order_data['order_data']['previous_amount'] = $depositedAccount->user_account_data['available_amount'];
-                $order_data['order_data']['current_amount'] = ($order_data['order_data']['previous_amount'] + $inputs['converted_amount']);
+                $depositedUpdatedAccount['user_account_data']['spent_amount'] = (float) $depositedUpdatedAccount['user_account_data']['spent_amount'] + (float) $userUpdatedBalance['spent_amount'];
+                $depositedUpdatedAccount['user_account_data']['available_amount'] = (float) $userUpdatedBalance['current_amount'];
+                if(((float) $depositedUpdatedAccount['user_account_data']['available_amount']) >= ((float) $userUpdatedBalance['spent_amount'])){
+                    throw new Exception(__('Insufficient balance!', [
+                        'previous_amount' => ((float) $depositedUpdatedAccount['user_account_data']['available_amount']),
+                        'current_amount' => ((float) $userUpdatedBalance['spent_amount']),
+                    ]));
+                }
+                $order_data['order_data']['previous_amount'] = (float) $depositedAccount->user_account_data['available_amount'];
+                $order_data['order_data']['current_amount'] = (float) $userUpdatedBalance['current_amount'];
                 if (! Transaction::userAccount()->update($depositedAccount->getKey(), $depositedUpdatedAccount)) {
                     throw new Exception(__('User Account Balance does not update', [
-                        'current_status' => $bangladeshTopUp->currentStatus(),
-                        'target_status' => OrderStatus::Success->value,
+                        'previous_amount' => ((float) $depositedUpdatedAccount['user_account_data']['available_amount']),
+                        'current_amount' => ((float) $userUpdatedBalance['spent_amount']),
                     ]));
                 }
                 Airtime::bangladeshTopUp()->update($bangladeshTopUp->getKey(), ['order_data' => $order_data, 'order_number' => $order_data['purchase_number']]);
@@ -163,6 +168,7 @@ class BangladeshTopUpController extends Controller
                 return $this->created([
                     'message' => __('core::messages.resource.created', ['model' => 'Bangladesh Top Up']),
                     'id' => $bangladeshTopUp->id,
+                    'spent' => $userUpdatedBalance['spent_amount']
                 ]);
             } else {
                 throw new Exception('Your another order is in process...!');
