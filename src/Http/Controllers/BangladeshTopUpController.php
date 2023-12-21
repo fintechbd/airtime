@@ -147,7 +147,7 @@ class BangladeshTopUpController extends Controller
                 $depositedUpdatedAccount = $depositedAccount->toArray();
                 $depositedUpdatedAccount['user_account_data']['spent_amount'] = (float) $depositedUpdatedAccount['user_account_data']['spent_amount'] + (float) $userUpdatedBalance['spent_amount'];
                 $depositedUpdatedAccount['user_account_data']['available_amount'] = (float) $userUpdatedBalance['current_amount'];
-                if(((float) $depositedUpdatedAccount['user_account_data']['available_amount']) >= ((float) $userUpdatedBalance['spent_amount'])){
+                if (((float) $depositedUpdatedAccount['user_account_data']['available_amount']) >= ((float) $userUpdatedBalance['spent_amount'])) {
                     throw new Exception(__('Insufficient balance!', [
                         'previous_amount' => ((float) $depositedUpdatedAccount['user_account_data']['available_amount']),
                         'current_amount' => ((float) $userUpdatedBalance['spent_amount']),
@@ -168,7 +168,7 @@ class BangladeshTopUpController extends Controller
                 return $this->created([
                     'message' => __('core::messages.resource.created', ['model' => 'Bangladesh Top Up']),
                     'id' => $bangladeshTopUp->id,
-                    'spent' => $userUpdatedBalance['spent_amount']
+                    'spent' => $userUpdatedBalance['spent_amount'],
                 ]);
             } else {
                 throw new Exception('Your another order is in process...!');
