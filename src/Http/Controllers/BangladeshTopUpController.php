@@ -125,7 +125,7 @@ class BangladeshTopUpController extends Controller
                 //$inputs['order_data']['operator_short_code'] = $request->input('operator_short_code', null);
                 $inputs['order_data']['system_notification_variable_success'] = 'bangladesh_top_up_success';
                 $inputs['order_data']['system_notification_variable_failed'] = 'bangladesh_top_up_failed';
-
+                unset($inputs['pin'], $inputs['password']);
                 $bangladeshTopUp = Airtime::bangladeshTopUp()->create($inputs);
 
                 if (! $bangladeshTopUp) {
