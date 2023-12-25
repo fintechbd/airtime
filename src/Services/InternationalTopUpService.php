@@ -2,27 +2,23 @@
 
 namespace Fintech\Airtime\Services;
 
-
 use Fintech\Airtime\Interfaces\InternationalTopUpRepository;
 use Fintech\Transaction\Facades\Transaction;
 
 /**
  * Class InternationalTopUpService
- * @package Fintech\Airtime\Services
- *
  */
 class InternationalTopUpService
 {
     /**
      * InternationalTopUpService constructor.
-     * @param InternationalTopUpRepository $internationalTopUpRepository
      */
-    public function __construct(InternationalTopUpRepository $internationalTopUpRepository) {
+    public function __construct(InternationalTopUpRepository $internationalTopUpRepository)
+    {
         $this->internationalTopUpRepository = $internationalTopUpRepository;
     }
 
     /**
-     * @param array $filters
      * @return mixed
      */
     public function list(array $filters = [])

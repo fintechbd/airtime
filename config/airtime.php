@@ -33,7 +33,6 @@ return [
     */
     'bangladesh_top_up_model' => \Fintech\Airtime\Models\BangladeshTopUp::class,
 
-    
     /*
     |--------------------------------------------------------------------------
     | InternationalTopUp Model

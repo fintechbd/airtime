@@ -1,23 +1,24 @@
 <?php
 
 namespace Fintech\Airtime\Http\Controllers;
+
 use Exception;
+use Fintech\Airtime\Facades\Airtime;
+use Fintech\Airtime\Http\Requests\ImportInternationalTopUpRequest;
+use Fintech\Airtime\Http\Requests\IndexInternationalTopUpRequest;
+use Fintech\Airtime\Http\Requests\StoreInternationalTopUpRequest;
+use Fintech\Airtime\Http\Requests\UpdateInternationalTopUpRequest;
+use Fintech\Airtime\Http\Resources\InternationalTopUpCollection;
+use Fintech\Airtime\Http\Resources\InternationalTopUpResource;
 use Fintech\Business\Facades\Business;
 use Fintech\Core\Enums\Auth\RiskProfile;
 use Fintech\Core\Enums\Auth\SystemRole;
 use Fintech\Core\Enums\Transaction\OrderStatus;
-use Fintech\Core\Exceptions\StoreOperationException;
-use Fintech\Core\Exceptions\UpdateOperationException;
 use Fintech\Core\Exceptions\DeleteOperationException;
 use Fintech\Core\Exceptions\RestoreOperationException;
+use Fintech\Core\Exceptions\StoreOperationException;
+use Fintech\Core\Exceptions\UpdateOperationException;
 use Fintech\Core\Traits\ApiResponseTrait;
-use Fintech\Airtime\Facades\Airtime;
-use Fintech\Airtime\Http\Resources\InternationalTopUpResource;
-use Fintech\Airtime\Http\Resources\InternationalTopUpCollection;
-use Fintech\Airtime\Http\Requests\ImportInternationalTopUpRequest;
-use Fintech\Airtime\Http\Requests\StoreInternationalTopUpRequest;
-use Fintech\Airtime\Http\Requests\UpdateInternationalTopUpRequest;
-use Fintech\Airtime\Http\Requests\IndexInternationalTopUpRequest;
 use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -26,15 +27,13 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Class InternationalTopUpController
- * @package Fintech\Airtime\Http\Controllers
  *
  * @lrd:start
  * This class handle create, display, update, delete & restore
  * operation related to InternationalTopUp
- * @lrd:end
  *
+ * @lrd:end
  */
-
 class InternationalTopUpController extends Controller
 {
     use ApiResponseTrait;
@@ -44,10 +43,8 @@ class InternationalTopUpController extends Controller
      * Return a listing of the *InternationalTopUp* resource as collection.
      *
      * *```paginate=false``` returns all resource as list not pagination*
-     * @lrd:end
      *
-     * @param IndexInternationalTopUpRequest $request
-     * @return InternationalTopUpCollection|JsonResponse
+     * @lrd:end
      */
     public function index(IndexInternationalTopUpRequest $request): InternationalTopUpCollection|JsonResponse
     {
@@ -71,10 +68,9 @@ class InternationalTopUpController extends Controller
     /**
      * @lrd:start
      * Create a new *InternationalTopUp* resource in storage.
+     *
      * @lrd:end
      *
-     * @param StoreInternationalTopUpRequest $request
-     * @return JsonResponse
      * @throws StoreOperationException
      */
     public function store(StoreInternationalTopUpRequest $request): JsonResponse
@@ -188,10 +184,9 @@ class InternationalTopUpController extends Controller
     /**
      * @lrd:start
      * Return a specified *InternationalTopUp* resource found by id.
+     *
      * @lrd:end
      *
-     * @param string|int $id
-     * @return InternationalTopUpResource|JsonResponse
      * @throws ModelNotFoundException
      */
     public function show(string|int $id): InternationalTopUpResource|JsonResponse
@@ -200,7 +195,7 @@ class InternationalTopUpController extends Controller
 
             $internationalTopUp = Airtime::internationalTopUp()->find($id);
 
-            if (!$internationalTopUp) {
+            if (! $internationalTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
 
@@ -219,11 +214,9 @@ class InternationalTopUpController extends Controller
     /**
      * @lrd:start
      * Update a specified *InternationalTopUp* resource using id.
+     *
      * @lrd:end
      *
-     * @param UpdateInternationalTopUpRequest $request
-     * @param string|int $id
-     * @return JsonResponse
      * @throws ModelNotFoundException
      * @throws UpdateOperationException
      */
@@ -233,13 +226,13 @@ class InternationalTopUpController extends Controller
 
             $internationalTopUp = Airtime::internationalTopUp()->find($id);
 
-            if (!$internationalTopUp) {
+            if (! $internationalTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
 
             $inputs = $request->validated();
 
-            if (!Airtime::internationalTopUp()->update($id, $inputs)) {
+            if (! Airtime::internationalTopUp()->update($id, $inputs)) {
 
                 throw (new UpdateOperationException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
@@ -259,10 +252,11 @@ class InternationalTopUpController extends Controller
     /**
      * @lrd:start
      * Soft delete a specified *InternationalTopUp* resource using id.
+     *
      * @lrd:end
      *
-     * @param string|int $id
      * @return JsonResponse
+     *
      * @throws ModelNotFoundException
      * @throws DeleteOperationException
      */
@@ -272,11 +266,11 @@ class InternationalTopUpController extends Controller
 
             $internationalTopUp = Airtime::internationalTopUp()->find($id);
 
-            if (!$internationalTopUp) {
+            if (! $internationalTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
 
-            if (!Airtime::internationalTopUp()->destroy($id)) {
+            if (! Airtime::internationalTopUp()->destroy($id)) {
 
                 throw (new DeleteOperationException())->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
@@ -297,9 +291,9 @@ class InternationalTopUpController extends Controller
      * @lrd:start
      * Restore the specified *InternationalTopUp* resource from trash.
      * ** ```Soft Delete``` needs to enabled to use this feature**
+     *
      * @lrd:end
      *
-     * @param string|int $id
      * @return JsonResponse
      */
     public function restore(string|int $id)
@@ -308,11 +302,11 @@ class InternationalTopUpController extends Controller
 
             $internationalTopUp = Airtime::internationalTopUp()->find($id, true);
 
-            if (!$internationalTopUp) {
+            if (! $internationalTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
 
-            if (!Airtime::internationalTopUp()->restore($id)) {
+            if (! Airtime::internationalTopUp()->restore($id)) {
 
                 throw (new RestoreOperationException())->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
@@ -335,9 +329,6 @@ class InternationalTopUpController extends Controller
      * After export job is done system will fire  export completed event
      *
      * @lrd:end
-     *
-     * @param IndexInternationalTopUpRequest $request
-     * @return JsonResponse
      */
     public function export(IndexInternationalTopUpRequest $request): JsonResponse
     {
@@ -361,7 +352,6 @@ class InternationalTopUpController extends Controller
      *
      * @lrd:end
      *
-     * @param ImportInternationalTopUpRequest $request
      * @return InternationalTopUpCollection|JsonResponse
      */
     public function import(ImportInternationalTopUpRequest $request): JsonResponse
