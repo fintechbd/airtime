@@ -3,9 +3,9 @@
 namespace Fintech\Airtime\Models;
 
 use Fintech\Core\Traits\AuditableTrait;
-use Fintech\Remit\Traits\AuthRelations;
-use Fintech\Remit\Traits\BusinessRelations;
-use Fintech\Remit\Traits\MetaDataRelations;
+use Fintech\Airtime\Traits\AuthRelations;
+use Fintech\Airtime\Traits\BusinessRelations;
+use Fintech\Airtime\Traits\MetaDataRelations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
