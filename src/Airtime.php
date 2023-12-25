@@ -12,6 +12,14 @@ class Airtime
         return app(\Fintech\Airtime\Services\BangladeshTopUpService::class);
     }
 
+    /**
+     * @return \Fintech\Airtime\Services\InternationalTopUpService
+     */
+    public function internationalTopUp()
+    {
+        return app(\Fintech\Airtime\Services\InternationalTopUpService::class);
+    }
+
     //** Crud Service Method Point Do not Remove **//
 
 }

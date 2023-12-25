@@ -9,7 +9,7 @@ use Fintech\Core\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BangladeshTopUp extends Model
+class InternationalTopUp extends Model
 {
     use AuditableTrait;
     use AuthRelations;
@@ -70,10 +70,10 @@ class BangladeshTopUp extends Model
         $primaryKey = $this->getKey();
 
         $links = [
-            'show' => action_link(route('airtime.bangladesh-top-ups.show', $primaryKey), __('core::messages.action.show'), 'get'),
-            'update' => action_link(route('airtime.bangladesh-top-ups.update', $primaryKey), __('core::messages.action.update'), 'put'),
-            'destroy' => action_link(route('airtime.bangladesh-top-ups.destroy', $primaryKey), __('core::messages.action.destroy'), 'delete'),
-            'restore' => action_link(route('airtime.bangladesh-top-ups.restore', $primaryKey), __('core::messages.action.restore'), 'post'),
+            'show' => action_link(route('airtime.international-top-ups.show', $primaryKey), __('core::messages.action.show'), 'get'),
+            'update' => action_link(route('airtime.international-top-ups.update', $primaryKey), __('core::messages.action.update'), 'put'),
+            'destroy' => action_link(route('airtime.international-top-ups.destroy', $primaryKey), __('core::messages.action.destroy'), 'delete'),
+            'restore' => action_link(route('airtime.international-top-ups.restore', $primaryKey), __('core::messages.action.restore'), 'post'),
         ];
 
         if ($this->getAttribute('deleted_at') == null) {
