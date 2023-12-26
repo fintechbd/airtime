@@ -2,7 +2,6 @@
 
 namespace Fintech\Airtime\Services;
 
-
 use Fintech\Airtime\Interfaces\InternationalTopUpRepository;
 use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -11,24 +10,19 @@ use Illuminate\Support\Collection;
 
 /**
  * Class InternationalTopUpService
- * @property InternationalTopUpRepository $internationalTopUpRepository
- * @package Fintech\Airtime\Services
  *
+ * @property InternationalTopUpRepository $internationalTopUpRepository
  */
 class InternationalTopUpService
 {
     /**
      * InternationalTopUpService constructor.
-     * @param InternationalTopUpRepository $internationalTopUpRepository
      */
-    public function __construct(InternationalTopUpRepository $internationalTopUpRepository) {
+    public function __construct(InternationalTopUpRepository $internationalTopUpRepository)
+    {
         $this->internationalTopUpRepository = $internationalTopUpRepository;
     }
 
-    /**
-     * @param array $filters
-     * @return Collection|Paginator
-     */
     public function list(array $filters = []): Collection|Paginator
     {
         return $this->internationalTopUpRepository->list($filters);
@@ -50,37 +44,21 @@ class InternationalTopUpService
         return $this->internationalTopUpRepository->update($id, $inputs);
     }
 
-    /**
-     * @param $id
-     * @return mixed
-     */
     public function destroy($id): mixed
     {
         return $this->internationalTopUpRepository->delete($id);
     }
 
-    /**
-     * @param $id
-     * @return mixed
-     */
     public function restore($id): mixed
     {
         return $this->internationalTopUpRepository->restore($id);
     }
 
-    /**
-     * @param array $filters
-     * @return Paginator|Collection
-     */
     public function export(array $filters): Paginator|Collection
     {
         return $this->internationalTopUpRepository->list($filters);
     }
 
-    /**
-     * @param array $filters
-     * @return Model|\MongoDB\Laravel\Eloquent\Model|null
-     */
     public function import(array $filters): Model|\MongoDB\Laravel\Eloquent\Model|null
     {
         return $this->internationalTopUpRepository->create($filters);

@@ -2,8 +2,8 @@
 
 namespace Fintech\Airtime\Repositories\Eloquent;
 
-use Fintech\Core\Repositories\EloquentRepository;
 use Fintech\Airtime\Interfaces\InternationalTopUpRepository as InterfacesInternationalTopUpRepository;
+use Fintech\Core\Repositories\EloquentRepository;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -11,19 +11,18 @@ use InvalidArgumentException;
 
 /**
  * Class InternationalTopUpRepository
- * @package Fintech\Airtime\Repositories\Eloquent
  */
 class InternationalTopUpRepository extends EloquentRepository implements InterfacesInternationalTopUpRepository
 {
     public function __construct()
     {
-       $model = app(config('fintech.airtime.international_top_up_model', \Fintech\Airtime\Models\InternationalTopUp::class));
+        $model = app(config('fintech.airtime.international_top_up_model', \Fintech\Airtime\Models\InternationalTopUp::class));
 
-       if (!$model instanceof Model) {
-           throw new InvalidArgumentException("Eloquent repository require model class to be `Illuminate\Database\Eloquent\Model` instance.");
-       }
+        if (! $model instanceof Model) {
+            throw new InvalidArgumentException("Eloquent repository require model class to be `Illuminate\Database\Eloquent\Model` instance.");
+        }
 
-       $this->model = $model;
+        $this->model = $model;
     }
 
     /**
