@@ -224,8 +224,6 @@ class InternationalTopUpController extends Controller
      * @param UpdateInternationalTopUpRequest $request
      * @param string|int $id
      * @return JsonResponse
-     * @throws ModelNotFoundException
-     * @throws UpdateOperationException
      */
     public function update(UpdateInternationalTopUpRequest $request, string|int $id): JsonResponse
     {
@@ -263,10 +261,8 @@ class InternationalTopUpController extends Controller
      *
      * @param string|int $id
      * @return JsonResponse
-     * @throws ModelNotFoundException
-     * @throws DeleteOperationException
      */
-    public function destroy(string|int $id)
+    public function destroy(string|int $id): JsonResponse
     {
         try {
 
@@ -302,7 +298,7 @@ class InternationalTopUpController extends Controller
      * @param string|int $id
      * @return JsonResponse
      */
-    public function restore(string|int $id)
+    public function restore(string|int $id): JsonResponse
     {
         try {
 
@@ -364,7 +360,7 @@ class InternationalTopUpController extends Controller
      * @param ImportInternationalTopUpRequest $request
      * @return InternationalTopUpCollection|JsonResponse
      */
-    public function import(ImportInternationalTopUpRequest $request): JsonResponse
+    public function import(ImportInternationalTopUpRequest $request): InternationalTopUpCollection|JsonResponse
     {
         try {
             $inputs = $request->validated();
