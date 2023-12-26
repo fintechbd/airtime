@@ -5,9 +5,13 @@ namespace Fintech\Airtime\Services;
 
 use Fintech\Airtime\Interfaces\InternationalTopUpRepository;
 use Fintech\Transaction\Facades\Transaction;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * Class InternationalTopUpService
+ * @property InternationalTopUpRepository $internationalTopUpRepository
  * @package Fintech\Airtime\Services
  *
  */
@@ -23,45 +27,61 @@ class InternationalTopUpService
 
     /**
      * @param array $filters
-     * @return mixed
+     * @return Collection|Paginator
      */
-    public function list(array $filters = [])
+    public function list(array $filters = []): Collection|Paginator
     {
         return $this->internationalTopUpRepository->list($filters);
 
     }
 
-    public function create(array $inputs = [])
+    public function create(array $inputs = []): Model|\MongoDB\Laravel\Eloquent\Model|null
     {
         return $this->internationalTopUpRepository->create($inputs);
     }
 
-    public function find($id, $onlyTrashed = false)
+    public function find($id, $onlyTrashed = false): Model|\MongoDB\Laravel\Eloquent\Model|null
     {
         return $this->internationalTopUpRepository->find($id, $onlyTrashed);
     }
 
-    public function update($id, array $inputs = [])
+    public function update($id, array $inputs = []): Model|\MongoDB\Laravel\Eloquent\Model|null
     {
         return $this->internationalTopUpRepository->update($id, $inputs);
     }
 
-    public function destroy($id)
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function destroy($id): mixed
     {
         return $this->internationalTopUpRepository->delete($id);
     }
 
-    public function restore($id)
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function restore($id): mixed
     {
         return $this->internationalTopUpRepository->restore($id);
     }
 
-    public function export(array $filters)
+    /**
+     * @param array $filters
+     * @return Paginator|Collection
+     */
+    public function export(array $filters): Paginator|Collection
     {
         return $this->internationalTopUpRepository->list($filters);
     }
 
-    public function import(array $filters)
+    /**
+     * @param array $filters
+     * @return Model|\MongoDB\Laravel\Eloquent\Model|null
+     */
+    public function import(array $filters): Model|\MongoDB\Laravel\Eloquent\Model|null
     {
         return $this->internationalTopUpRepository->create($filters);
     }
@@ -136,7 +156,8 @@ class InternationalTopUpService
         $data->step = 5;
         //$data->order_detail_parent_id = $orderDetailStore->getKey();
         //$updateData['order_data']['previous_amount'] = 0;
-        $orderDetailStoreForDiscount = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
+        //$orderDetailStoreForDiscount =
+        Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStoreForDiscountForMaster = $orderDetailStoreForCharge->replicate();
         $orderDetailStoreForDiscountForMaster->user_id = $data->sender_receiver_id;
         $orderDetailStoreForDiscountForMaster->sender_receiver_id = $data->user_id;
@@ -168,7 +189,7 @@ class InternationalTopUpService
     }
 
     /**
-     * @return int[]
+     * @return array{previous_amount: mixed|null, current_amount: mixed|null, spent_amount: mixed|null}
      */
     public function creditTransaction($data): array
     {
@@ -234,8 +255,9 @@ class InternationalTopUpService
         $data->notes = 'International Topup Discount form '.$master_user_name;
         $data->step = 5;
         //$data->order_detail_parent_id = $orderDetailStore->getKey();
-        $updateData['order_data']['previous_amount'] = 0;
-        $orderDetailStoreForDiscount = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
+        //$updateData['order_data']['previous_amount'] = 0;
+        //$orderDetailStoreForDiscount =
+        Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStoreForDiscountForMaster = $orderDetailStoreForCharge->replicate();
         $orderDetailStoreForDiscountForMaster->user_id = $data->sender_receiver_id;
         $orderDetailStoreForDiscountForMaster->sender_receiver_id = $data->user_id;
