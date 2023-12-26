@@ -2,6 +2,8 @@
 
 namespace Fintech\Airtime\Http\Controllers;
 use Exception;
+use Fintech\Auth\Facades\Auth;
+use Fintech\Auth\Models\User;
 use Fintech\Business\Facades\Business;
 use Fintech\Core\Enums\Auth\RiskProfile;
 use Fintech\Core\Enums\Auth\SystemRole;
@@ -88,7 +90,7 @@ class InternationalTopUpController extends Controller
             $depositor = $request->user('sanctum');
             if (Transaction::orderQueue()->addToQueueUserWise(($user_id ?? $depositor->getKey())) > 0) {
 
-                $depositAccount = \Fintech\Transaction\Facades\Transaction::userAccount()->list([
+                $depositAccount = Transaction::userAccount()->list([
                     'user_id' => $user_id ?? $depositor->getKey(),
                     'country_id' => $request->input('source_country_id', $depositor->profile?->country_id),
                 ])->first();
@@ -97,7 +99,7 @@ class InternationalTopUpController extends Controller
                     throw new Exception("User don't have account deposit balance");
                 }
 
-                $masterUser = \Fintech\Auth\Facades\Auth::user()->list([
+                $masterUser = Auth::user()->list([
                     'role_name' => SystemRole::MasterUser->value,
                     'country_id' => $request->input('source_country_id', $depositor->profile?->country_id),
                 ])->first();
@@ -136,16 +138,16 @@ class InternationalTopUpController extends Controller
                     throw (new StoreOperationException)->setModel(config('fintech.airtime.international_top_up_model'));
                 }
 
-                $order_data = $internationalTopUp->order_data;
-                $order_data['purchase_number'] = entry_number($internationalTopUp->getKey(), $internationalTopUp->sourceCountry->iso3, OrderStatus::Successful->value);
+                $order_data = $internationalTopUp->order_data ?? [];
+                $order_data['purchase_number'] = entry_number($internationalTopUp->getKey(), $internationalTopUp->sourceCountry->iso3 ?? null, OrderStatus::Successful->value);
                 $order_data['service_stat_data'] = Business::serviceStat()->serviceStateData($internationalTopUp);
                 //TODO Need to work negative amount
-                $order_data['user_name'] = $internationalTopUp->user->name;
+                $order_data['user_name'] = $internationalTopUp->user->name ?? null;
                 $internationalTopUp->order_data = $order_data;
                 $userUpdatedBalance = Airtime::internationalTopUp()->debitTransaction($internationalTopUp);
-                $depositedAccount = \Fintech\Transaction\Facades\Transaction::userAccount()->list([
+                $depositedAccount = Transaction::userAccount()->list([
                     'user_id' => $depositor->getKey(),
-                    'country_id' => $internationalTopUp->source_country_id,
+                    'country_id' => $internationalTopUp->source_country_id ?? null,
                 ])->first();
                 //update User Account
                 $depositedUpdatedAccount = $depositedAccount->toArray();
@@ -171,13 +173,14 @@ class InternationalTopUpController extends Controller
 
                 return $this->created([
                     'message' => __('core::messages.resource.created', ['model' => 'International Top Up']),
-                    'id' => $internationalTopUp->id,
+                    'id' => $internationalTopUp->getKey(),
                     'spent' => $userUpdatedBalance['spent_amount'],
                 ]);
             } else {
                 throw new Exception('Your another order is in process...!');
             }
         } catch (Exception $exception) {
+            /** @var User $depositor */
             Transaction::orderQueue()->removeFromQueueUserWise($user_id ?? $depositor->getKey());
             DB::rollBack();
 
@@ -327,7 +330,7 @@ class InternationalTopUpController extends Controller
 
     /**
      * @lrd:start
-     * Create a exportable list of the *InternationalTopUp* resource as document.
+     * Create an exportable list of the *InternationalTopUp* resource as document.
      * After export job is done system will fire  export completed event
      *
      * @lrd:end
@@ -340,7 +343,8 @@ class InternationalTopUpController extends Controller
         try {
             $inputs = $request->validated();
 
-            $internationalTopUpPaginate = Airtime::internationalTopUp()->export($inputs);
+            //$internationalTopUpPaginate = Airtime::internationalTopUp()->export($inputs);
+            Airtime::internationalTopUp()->export($inputs);
 
             return $this->exported(__('core::messages.resource.exported', ['model' => 'International Top Up']));
 
@@ -352,7 +356,7 @@ class InternationalTopUpController extends Controller
 
     /**
      * @lrd:start
-     * Create a exportable list of the *InternationalTopUp* resource as document.
+     * Create an exportable list of the *InternationalTopUp* resource as document.
      * After export job is done system will fire  export completed event
      *
      * @lrd:end
