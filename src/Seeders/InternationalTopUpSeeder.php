@@ -84,8 +84,12 @@ class InternationalTopUpSeeder extends Seeder
 
         return [
             [
-                'service_type_id' => \Fintech\Business\Facades\Business::serviceType()->list(['service_type_slug' => 'air_time'])->first()->id,
-                'service_type_name' => 'International Top Up', 'service_type_slug' => 'international_top_up', 'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents($image_svg.'international_top_up.svg')), 'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents($image_png.'international_top_up.png')), 'service_type_is_parent' => 'yes', 'service_type_is_description' => 'no', 'service_type_step' => '2', 'enabled' => true],
+                'service_type_parent_id' => \Fintech\Business\Facades\Business::serviceType()->list(['service_type_slug' => 'air_time'])->first()->id,
+                'service_type_name' => 'International Top Up',
+                'service_type_slug' => 'international_top_up',
+                'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents($image_svg.'international_top_up.svg')),
+                'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents($image_png.'international_top_up.png')),
+                'service_type_is_parent' => 'no', 'service_type_is_description' => 'no', 'service_type_step' => '2', 'enabled' => true],
         ];
     }
 
