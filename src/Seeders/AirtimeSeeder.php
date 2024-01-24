@@ -22,6 +22,7 @@ class AirtimeSeeder extends Seeder
                 }
 
                 $findServiceTypeModel = \Fintech\Business\Facades\Business::serviceType()->list(['service_type_slug' => $entry['service_type_slug']])->first();
+
                 if ($findServiceTypeModel) {
                     $serviceTypeModel = \Fintech\Business\Facades\Business::serviceType()->update($findServiceTypeModel->id, $entry);
                 } else {
@@ -30,7 +31,7 @@ class AirtimeSeeder extends Seeder
 
                 if (! empty($serviceTypeChild)) {
                     array_walk($serviceTypeChild, function ($item) use (&$serviceTypeModel) {
-                        $item['service_type_parent_id'] = $serviceTypeModel->id;
+                        $item['service_type_parent_id'] = $serviceTypeModel->getKey();
                         \Fintech\Business\Facades\Business::serviceType()->create($item);
                     });
                 }
