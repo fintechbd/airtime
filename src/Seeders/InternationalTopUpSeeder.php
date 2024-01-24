@@ -20,7 +20,7 @@ class InternationalTopUpSeeder extends Seeder
 
             $serviceTypes = $this->serviceType();
 
-            if (!empty($serviceTypes)) {
+            if (! empty($serviceTypes)) {
                 foreach ($serviceTypes as $entry) {
                     $serviceTypeChild = $entry['serviceTypeChild'] ?? [];
 
@@ -35,7 +35,7 @@ class InternationalTopUpSeeder extends Seeder
                         $serviceTypeModel = \Fintech\Business\Facades\Business::serviceType()->create($entry);
                     }
 
-                    if (!empty($serviceTypeChild)) {
+                    if (! empty($serviceTypeChild)) {
                         array_walk($serviceTypeChild, function ($item) use (&$serviceTypeModel) {
                             $item['service_type_parent_id'] = $serviceTypeModel->id;
                             \Fintech\Business\Facades\Business::serviceType()->create($item);
@@ -62,14 +62,14 @@ class InternationalTopUpSeeder extends Seeder
             }
         }
 
-//        $data = $this->data();
-//
-//        foreach (array_chunk($data, 200) as $block) {
-//            set_time_limit(2100);
-//            foreach ($block as $entry) {
-//                Airtime::internationalTopUp()->create($entry);
-//            }
-//        }
+        //        $data = $this->data();
+        //
+        //        foreach (array_chunk($data, 200) as $block) {
+        //            set_time_limit(2100);
+        //            foreach ($block as $entry) {
+        //                Airtime::internationalTopUp()->create($entry);
+        //            }
+        //        }
     }
 
     private function data()
