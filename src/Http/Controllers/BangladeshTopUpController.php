@@ -147,7 +147,7 @@ class BangladeshTopUpController extends Controller
                 $depositedUpdatedAccount = $depositedAccount->toArray();
                 $depositedUpdatedAccount['user_account_data']['spent_amount'] = (float) $depositedUpdatedAccount['user_account_data']['spent_amount'] + (float) $userUpdatedBalance['spent_amount'];
                 $depositedUpdatedAccount['user_account_data']['available_amount'] = (float) $userUpdatedBalance['current_amount'];
-                if (((float) $depositedUpdatedAccount['user_account_data']['available_amount']) >= ((float) $userUpdatedBalance['spent_amount'])) {
+                if (((float) $depositedUpdatedAccount['user_account_data']['available_amount']) <= ((float) $userUpdatedBalance['spent_amount'])) {
                     throw new Exception(__('Insufficient balance!', [
                         'previous_amount' => ((float) $depositedUpdatedAccount['user_account_data']['available_amount']),
                         'current_amount' => ((float) $userUpdatedBalance['spent_amount']),
