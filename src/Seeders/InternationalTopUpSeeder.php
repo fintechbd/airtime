@@ -111,7 +111,7 @@ class InternationalTopUpSeeder extends Seeder
                 'service_stat_policy' => 'yes',
                 'service_serial' => 1,
                 'service_data' => ['visible_website' => 'yes', 'visible_android_app' => 'yes', 'visible_ios_app' => 'yes', 'account_name' => '', 'account_number' => '', 'transactional_currency' => 'MYR', 'beneficiary_type_id' => null, 'operator_short_code' => null],
-                'enabled' => true
+                'enabled' => true,
             ],
         ];
 
