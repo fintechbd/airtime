@@ -99,7 +99,20 @@ class InternationalTopUpSeeder extends Seeder
         $image_png = __DIR__.'/../../resources/img/service/logo_png/';
 
         return [
-            ['service_type_id' => \Fintech\Business\Facades\Business::serviceType()->list(['service_type_slug' => 'international_top_up'])->first()->id, 'service_vendor_id' => 1, 'service_name' => 'International Top Up', 'service_slug' => 'international_top_up', 'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents($image_svg.'international_top_up.svg')), 'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents($image_png.'international_top_up.png')), 'service_notification' => 'yes', 'service_delay' => 'yes', 'service_stat_policy' => 'yes', 'service_serial' => 1, 'service_data' => ['visible_website' => 'yes', 'visible_android_app' => 'yes', 'visible_ios_app' => 'yes', 'account_name' => '', 'account_number' => '', 'transactional_currency' => 'MYR', 'beneficiary_type_id' => null, 'operator_short_code' => null], 'enabled' => true],
+            [
+                'service_type_id' => \Fintech\Business\Facades\Business::serviceType()->list(['service_type_slug' => 'international_top_up'])->first()->id,
+                'service_vendor_id' => 1,
+                'service_name' => 'International Top Up',
+                'service_slug' => 'international_top_up',
+                'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents($image_svg.'international_top_up.svg')),
+                'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents($image_png.'international_top_up.png')),
+                'service_notification' => 'yes',
+                'service_delay' => 'yes',
+                'service_stat_policy' => 'yes',
+                'service_serial' => 1,
+                'service_data' => ['visible_website' => 'yes', 'visible_android_app' => 'yes', 'visible_ios_app' => 'yes', 'account_name' => '', 'account_number' => '', 'transactional_currency' => 'MYR', 'beneficiary_type_id' => null, 'operator_short_code' => null],
+                'enabled' => true
+            ],
         ];
 
     }
