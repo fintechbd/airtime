@@ -2,7 +2,6 @@
 
 namespace Fintech\Airtime\Seeders;
 
-use Fintech\Airtime\Facades\Airtime;
 use Fintech\Core\Facades\Core;
 use Illuminate\Database\Seeder;
 

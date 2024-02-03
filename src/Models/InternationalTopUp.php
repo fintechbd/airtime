@@ -69,20 +69,9 @@ class InternationalTopUp extends Model
     {
         $primaryKey = $this->getKey();
 
-        $links = [
+        return [
             'show' => action_link(route('airtime.international-top-ups.show', $primaryKey), __('core::messages.action.show'), 'get'),
-            'update' => action_link(route('airtime.international-top-ups.update', $primaryKey), __('core::messages.action.update'), 'put'),
-            'destroy' => action_link(route('airtime.international-top-ups.destroy', $primaryKey), __('core::messages.action.destroy'), 'delete'),
-            'restore' => action_link(route('airtime.international-top-ups.restore', $primaryKey), __('core::messages.action.restore'), 'post'),
         ];
-
-        if ($this->getAttribute('deleted_at') == null) {
-            unset($links['restore']);
-        } else {
-            unset($links['destroy']);
-        }
-
-        return $links;
     }
 
     /*

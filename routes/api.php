@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Route;
 if (Config::get('fintech.airtime.enabled')) {
     Route::prefix('airtime')->name('airtime.')->group(function () {
 
-        Route::apiResource('bangladesh-top-ups', \Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class)->except('update', 'destroy');
-        //Route::post('bangladesh-top-ups/{bangladesh_top_up}/restore', [\Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class, 'restore'])->name('bangladesh-top-ups.restore');
+        Route::apiResource('bangladesh-top-ups', \Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class)
+            ->only('index', 'store', 'show');
 
-        Route::apiResource('international-top-ups', \Fintech\Airtime\Http\Controllers\InternationalTopUpController::class)->except('update', 'destroy');
-        //Route::post('international-top-ups/{international_top_up}/restore', [\Fintech\Airtime\Http\Controllers\InternationalTopUpController::class, 'restore'])->name('international-top-ups.restore');
+        Route::apiResource('international-top-ups', \Fintech\Airtime\Http\Controllers\InternationalTopUpController::class)
+            ->only('index', 'store', 'show');
 
         //DO NOT REMOVE THIS LINE//
     });

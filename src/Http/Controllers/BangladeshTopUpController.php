@@ -46,7 +46,7 @@ class BangladeshTopUpController extends Controller
      *
      * @lrd:end
      */
-    public function index(IndexBangladeshTopUpRequest $request): BangladeshTopUpCollection|JsonResponse
+    public function index(IndexBangladeshTopUpRequest $request)
     {
         try {
             $inputs = $request->validated();
@@ -54,9 +54,7 @@ class BangladeshTopUpController extends Controller
             $inputs['transaction_form_code'] = 'bangladesh_top_up';
             //$inputs['service_id'] = Business::serviceType()->list(['service_type_slug'=>'bangladesh_top_up']);
             //$inputs['service_type_slug'] = 'bangladesh_top_up';
-            //$bangladeshTopUpPaginate = Airtime::bangladeshTopUp()->list($inputs);
-            $bangladeshTopUpPaginate = Transaction::order()->list($inputs);
-
+            $bangladeshTopUpPaginate = Airtime::bangladeshTopUp()->list($inputs);
             return new BangladeshTopUpCollection($bangladeshTopUpPaginate);
 
         } catch (Exception $exception) {
