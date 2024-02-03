@@ -3,7 +3,6 @@
 namespace Fintech\Airtime\Repositories\Eloquent;
 
 use Fintech\Airtime\Interfaces\BangladeshTopUpRepository as InterfacesBangladeshTopUpRepository;
-use Fintech\Core\Repositories\EloquentRepository;
 use Fintech\Transaction\Repositories\Eloquent\OrderRepository;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -32,6 +31,7 @@ class BangladeshTopUpRepository extends OrderRepository implements InterfacesBan
      * filtered options
      *
      * @return Paginator|Collection
+     *
      * @throws BindingResolutionException
      */
     public function list(array $filters = [])

@@ -3,7 +3,6 @@
 namespace Fintech\Airtime\Repositories\Eloquent;
 
 use Fintech\Airtime\Interfaces\InternationalTopUpRepository as InterfacesInternationalTopUpRepository;
-use Fintech\Core\Repositories\EloquentRepository;
 use Fintech\Transaction\Repositories\Eloquent\OrderRepository;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;

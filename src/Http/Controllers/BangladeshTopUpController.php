@@ -55,6 +55,7 @@ class BangladeshTopUpController extends Controller
             //$inputs['service_id'] = Business::serviceType()->list(['service_type_slug'=>'bangladesh_top_up']);
             //$inputs['service_type_slug'] = 'bangladesh_top_up';
             $bangladeshTopUpPaginate = Airtime::bangladeshTopUp()->list($inputs);
+
             return new BangladeshTopUpCollection($bangladeshTopUpPaginate);
 
         } catch (Exception $exception) {
