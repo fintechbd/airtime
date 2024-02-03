@@ -53,7 +53,7 @@ class BangladeshTopUpController extends Controller
             //$inputs['transaction_form_id'] = Transaction::transactionForm()->list(['code' => 'bangladesh_top_up'])->first()->getKey();
             $inputs['transaction_form_code'] = 'bangladesh_top_up';
             //$inputs['service_id'] = Business::serviceType()->list(['service_type_slug'=>'bangladesh_top_up']);
-            $inputs['service_type_slug'] = 'bangladesh_top_up';
+            //$inputs['service_type_slug'] = 'bangladesh_top_up';
             //$bangladeshTopUpPaginate = Airtime::bangladeshTopUp()->list($inputs);
             $bangladeshTopUpPaginate = Transaction::order()->list($inputs);
 
