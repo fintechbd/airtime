@@ -61,6 +61,7 @@ class InternationalTopUpSeeder extends Seeder
             }
         }
     }
+
     private function serviceType(): array
     {
         $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';
