@@ -60,22 +60,7 @@ class InternationalTopUpSeeder extends Seeder
                 }
             }
         }
-
-        //        $data = $this->data();
-        //
-        //        foreach (array_chunk($data, 200) as $block) {
-        //            set_time_limit(2100);
-        //            foreach ($block as $entry) {
-        //                Airtime::internationalTopUp()->create($entry);
-        //            }
-        //        }
     }
-
-    private function data()
-    {
-        return [];
-    }
-
     private function serviceType(): array
     {
         $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';

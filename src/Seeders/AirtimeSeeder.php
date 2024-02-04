@@ -36,14 +36,6 @@ class AirtimeSeeder extends Seeder
                 }
             }
         }
-        /*$data = $this->data();
-
-        foreach (array_chunk($data, 200) as $block) {
-            set_time_limit(2100);
-            foreach ($block as $entry) {
-                Airtime::airtime()->create($entry);
-            }
-        }*/
     }
 
     private function data()
