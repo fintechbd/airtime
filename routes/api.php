@@ -18,12 +18,12 @@ if (Config::get('fintech.airtime.enabled')) {
         ->middleware(config('fintech.auth.middleware'))
         ->group(function () {
 
-        Route::apiResource('bangladesh-top-ups', \Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class)
-            ->only('index', 'store', 'show');
+            Route::apiResource('bangladesh-top-ups', \Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class)
+                ->only('index', 'store', 'show');
 
-        Route::apiResource('international-top-ups', \Fintech\Airtime\Http\Controllers\InternationalTopUpController::class)
-            ->only('index', 'store', 'show');
+            Route::apiResource('international-top-ups', \Fintech\Airtime\Http\Controllers\InternationalTopUpController::class)
+                ->only('index', 'store', 'show');
 
-        //DO NOT REMOVE THIS LINE//
-    });
+            //DO NOT REMOVE THIS LINE//
+        });
 }
