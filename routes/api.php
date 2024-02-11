@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 if (Config::get('fintech.airtime.enabled')) {
-    Route::prefix('airtime')->name('airtime.')->group(function () {
+    Route::prefix('airtime')->name('airtime.')
+        ->middleware(config('fintech.auth.middleware'))
+        ->group(function () {
 
         Route::apiResource('bangladesh-top-ups', \Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class)
             ->only('index', 'store', 'show');
