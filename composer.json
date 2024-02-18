@@ -64,7 +64,7 @@
                 "Fintech\\Airtime\\AirtimeServiceProvider",
                 "Fintech\\Airtime\\RouteServiceProvider",
                 "Fintech\\Airtime\\RepositoryServiceProvider",
-                "Fintech\\Airtime\\EventSrviceProvider"
+                "Fintech\\Airtime\\EventServiceProvider"
             ],
             "aliases": {
                 "Airtime": "Fintech\\Airtime\\Facades\\Airtime"
