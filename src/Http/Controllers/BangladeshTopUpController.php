@@ -3,6 +3,7 @@
 namespace Fintech\Airtime\Http\Controllers;
 
 use Exception;
+use Fintech\Airtime\Events\BangladeshTopUpRequested;
 use Fintech\Airtime\Facades\Airtime;
 use Fintech\Airtime\Http\Requests\ImportBangladeshTopUpRequest;
 use Fintech\Airtime\Http\Requests\IndexBangladeshTopUpRequest;
@@ -163,6 +164,7 @@ class BangladeshTopUpController extends Controller
                 Airtime::bangladeshTopUp()->update($bangladeshTopUp->getKey(), ['order_data' => $order_data, 'order_number' => $order_data['purchase_number']]);
                 Transaction::orderQueue()->removeFromQueueUserWise($user_id ?? $depositor->getKey());
                 DB::commit();
+                event(new BangladeshTopUpRequested($bangladeshTopUp));
 
                 return $this->created([
                     'message' => __('core::messages.resource.created', ['model' => 'Bangladesh Top Up']),
