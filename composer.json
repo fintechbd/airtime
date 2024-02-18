@@ -61,7 +61,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Fintech\\Airtime\\AirtimeServiceProvider"
+                "Fintech\\Airtime\\AirtimeServiceProvider",
+                "Fintech\\Airtime\\RouteSrviceProvider",
+                "Fintech\\Airtime\\RepositoryServiceProvider",
+                "Fintech\\Airtime\\EventSrviceProvider"
             ],
             "aliases": {
                 "Airtime": "Fintech\\Airtime\\Facades\\Airtime"

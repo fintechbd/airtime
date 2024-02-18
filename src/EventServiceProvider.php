@@ -12,6 +12,7 @@ use Fintech\Airtime\Events\InternationalTopUpCompleted;
 use Fintech\Airtime\Events\InternationalTopUpRefunded;
 use Fintech\Airtime\Events\InternationalTopUpRejected;
 use Fintech\Airtime\Events\InternationalTopUpRequested;
+use Fintech\Core\Listeners\Bell\TriggerListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -23,35 +24,35 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         BangladeshTopUpCancelled::class => [
-
+            TriggerListener::class
         ],
         BangladeshTopUpCompleted::class => [
-
+            TriggerListener::class
         ],
         BangladeshTopUpRefunded::class => [
-
+            TriggerListener::class
         ],
         BangladeshTopUpRejected::class => [
-
+            TriggerListener::class
         ],
         BangladeshTopUpRequested::class => [
-
+            TriggerListener::class
         ],
 
         InternationalTopUpCancelled::class => [
-
+            TriggerListener::class
         ],
         InternationalTopUpCompleted::class => [
-
+            TriggerListener::class
         ],
         InternationalTopUpRefunded::class => [
-
+            TriggerListener::class
         ],
         InternationalTopUpRejected::class => [
-
+            TriggerListener::class
         ],
         InternationalTopUpRequested::class => [
-
+            TriggerListener::class
         ],
     ];
 }
