@@ -24,35 +24,35 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         BangladeshTopUpCancelled::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
         BangladeshTopUpCompleted::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
         BangladeshTopUpRefunded::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
         BangladeshTopUpRejected::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
         BangladeshTopUpRequested::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
 
         InternationalTopUpCancelled::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
         InternationalTopUpCompleted::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
         InternationalTopUpRefunded::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
         InternationalTopUpRejected::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
         InternationalTopUpRequested::class => [
-            TriggerListener::class
+            TriggerListener::class,
         ],
     ];
 }
