@@ -62,7 +62,7 @@
         "laravel": {
             "providers": [
                 "Fintech\\Airtime\\AirtimeServiceProvider",
-                "Fintech\\Airtime\\RouteSrviceProvider",
+                "Fintech\\Airtime\\RouteServiceProvider",
                 "Fintech\\Airtime\\RepositoryServiceProvider",
                 "Fintech\\Airtime\\EventSrviceProvider"
             ],
