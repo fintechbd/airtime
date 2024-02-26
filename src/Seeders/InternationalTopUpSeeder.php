@@ -2,6 +2,7 @@
 
 namespace Fintech\Airtime\Seeders;
 
+use Fintech\Business\Facades\Business;
 use Fintech\Core\Facades\Core;
 use Illuminate\Database\Seeder;
 
@@ -19,7 +20,7 @@ class InternationalTopUpSeeder extends Seeder
 
             $serviceTypes = $this->serviceType();
 
-            if (! empty($serviceTypes)) {
+            if (!empty($serviceTypes)) {
                 foreach ($serviceTypes as $entry) {
                     $serviceTypeChild = $entry['serviceTypeChild'] ?? [];
 
@@ -27,17 +28,17 @@ class InternationalTopUpSeeder extends Seeder
                         unset($entry['serviceTypeChild']);
                     }
 
-                    $findServiceTypeModel = \Fintech\Business\Facades\Business::serviceType()->list(['service_type_slug' => $entry['service_type_slug']])->first();
+                    $findServiceTypeModel = Business::serviceType()->list(['service_type_slug' => $entry['service_type_slug']])->first();
                     if ($findServiceTypeModel) {
-                        $serviceTypeModel = \Fintech\Business\Facades\Business::serviceType()->update($findServiceTypeModel->id, $entry);
+                        $serviceTypeModel = Business::serviceType()->update($findServiceTypeModel->id, $entry);
                     } else {
-                        $serviceTypeModel = \Fintech\Business\Facades\Business::serviceType()->create($entry);
+                        $serviceTypeModel = Business::serviceType()->create($entry);
                     }
 
-                    if (! empty($serviceTypeChild)) {
+                    if (!empty($serviceTypeChild)) {
                         array_walk($serviceTypeChild, function ($item) use (&$serviceTypeModel) {
                             $item['service_type_parent_id'] = $serviceTypeModel->id;
-                            \Fintech\Business\Facades\Business::serviceType()->create($item);
+                            Business::serviceType()->create($item);
                         });
                     }
                 }
@@ -47,7 +48,7 @@ class InternationalTopUpSeeder extends Seeder
                 foreach (array_chunk($serviceData, 200) as $block) {
                     set_time_limit(2100);
                     foreach ($block as $entry) {
-                        \Fintech\Business\Facades\Business::service()->create($entry);
+                        Business::service()->create($entry);
                     }
                 }
 
@@ -55,7 +56,7 @@ class InternationalTopUpSeeder extends Seeder
                 foreach (array_chunk($serviceStatData, 200) as $block) {
                     set_time_limit(2100);
                     foreach ($block as $entry) {
-                        \Fintech\Business\Facades\Business::serviceStat()->customStore($entry);
+                        Business::serviceStat()->customStore($entry);
                     }
                 }
             }
@@ -64,33 +65,33 @@ class InternationalTopUpSeeder extends Seeder
 
     private function serviceType(): array
     {
-        $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';
-        $image_png = __DIR__.'/../../resources/img/service_type/logo_png/';
+        $image_svg = __DIR__ . '/../../resources/img/service_type/logo_svg/';
+        $image_png = __DIR__ . '/../../resources/img/service_type/logo_png/';
 
         return [
             [
-                'service_type_parent_id' => \Fintech\Business\Facades\Business::serviceType()->list(['service_type_slug' => 'air_time'])->first()->id,
+                'service_type_parent_id' => Business::serviceType()->list(['service_type_slug' => 'air_time'])->first()->id,
                 'service_type_name' => 'International Top Up',
                 'service_type_slug' => 'international_top_up',
-                'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents($image_svg.'international_top_up.svg')),
-                'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents($image_png.'international_top_up.png')),
+                'logo_svg' => 'data:image/svg+xml;base64,' . base64_encode(file_get_contents($image_svg . 'international_top_up.svg')),
+                'logo_png' => 'data:image/png;base64,' . base64_encode(file_get_contents($image_png . 'international_top_up.png')),
                 'service_type_is_parent' => 'no', 'service_type_is_description' => 'no', 'service_type_step' => '2', 'enabled' => true],
         ];
     }
 
     private function service(): array
     {
-        $image_svg = __DIR__.'/../../resources/img/service/logo_svg/';
-        $image_png = __DIR__.'/../../resources/img/service/logo_png/';
+        $image_svg = __DIR__ . '/../../resources/img/service/logo_svg/';
+        $image_png = __DIR__ . '/../../resources/img/service/logo_png/';
 
         return [
             [
-                'service_type_id' => \Fintech\Business\Facades\Business::serviceType()->list(['service_type_slug' => 'international_top_up'])->first()->id,
+                'service_type_id' => Business::serviceType()->list(['service_type_slug' => 'international_top_up'])->first()->id,
                 'service_vendor_id' => 1,
                 'service_name' => 'International Top Up',
                 'service_slug' => 'international_top_up',
-                'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents($image_svg.'international_top_up.svg')),
-                'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents($image_png.'international_top_up.png')),
+                'logo_svg' => 'data:image/svg+xml;base64,' . base64_encode(file_get_contents($image_svg . 'international_top_up.svg')),
+                'logo_png' => 'data:image/png;base64,' . base64_encode(file_get_contents($image_png . 'international_top_up.png')),
                 'service_notification' => 'yes',
                 'service_delay' => 'yes',
                 'service_stat_policy' => 'yes',
@@ -107,7 +108,7 @@ class InternationalTopUpSeeder extends Seeder
         $serviceLists = $this->service();
         $serviceStats = [];
         foreach ($serviceLists as $serviceList) {
-            $service = \Fintech\Business\Facades\Business::service()->list(['service_slug' => $serviceList['service_slug']])->first();
+            $service = Business::service()->list(['service_slug' => $serviceList['service_slug']])->first();
             $serviceStats[] = [
                 'role_id' => [2, 3, 4, 5, 6, 7],
                 'service_id' => $service->getKey(),

@@ -5,8 +5,8 @@ namespace Fintech\Airtime\Services;
 use Fintech\Airtime\Interfaces\InternationalTopUpRepository;
 use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use MongoDB\Laravel\Eloquent\Model;
 
 /**
  * Class InternationalTopUpService
@@ -23,23 +23,12 @@ class InternationalTopUpService
         $this->internationalTopUpRepository = $internationalTopUpRepository;
     }
 
-    public function list(array $filters = []): Collection|Paginator
-    {
-        return $this->internationalTopUpRepository->list($filters);
-
-    }
-
-    public function create(array $inputs = []): Model|\MongoDB\Laravel\Eloquent\Model|null
-    {
-        return $this->internationalTopUpRepository->create($inputs);
-    }
-
-    public function find($id, $onlyTrashed = false): Model|\MongoDB\Laravel\Eloquent\Model|null
+    public function find($id, $onlyTrashed = false): Model|Model|null
     {
         return $this->internationalTopUpRepository->find($id, $onlyTrashed);
     }
 
-    public function update($id, array $inputs = []): Model|\MongoDB\Laravel\Eloquent\Model|null
+    public function update($id, array $inputs = []): Model|Model|null
     {
         return $this->internationalTopUpRepository->update($id, $inputs);
     }
@@ -59,9 +48,20 @@ class InternationalTopUpService
         return $this->internationalTopUpRepository->list($filters);
     }
 
-    public function import(array $filters): Model|\MongoDB\Laravel\Eloquent\Model|null
+    public function list(array $filters = []): Collection|Paginator
+    {
+        return $this->internationalTopUpRepository->list($filters);
+
+    }
+
+    public function import(array $filters): Model|Model|null
     {
         return $this->internationalTopUpRepository->create($filters);
+    }
+
+    public function create(array $inputs = []): Model|Model|null
+    {
+        return $this->internationalTopUpRepository->create($inputs);
     }
 
     /**
@@ -93,7 +93,7 @@ class InternationalTopUpService
         $data->order_detail_cause_name = 'cash_withdraw';
         $data->order_detail_number = $data->order_data['purchase_number'];
         $data->order_detail_response_id = $data->order_data['purchase_number'];
-        $data->notes = 'International Topup Payment Send to '.$master_user_name;
+        $data->notes = 'International Topup Payment Send to ' . $master_user_name;
         $orderDetailStore = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStore->order_detail_parent_id = $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStore->save();
@@ -104,7 +104,7 @@ class InternationalTopUpService
         $orderDetailStoreForMaster->order_detail_amount = $amount;
         $orderDetailStoreForMaster->converted_amount = $converted_amount;
         $orderDetailStoreForMaster->step = 2;
-        $orderDetailStoreForMaster->notes = 'International Topup Payment Receive From'.$user_name;
+        $orderDetailStoreForMaster->notes = 'International Topup Payment Receive From' . $user_name;
         $orderDetailStoreForMaster->save();
 
         //For Charge
@@ -112,7 +112,7 @@ class InternationalTopUpService
         $data->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $data->order_detail_cause_name = 'charge';
         $data->order_detail_parent_id = $orderDetailStore->getKey();
-        $data->notes = 'International Topup Charge Send to '.$master_user_name;
+        $data->notes = 'International Topup Charge Send to ' . $master_user_name;
         $data->step = 3;
         $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStoreForCharge = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
@@ -122,7 +122,7 @@ class InternationalTopUpService
         $orderDetailStoreForChargeForMaster->order_detail_amount = -calculate_flat_percent($amount, $serviceStatData['charge']);
         $orderDetailStoreForChargeForMaster->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $orderDetailStoreForChargeForMaster->order_detail_cause_name = 'charge';
-        $orderDetailStoreForChargeForMaster->notes = 'International Topup Charge Receive from '.$user_name;
+        $orderDetailStoreForChargeForMaster->notes = 'International Topup Charge Receive from ' . $user_name;
         $orderDetailStoreForChargeForMaster->step = 4;
         $orderDetailStoreForChargeForMaster->save();
 
@@ -130,7 +130,7 @@ class InternationalTopUpService
         $data->amount = -calculate_flat_percent($amount, $serviceStatData['discount']);
         $data->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $data->order_detail_cause_name = 'discount';
-        $data->notes = 'International Topup Discount form '.$master_user_name;
+        $data->notes = 'International Topup Discount form ' . $master_user_name;
         $data->step = 5;
         //$data->order_detail_parent_id = $orderDetailStore->getKey();
         //$updateData['order_data']['previous_amount'] = 0;
@@ -142,7 +142,7 @@ class InternationalTopUpService
         $orderDetailStoreForDiscountForMaster->order_detail_amount = calculate_flat_percent($amount, $serviceStatData['discount']);
         $orderDetailStoreForDiscountForMaster->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $orderDetailStoreForDiscountForMaster->order_detail_cause_name = 'discount';
-        $orderDetailStoreForDiscountForMaster->notes = 'International Topup Discount to '.$user_name;
+        $orderDetailStoreForDiscountForMaster->notes = 'International Topup Discount to ' . $user_name;
         $orderDetailStoreForDiscountForMaster->step = 6;
         $orderDetailStoreForDiscountForMaster->save();
 
@@ -191,7 +191,7 @@ class InternationalTopUpService
         $data->order_detail_cause_name = 'cash_withdraw';
         $data->order_detail_number = $data->order_data['accepted_number'];
         $data->order_detail_response_id = $data->order_data['purchase_number'];
-        $data->notes = 'International Topup Refund From '.$master_user_name;
+        $data->notes = 'International Topup Refund From ' . $master_user_name;
         $orderDetailStore = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStore->order_detail_parent_id = $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStore->save();
@@ -204,7 +204,7 @@ class InternationalTopUpService
         $orderDetailStoreForMaster->order_detail_amount = -$amount;
         $orderDetailStoreForMaster->converted_amount = -$converted_amount;
         $orderDetailStoreForMaster->step = 2;
-        $orderDetailStoreForMaster->notes = 'International Topup Send to '.$user_name;
+        $orderDetailStoreForMaster->notes = 'International Topup Send to ' . $user_name;
         $orderDetailStoreForMaster->save();
 
         //For Charge
@@ -212,7 +212,7 @@ class InternationalTopUpService
         $data->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $data->order_detail_cause_name = 'charge';
         $data->order_detail_parent_id = $orderDetailStore->getKey();
-        $data->notes = 'International Topup Charge Receive from '.$master_user_name;
+        $data->notes = 'International Topup Charge Receive from ' . $master_user_name;
         $data->step = 3;
         $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStoreForCharge = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
@@ -222,7 +222,7 @@ class InternationalTopUpService
         $orderDetailStoreForChargeForMaster->order_detail_amount = calculate_flat_percent($amount, $serviceStatData['charge']);
         $orderDetailStoreForChargeForMaster->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $orderDetailStoreForChargeForMaster->order_detail_cause_name = 'charge';
-        $orderDetailStoreForChargeForMaster->notes = 'International Topup Charge Send to '.$user_name;
+        $orderDetailStoreForChargeForMaster->notes = 'International Topup Charge Send to ' . $user_name;
         $orderDetailStoreForChargeForMaster->step = 4;
         $orderDetailStoreForChargeForMaster->save();
 
@@ -230,7 +230,7 @@ class InternationalTopUpService
         $data->amount = calculate_flat_percent($amount, $serviceStatData['discount']);
         $data->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $data->order_detail_cause_name = 'discount';
-        $data->notes = 'International Topup Discount form '.$master_user_name;
+        $data->notes = 'International Topup Discount form ' . $master_user_name;
         $data->step = 5;
         //$data->order_detail_parent_id = $orderDetailStore->getKey();
         //$updateData['order_data']['previous_amount'] = 0;
@@ -242,7 +242,7 @@ class InternationalTopUpService
         $orderDetailStoreForDiscountForMaster->order_detail_amount = -calculate_flat_percent($amount, $serviceStatData['discount']);
         $orderDetailStoreForDiscountForMaster->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $orderDetailStoreForDiscountForMaster->order_detail_cause_name = 'discount';
-        $orderDetailStoreForDiscountForMaster->notes = 'International Topup Discount to '.$user_name;
+        $orderDetailStoreForDiscountForMaster->notes = 'International Topup Discount to ' . $user_name;
         $orderDetailStoreForDiscountForMaster->step = 6;
         $orderDetailStoreForDiscountForMaster->save();
 

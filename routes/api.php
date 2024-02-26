@@ -1,5 +1,7 @@
 <?php
 
+use Fintech\Airtime\Http\Controllers\BangladeshTopUpController;
+use Fintech\Airtime\Http\Controllers\InternationalTopUpController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -18,10 +20,10 @@ if (Config::get('fintech.airtime.enabled')) {
         ->middleware(config('fintech.auth.middleware'))
         ->group(function () {
 
-            Route::apiResource('bangladesh-top-ups', \Fintech\Airtime\Http\Controllers\BangladeshTopUpController::class)
+            Route::apiResource('bangladesh-top-ups', BangladeshTopUpController::class)
                 ->only('index', 'store', 'show');
 
-            Route::apiResource('international-top-ups', \Fintech\Airtime\Http\Controllers\InternationalTopUpController::class)
+            Route::apiResource('international-top-ups', InternationalTopUpController::class)
                 ->only('index', 'store', 'show');
 
             //DO NOT REMOVE THIS LINE//

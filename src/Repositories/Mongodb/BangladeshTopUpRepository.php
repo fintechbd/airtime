@@ -3,6 +3,7 @@
 namespace Fintech\Airtime\Repositories\Mongodb;
 
 use Fintech\Airtime\Interfaces\BangladeshTopUpRepository as InterfacesBangladeshTopUpRepository;
+use Fintech\Airtime\Models\BangladeshTopUp;
 use Fintech\Core\Repositories\MongodbRepository;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,9 +17,9 @@ class BangladeshTopUpRepository extends MongodbRepository implements InterfacesB
 {
     public function __construct()
     {
-        $model = app(config('fintech.airtime.bangladesh_top_up_model', \Fintech\Airtime\Models\BangladeshTopUp::class));
+        $model = app(config('fintech.airtime.bangladesh_top_up_model', BangladeshTopUp::class));
 
-        if (! $model instanceof Model) {
+        if (!$model instanceof Model) {
             throw new InvalidArgumentException("Mongodb repository require model class to be `MongoDB\Laravel\Eloquent\Model` instance.");
         }
 
@@ -36,7 +37,7 @@ class BangladeshTopUpRepository extends MongodbRepository implements InterfacesB
         $query = $this->model->newQuery();
 
         //Searching
-        if (! empty($filters['search'])) {
+        if (!empty($filters['search'])) {
             if (is_numeric($filters['search'])) {
                 $query->where($this->model->getKeyName(), 'like', "%{$filters['search']}%");
             } else {

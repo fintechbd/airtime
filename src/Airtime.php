@@ -2,22 +2,25 @@
 
 namespace Fintech\Airtime;
 
+use Fintech\Airtime\Services\BangladeshTopUpService;
+use Fintech\Airtime\Services\InternationalTopUpService;
+
 class Airtime
 {
     /**
-     * @return \Fintech\Airtime\Services\BangladeshTopUpService
+     * @return BangladeshTopUpService
      */
     public function bangladeshTopUp()
     {
-        return app(\Fintech\Airtime\Services\BangladeshTopUpService::class);
+        return app(BangladeshTopUpService::class);
     }
 
     /**
-     * @return \Fintech\Airtime\Services\InternationalTopUpService
+     * @return InternationalTopUpService
      */
     public function internationalTopUp()
     {
-        return app(\Fintech\Airtime\Services\InternationalTopUpService::class);
+        return app(InternationalTopUpService::class);
     }
 
     //** Crud Service Method Point Do not Remove **//

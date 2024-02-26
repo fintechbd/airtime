@@ -5,11 +5,11 @@ namespace Fintech\Airtime\Models;
 use Fintech\Airtime\Traits\AuthRelations;
 use Fintech\Airtime\Traits\BusinessRelations;
 use Fintech\Airtime\Traits\MetaDataRelations;
+use Fintech\Core\Abstracts\BaseModel;
 use Fintech\Core\Traits\AuditableTrait;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class InternationalTopUp extends Model
+class InternationalTopUp extends BaseModel
 {
     use AuditableTrait;
     use AuthRelations;
