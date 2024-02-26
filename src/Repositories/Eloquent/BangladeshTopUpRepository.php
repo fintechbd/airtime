@@ -17,13 +17,7 @@ class BangladeshTopUpRepository extends OrderRepository implements InterfacesBan
 {
     public function __construct()
     {
-        $model = app(config('fintech.airtime.bangladesh_top_up_model', BangladeshTopUp::class));
-
-        if (!$model instanceof Model) {
-            throw new InvalidArgumentException("Eloquent repository require model class to be `Illuminate\Database\Eloquent\Model` instance.");
-        }
-
-        $this->model = $model;
+        parent::__construct(config('fintech.airtime.bangladesh_top_up_model', BangladeshTopUp::class));
     }
 
     /**
@@ -31,7 +25,6 @@ class BangladeshTopUpRepository extends OrderRepository implements InterfacesBan
      * filtered options
      *
      * @return Paginator|Collection
-     *
      * @throws BindingResolutionException
      */
     public function list(array $filters = [])

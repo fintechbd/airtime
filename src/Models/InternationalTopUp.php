@@ -2,20 +2,10 @@
 
 namespace Fintech\Airtime\Models;
 
-use Fintech\Airtime\Traits\AuthRelations;
-use Fintech\Airtime\Traits\BusinessRelations;
-use Fintech\Airtime\Traits\MetaDataRelations;
-use Fintech\Core\Abstracts\BaseModel;
-use Fintech\Core\Traits\AuditableTrait;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Fintech\Transaction\Models\Order;
 
-class InternationalTopUp extends BaseModel
+class InternationalTopUp extends Order
 {
-    use AuditableTrait;
-    use AuthRelations;
-    use BusinessRelations;
-    use MetaDataRelations;
-    use SoftDeletes;
 
     /*
     |--------------------------------------------------------------------------
@@ -23,27 +13,12 @@ class InternationalTopUp extends BaseModel
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'orders';
-
-    protected $primaryKey = 'id';
-
-    protected $guarded = ['id'];
-
-    protected $appends = ['links'];
-
-    protected $casts = ['order_data' => 'array', 'restored_at' => 'datetime'];
-
-    protected $hidden = ['creator_id', 'editor_id', 'destroyer_id', 'restorer_id'];
-
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-    public function currentStatus(): mixed
-    {
-        return $this->status;
-    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
