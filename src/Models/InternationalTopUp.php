@@ -6,7 +6,6 @@ use Fintech\Transaction\Models\Order;
 
 class InternationalTopUp extends Order
 {
-
     /*
     |--------------------------------------------------------------------------
     | GLOBAL VARIABLES

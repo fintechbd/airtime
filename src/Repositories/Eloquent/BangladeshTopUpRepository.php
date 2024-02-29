@@ -24,6 +24,7 @@ class BangladeshTopUpRepository extends OrderRepository implements InterfacesBan
      * filtered options
      *
      * @return Paginator|Collection
+     *
      * @throws BindingResolutionException
      */
     public function list(array $filters = [])
