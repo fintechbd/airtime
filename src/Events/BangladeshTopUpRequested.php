@@ -2,6 +2,7 @@
 
 namespace Fintech\Airtime\Events;
 
+use Fintech\Airtime\Models\BangladeshTopUp;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -12,12 +13,14 @@ class BangladeshTopUpRequested
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $bangladeshTopUp;
+
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct($bangladeshTopUp)
     {
-        //
+        $this->bangladeshTopUp = $bangladeshTopUp;
     }
 
     /**

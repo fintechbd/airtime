@@ -18,10 +18,6 @@ class AirtimeServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/../config/airtime.php', 'fintech.airtime'
         );
-
-        $this->app->register(RouteServiceProvider::class);
-        $this->app->register(RepositoryServiceProvider::class);
-        $this->app->register(EventServiceProvider::class);
     }
 
     /**
