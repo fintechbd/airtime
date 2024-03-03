@@ -23,12 +23,12 @@ class InternationalTopUpService
         $this->internationalTopUpRepository = $internationalTopUpRepository;
     }
 
-    public function find($id, $onlyTrashed = false): Model|Model|null
+    public function find($id, $onlyTrashed = false): Model|null
     {
         return $this->internationalTopUpRepository->find($id, $onlyTrashed);
     }
 
-    public function update($id, array $inputs = []): Model|Model|null
+    public function update($id, array $inputs = []): Model|null
     {
         return $this->internationalTopUpRepository->update($id, $inputs);
     }
@@ -54,12 +54,12 @@ class InternationalTopUpService
 
     }
 
-    public function import(array $filters): Model|Model|null
+    public function import(array $filters): Model|null
     {
         return $this->internationalTopUpRepository->create($filters);
     }
 
-    public function create(array $inputs = []): Model|Model|null
+    public function create(array $inputs = []): Model|null
     {
         return $this->internationalTopUpRepository->create($inputs);
     }
