@@ -16,31 +16,36 @@ interface BangladeshTopUpRepository
      * return a list or pagination of items from
      * filtered options
      *
+     * @param array $filters
      * @return Paginator|Collection
      */
-    public function list(array $filters = []);
+    public function list(array $filters = []): Paginator|Collection;
 
     /**
      * Create a new entry resource
      *
+     * @param array $attributes
      * @return BaseModel
      */
-    public function create(array $attributes = []);
+    public function create(array $attributes = []): BaseModel;
 
     /**
      * find and update a resource attributes
      *
+     * @param int|string $id
+     * @param array $attributes
      * @return BaseModel
      */
-    public function update(int|string $id, array $attributes = []);
+    public function update(int|string $id, array $attributes = []): BaseModel;
 
     /**
      * find and delete a entry from records
      *
-     * @param  bool  $onlyTrashed
-     * @return BaseModel
+     * @param int|string $id
+     * @param bool $onlyTrashed
+     * @return ?BaseModel
      */
-    public function find(int|string $id, $onlyTrashed = false);
+    public function find(int|string $id, $onlyTrashed = false): ?BaseModel;
 
     /**
      * find and delete a entry from records

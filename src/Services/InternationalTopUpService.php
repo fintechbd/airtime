@@ -3,10 +3,10 @@
 namespace Fintech\Airtime\Services;
 
 use Fintech\Airtime\Interfaces\InternationalTopUpRepository;
+use Fintech\Core\Abstracts\BaseModel;
 use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use MongoDB\Laravel\Eloquent\Model;
 
 /**
  * Class InternationalTopUpService
@@ -23,12 +23,12 @@ class InternationalTopUpService
         $this->internationalTopUpRepository = $internationalTopUpRepository;
     }
 
-    public function find($id, $onlyTrashed = false): ?Model
+    public function find($id, $onlyTrashed = false): ?BaseModel
     {
         return $this->internationalTopUpRepository->find($id, $onlyTrashed);
     }
 
-    public function update($id, array $inputs = []): ?Model
+    public function update($id, array $inputs = []): ?BaseModel
     {
         return $this->internationalTopUpRepository->update($id, $inputs);
     }
@@ -54,12 +54,12 @@ class InternationalTopUpService
 
     }
 
-    public function import(array $filters): ?Model
+    public function import(array $filters): ?BaseModel
     {
         return $this->internationalTopUpRepository->create($filters);
     }
 
-    public function create(array $inputs = []): ?Model
+    public function create(array $inputs = []): ?BaseModel
     {
         return $this->internationalTopUpRepository->create($inputs);
     }

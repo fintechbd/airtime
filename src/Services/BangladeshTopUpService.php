@@ -3,6 +3,7 @@
 namespace Fintech\Airtime\Services;
 
 use Fintech\Airtime\Interfaces\BangladeshTopUpRepository;
+use Fintech\Core\Abstracts\BaseModel;
 use Fintech\Transaction\Facades\Transaction;
 
 /**
@@ -13,17 +14,16 @@ class BangladeshTopUpService
     /**
      * BangladeshTopUpService constructor.
      */
-    public function __construct(BangladeshTopUpRepository $bangladeshTopUpRepository)
+    public function __construct(public BangladeshTopUpRepository $bangladeshTopUpRepository)
     {
-        $this->bangladeshTopUpRepository = $bangladeshTopUpRepository;
     }
 
-    public function find($id, $onlyTrashed = false)
+    public function find($id, $onlyTrashed = false): ?BaseModel
     {
         return $this->bangladeshTopUpRepository->find($id, $onlyTrashed);
     }
 
-    public function update($id, array $inputs = [])
+    public function update($id, array $inputs = []): BaseModel
     {
         return $this->bangladeshTopUpRepository->update($id, $inputs);
     }
