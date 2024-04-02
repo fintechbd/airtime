@@ -15,18 +15,21 @@ interface InternationalTopUpRepository
     /**
      * return a list or pagination of items from
      * filtered options
+     *
      * @return Paginator|Collection
      */
     public function list(array $filters = []);
 
     /**
      * Create a new entry resource
+     *
      * @return BaseModel
      */
     public function create(array $attributes = []);
 
     /**
      * find and update a resource attributes
+     *
      * @return BaseModel
      */
     public function update(int|string $id, array $attributes = []);
