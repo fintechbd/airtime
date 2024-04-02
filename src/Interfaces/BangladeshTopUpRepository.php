@@ -15,18 +15,21 @@ interface BangladeshTopUpRepository
     /**
      * return a list or pagination of items from
      * filtered options
+     * @return Paginator|Collection
      */
-    public function list(array $filters = []): Paginator|Collection;
+    public function list(array $filters = []);
 
     /**
      * Create a new entry resource
+     * @return BaseModel
      */
-    public function create(array $attributes = []): BaseModel;
+    public function create(array $attributes = []);
 
     /**
      * find and update a resource attributes
+     * @return BaseModel
      */
-    public function update(int|string $id, array $attributes = []): BaseModel;
+    public function update(int|string $id, array $attributes = []);
 
     /**
      * find and delete a entry from records
@@ -34,7 +37,7 @@ interface BangladeshTopUpRepository
      * @param  bool  $onlyTrashed
      * @return ?BaseModel
      */
-    public function find(int|string $id, $onlyTrashed = false): ?BaseModel;
+    public function find(int|string $id, $onlyTrashed = false);
 
     /**
      * find and delete a entry from records
