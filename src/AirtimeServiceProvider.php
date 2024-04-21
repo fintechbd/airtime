@@ -4,10 +4,13 @@ namespace Fintech\Airtime;
 
 use Fintech\Airtime\Commands\AirtimeCommand;
 use Fintech\Airtime\Commands\InstallCommand;
+use Fintech\Core\Traits\RegisterPackageTrait;
 use Illuminate\Support\ServiceProvider;
 
 class AirtimeServiceProvider extends ServiceProvider
 {
+    use RegisterPackageTrait;
+
     /**
      * Register any application services.
      *
@@ -15,6 +18,8 @@ class AirtimeServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->packageCode = 'airtime';
+
         $this->mergeConfigFrom(
             __DIR__.'/../config/airtime.php', 'fintech.airtime'
         );
@@ -28,6 +33,8 @@ class AirtimeServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->injectOnConfig();
+
         $this->publishes([
             __DIR__.'/../config/airtime.php' => config_path('fintech/airtime.php'),
         ]);
