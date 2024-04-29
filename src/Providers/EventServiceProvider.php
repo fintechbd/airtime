@@ -1,6 +1,6 @@
 <?php
 
-namespace Fintech\Airtime;
+namespace Fintech\Airtime\Providers;
 
 use Fintech\Airtime\Events\BangladeshTopUpCancelled;
 use Fintech\Airtime\Events\BangladeshTopUpCompleted;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fintech\Airtime;
+namespace Fintech\Airtime\Providers;
 
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Facades\Config;
