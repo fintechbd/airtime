@@ -35,7 +35,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Fintech\\Airtime\\": "src/"
+            "Fintech\\Airtime\\": "src/",
+            "Fintech\\Airtime\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
