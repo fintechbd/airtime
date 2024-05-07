@@ -2,7 +2,6 @@
 
 namespace Fintech\Airtime;
 
-use Fintech\Airtime\Commands\AirtimeCommand;
 use Fintech\Airtime\Commands\InstallCommand;
 use Fintech\Core\Traits\RegisterPackageTrait;
 use Illuminate\Support\ServiceProvider;
@@ -55,8 +54,7 @@ class AirtimeServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                InstallCommand::class,
-                AirtimeCommand::class,
+                InstallCommand::class
             ]);
         }
     }
