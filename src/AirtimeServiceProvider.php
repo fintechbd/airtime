@@ -25,7 +25,6 @@ class AirtimeServiceProvider extends ServiceProvider
         );
 
         $this->app->register(\Fintech\Airtime\Providers\EventServiceProvider::class);
-        $this->app->register(\Fintech\Airtime\Providers\RouteServiceProvider::class);
         $this->app->register(\Fintech\Airtime\Providers\RepositoryServiceProvider::class);
     }
 
