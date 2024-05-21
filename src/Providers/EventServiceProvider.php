@@ -12,7 +12,7 @@ use Fintech\Airtime\Events\InternationalTopUpCompleted;
 use Fintech\Airtime\Events\InternationalTopUpRefunded;
 use Fintech\Airtime\Events\InternationalTopUpRejected;
 use Fintech\Airtime\Events\InternationalTopUpRequested;
-use Fintech\Core\Listeners\Bell\TriggerListener;
+use Fintech\Core\Listeners\TriggerListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
