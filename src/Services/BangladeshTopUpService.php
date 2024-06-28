@@ -14,9 +14,7 @@ class BangladeshTopUpService
     /**
      * BangladeshTopUpService constructor.
      */
-    public function __construct(public BangladeshTopUpRepository $bangladeshTopUpRepository)
-    {
-    }
+    public function __construct(public BangladeshTopUpRepository $bangladeshTopUpRepository) {}
 
     public function find($id, $onlyTrashed = false): ?BaseModel
     {

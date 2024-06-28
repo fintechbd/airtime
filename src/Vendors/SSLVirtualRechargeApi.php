@@ -2,7 +2,4 @@
 
 namespace Fintech\Airtime\Vendors;
 
-class SSLVirtualRechargeApi
-{
-
-}
+class SSLVirtualRechargeApi {}
