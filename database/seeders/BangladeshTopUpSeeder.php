@@ -20,10 +20,10 @@ class BangladeshTopUpSeeder extends Seeder
             if (! empty($serviceTypes)) {
 
                 foreach ($this->serviceType() as $entry) {
-                    $serviceTypeChild = $entry['serviceTypeChild'] ?? [];
+                    $serviceTypeChildren = $entry['serviceTypeChildren'] ?? [];
 
-                    if (isset($entry['serviceTypeChild'])) {
-                        unset($entry['serviceTypeChild']);
+                    if (isset($entry['serviceTypeChildren'])) {
+                        unset($entry['serviceTypeChildren']);
                     }
 
                     $findServiceTypeModel = Business::serviceType()->list(['service_type_slug' => $entry['service_type_slug']])->first();
@@ -33,8 +33,8 @@ class BangladeshTopUpSeeder extends Seeder
                         $serviceTypeModel = Business::serviceType()->create($entry);
                     }
 
-                    if (! empty($serviceTypeChild)) {
-                        array_walk($serviceTypeChild, function ($item) use (&$serviceTypeModel) {
+                    if (! empty($serviceTypeChildren)) {
+                        array_walk($serviceTypeChildren, function ($item) use (&$serviceTypeModel) {
                             $item['service_type_parent_id'] = $serviceTypeModel->id;
                             Business::serviceType()->create($item);
                         });
@@ -79,7 +79,7 @@ class BangladeshTopUpSeeder extends Seeder
                     'service_type_is_description' => 'no',
                     'service_type_step' => '2',
                     'enabled' => true,
-                    'serviceTypeChild' => [
+                    'serviceTypeChildren' => [
                         [
                             'service_type_name' => 'GrameenPhone',
                             'service_type_slug' => 'grameen_phone_bd',
