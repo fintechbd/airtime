@@ -54,7 +54,7 @@ class AirtimeSeeder extends Seeder
                 'service_type_is_parent' => 'yes',
                 'service_type_is_description' => 'no',
                 'service_type_step' => '1',
-                'enabled' => true
+                'enabled' => true,
             ],
         ];
     }
