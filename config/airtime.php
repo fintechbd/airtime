@@ -91,7 +91,6 @@ return [
                     'utility_auth_key' => 'VR15310355096848',
                     'utility_secret_key' => 'szbrpaBFunmpNBZ0',
                 ],
-
             ]
         ],
     ],
