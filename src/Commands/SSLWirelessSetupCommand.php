@@ -5,9 +5,9 @@ namespace Fintech\Airtime\Commands;
 use Fintech\Core\Facades\Core;
 use Illuminate\Console\Command;
 
-class SSLVRSetupCommand extends Command
+class SSLWirelessSetupCommand extends Command
 {
-    public $signature = 'airtime:ssvr-setup';
+    public $signature = 'airtime:sslwireless-setup';
 
     public $description = 'install/update required fields for SSL Wireless utility api';
 
