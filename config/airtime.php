@@ -57,7 +57,7 @@ return [
     | This value will be used across systems where a repository instance is needed
     */
     'providers' => [
-        'sslvr' => [
+        'sslwireless' => [
             'mode' => 'sandbox',
             'driver' => Fintech\Airtime\Vendors\SSLVirtualRecharge::class,
             'live' => [
