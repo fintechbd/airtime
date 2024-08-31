@@ -140,17 +140,6 @@ class SSLVirtualRecharge implements AirtimeTransfer
             ]);
     }
 
-    private function get($url = '', $payload = [])
-    {
-        return $this->client->get($url, $payload)->json();
-
-    }
-
-    private function post($url = '', $payload = [])
-    {
-        return $this->client->post($url, $payload)->json();
-    }
-
     /**
      * Method to make a request to the topup service provider
      * for a quotation of the order. that include charge, fee,
@@ -164,13 +153,18 @@ class SSLVirtualRecharge implements AirtimeTransfer
             'transaction_id' => $order->order_data[''],
             'operator_id' => self::OPERATORS[$order->order_data['']],
             'recipient_msisdn' => str_replace('+88', '', $order->order_data['']),
-            'amount' => (int) $order->amount,
+            'amount' => (int)$order->amount,
             'connection_type' => self::CONNECTION_TYPE[$order->order_data['']],
             'utility_auth_key' => $this->options[$order->order_data['']]['utility_auth_key'],
             'utility_secret_key' => $this->options[$order->order_data['']]['utility_secret_key'],
         ];
 
         return $this->post('/bill-info', $params);
+    }
+
+    private function post($url = '', $payload = [])
+    {
+        return $this->client->post($url, $payload)->json();
     }
 
     /**
@@ -239,5 +233,11 @@ class SSLVirtualRecharge implements AirtimeTransfer
         ];
 
         return $this->post('/bill-cancel', $params);
+    }
+
+    private function get($url = '', $payload = [])
+    {
+        return $this->client->get($url, $payload)->json();
+
     }
 }
