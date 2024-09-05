@@ -2,6 +2,7 @@
 
 namespace Fintech\Airtime\Vendors;
 
+use ErrorException;
 use Fintech\Airtime\Contracts\AirtimeTransfer;
 use Fintech\Core\Abstracts\BaseModel;
 use Illuminate\Http\Client\PendingRequest;
@@ -145,7 +146,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
      * for a quotation of the order. that include charge, fee,
      * commission and other information related to order.
      *
-     * @throws \ErrorException
+     * @throws ErrorException
      */
     public function requestQuote(BaseModel $order): mixed
     {
@@ -153,7 +154,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
             'transaction_id' => $order->order_data[''],
             'operator_id' => self::OPERATORS[$order->order_data['']],
             'recipient_msisdn' => str_replace('+88', '', $order->order_data['']),
-            'amount' => (int) $order->amount,
+            'amount' => (int)$order->amount,
             'connection_type' => self::CONNECTION_TYPE[$order->order_data['']],
             'utility_auth_key' => $this->options[$order->order_data['']]['utility_auth_key'],
             'utility_secret_key' => $this->options[$order->order_data['']]['utility_secret_key'],
@@ -171,7 +172,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
      * Method to make a request to the topup service provider
      * for an execution of the order.
      *
-     * @throws \ErrorException
+     * @throws ErrorException
      */
     public function executeOrder(BaseModel $order): mixed
     {
@@ -188,7 +189,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
      * Method to make a request to the topup service provider
      * for the progress status of the order.
      *
-     * @throws \ErrorException
+     * @throws ErrorException
      */
     public function orderStatus(BaseModel $order): mixed
     {
@@ -205,7 +206,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
      * Method to make a request to the topup service provider
      * for the track real-time progress of the order.
      *
-     * @throws \ErrorException
+     * @throws ErrorException
      */
     public function trackOrder(BaseModel $order): mixed
     {
@@ -222,7 +223,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
      * Method to make a request to the topup service provider
      * for the cancellation of the order.
      *
-     * @throws \ErrorException
+     * @throws ErrorException
      */
     public function cancelOrder(BaseModel $order): mixed
     {

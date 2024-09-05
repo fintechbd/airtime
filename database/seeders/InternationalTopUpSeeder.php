@@ -20,7 +20,7 @@ class InternationalTopUpSeeder extends Seeder
 
             $serviceTypes = $this->serviceType();
 
-            if (! empty($serviceTypes)) {
+            if (!empty($serviceTypes)) {
                 foreach ($serviceTypes as $entry) {
                     $serviceTypeChildren = $entry['serviceTypeChildren'] ?? [];
 
@@ -35,7 +35,7 @@ class InternationalTopUpSeeder extends Seeder
                         $serviceTypeModel = Business::serviceType()->create($entry);
                     }
 
-                    if (! empty($serviceTypeChildren)) {
+                    if (!empty($serviceTypeChildren)) {
                         array_walk($serviceTypeChildren, function ($item) use (&$serviceTypeModel) {
                             $item['service_type_parent_id'] = $serviceTypeModel->id;
                             Business::serviceType()->create($item);
@@ -65,24 +65,24 @@ class InternationalTopUpSeeder extends Seeder
 
     private function serviceType(): array
     {
-        $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';
-        $image_png = __DIR__.'/../../resources/img/service_type/logo_png/';
+        $image_svg = __DIR__ . '/../../resources/img/service_type/logo_svg/';
+        $image_png = __DIR__ . '/../../resources/img/service_type/logo_png/';
 
         return [
             [
                 'service_type_parent_id' => Business::serviceType()->list(['service_type_slug' => 'air_time'])->first()->id,
                 'service_type_name' => 'International Top Up',
                 'service_type_slug' => 'international_top_up',
-                'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents($image_svg.'international_top_up.svg')),
-                'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents($image_png.'international_top_up.png')),
+                'logo_svg' => 'data:image/svg+xml;base64,' . base64_encode(file_get_contents($image_svg . 'international_top_up.svg')),
+                'logo_png' => 'data:image/png;base64,' . base64_encode(file_get_contents($image_png . 'international_top_up.png')),
                 'service_type_is_parent' => 'no', 'service_type_is_description' => 'no', 'service_type_step' => '2', 'enabled' => true],
         ];
     }
 
     private function service(): array
     {
-        $image_svg = __DIR__.'/../../resources/img/service/logo_svg/';
-        $image_png = __DIR__.'/../../resources/img/service/logo_png/';
+        $image_svg = __DIR__ . '/../../resources/img/service/logo_svg/';
+        $image_png = __DIR__ . '/../../resources/img/service/logo_png/';
 
         return [
             [
@@ -90,8 +90,8 @@ class InternationalTopUpSeeder extends Seeder
                 'service_vendor_id' => 1,
                 'service_name' => 'International Top Up',
                 'service_slug' => 'international_top_up',
-                'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents($image_svg.'international_top_up.svg')),
-                'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents($image_png.'international_top_up.png')),
+                'logo_svg' => 'data:image/svg+xml;base64,' . base64_encode(file_get_contents($image_svg . 'international_top_up.svg')),
+                'logo_png' => 'data:image/png;base64,' . base64_encode(file_get_contents($image_png . 'international_top_up.png')),
                 'service_notification' => 'yes',
                 'service_delay' => 'yes',
                 'service_stat_policy' => 'yes',
