@@ -24,16 +24,16 @@ class InternationalTopUpSeeder extends Seeder
         }
     }
 
-
     private function data(): array
     {
-        $image_svg = __DIR__ . '/../../resources/img/service_type/logo_svg/';
-        $image_png = __DIR__ . '/../../resources/img/service_type/logo_png/';
+        $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';
+        $image_png = __DIR__.'/../../resources/img/service_type/logo_png/';
+
         return [
             'service_type_name' => 'International Top Up',
             'service_type_slug' => 'international_top_up',
-            'logo_svg' => $image_svg . 'international_top_up.svg',
-            'logo_png' => $image_png . 'international_top_up.png',
+            'logo_svg' => $image_svg.'international_top_up.svg',
+            'logo_png' => $image_png.'international_top_up.png',
             'service_type_is_parent' => 'no',
             'service_type_is_description' => 'no',
         ];
