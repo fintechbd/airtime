@@ -131,7 +131,6 @@ class SSLVirtualRecharge implements AirtimeTransfer
      * Method to make a request to the topup service provider
      * for a quotation of the order. that include charge, fee,
      * commission and other information related to order.
-     *
      */
     public function requestQuote(BaseModel $order): mixed
     {
@@ -142,7 +141,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
 
         $params = [
             'transaction_id' => $order->order_data[''],
-            'operator_id' =>  $params['operator_short_code'],
+            'operator_id' => $params['operator_short_code'],
             'recipient_msisdn' => str_replace('+88', '', $params['recipient_msisdn']),
             'amount' => (int) $params['amount'],
             'connection_type' => $params['connection_type'],
