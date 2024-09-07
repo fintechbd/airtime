@@ -11,7 +11,7 @@ class InternationalTopUpSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(array ...$countries): void
+    public function run(...$countries): void
     {
         if (Core::packageExists('Business')) {
 
