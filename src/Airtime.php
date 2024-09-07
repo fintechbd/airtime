@@ -2,6 +2,7 @@
 
 namespace Fintech\Airtime;
 
+use Fintech\Airtime\Services\AssignVendorService;
 use Fintech\Airtime\Services\BangladeshTopUpService;
 use Fintech\Airtime\Services\InternationalTopUpService;
 
@@ -21,6 +22,11 @@ class Airtime
     public function internationalTopUp()
     {
         return app(InternationalTopUpService::class);
+    }
+
+    public function assignVendor(): AssignVendorService
+    {
+        return app(AssignVendorService::class);
     }
 
     //** Crud Service Method Point Do not Remove **//

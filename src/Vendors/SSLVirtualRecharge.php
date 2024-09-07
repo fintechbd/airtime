@@ -4,25 +4,13 @@ namespace Fintech\Airtime\Vendors;
 
 use ErrorException;
 use Fintech\Airtime\Contracts\AirtimeTransfer;
+use Fintech\Business\Facades\Business;
 use Fintech\Core\Abstracts\BaseModel;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
 class SSLVirtualRecharge implements AirtimeTransfer
 {
-    const OPERATORS = [
-        'grameenphone' => 1,
-        'banglalink' => 2,
-        'robi' => 3,
-        'teletalk' => 5,
-        'airtel' => 6,
-    ];
-
-    const CONNECTION_TYPE = [
-        'prepaid' => 'prepaid',
-        'postpaid' => 'postpaid',
-    ];
-
     const ERROR_MESSAGES = [
         100 => 'The Recharge request has been created but is waiting for initiation.',
         200 => 'Recharge request has been initiated for processing.',
@@ -129,8 +117,6 @@ class SSLVirtualRecharge implements AirtimeTransfer
             $this->status = 'live';
         }
 
-        $this->options = $this->config['options'];
-
         $this->client = Http::withoutVerifying()
             ->baseUrl($this->apiUrl)
             ->acceptJson()
@@ -146,19 +132,39 @@ class SSLVirtualRecharge implements AirtimeTransfer
      * for a quotation of the order. that include charge, fee,
      * commission and other information related to order.
      *
-     * @throws ErrorException
      */
     public function requestQuote(BaseModel $order): mixed
     {
+        $params = $order->order_data['airtime_data'];
+        $params['transaction_id'] = $order->order_number;
+        $params['utility_auth_key'] = '';
+        $params['utility_secret_key'] = '';
+
         $params = [
             'transaction_id' => $order->order_data[''],
-            'operator_id' => self::OPERATORS[$order->order_data['']],
-            'recipient_msisdn' => str_replace('+88', '', $order->order_data['']),
-            'amount' => (int) $order->amount,
-            'connection_type' => self::CONNECTION_TYPE[$order->order_data['']],
+            'operator_id' =>  $params['operator_short_code'],
+            'recipient_msisdn' => str_replace('+88', '', $params['recipient_msisdn']),
+            'amount' => (int) $params['amount'],
+            'connection_type' => $params['connection_type'],
             'utility_auth_key' => $this->options[$order->order_data['']]['utility_auth_key'],
             'utility_secret_key' => $this->options[$order->order_data['']]['utility_secret_key'],
         ];
+
+        $serviceStat = Business::serviceStat()->list([
+            'role_id' => $order->order_data['service_stat_data']['role_id'],
+            'service_id' => $order->order_data['service_stat_data']['service_id'],
+            'source_country_id' => $order->order_data['service_stat_data']['source_country_id'],
+            'destination_country_id' => $order->order_data['service_stat_data']['destination_country_id'],
+            'service_vendor_id' => $order->order_data['service_stat_data']['service_vendor_id'],
+            'enabled' => true,
+            'paginate' => false,
+        ])->first();
+
+        if ($serviceStat) {
+            $serviceStatData = $serviceStat->service_stat_data[0] ?? [];
+            $params['utility_auth_key'] = $serviceStatData['utility_auth_key'] ?? null;
+            $params['utility_secret_key'] = $serviceStatData['utility_secret_key'] ?? null;
+        }
 
         return $this->post('/bill-info', $params);
     }

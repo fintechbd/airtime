@@ -1,13 +1,13 @@
 <?php
 
-namespace Fintech\Tab\Services;
+namespace Fintech\Airtime\Services;
 
 use ErrorException;
+use Fintech\Airtime\Contracts\AirtimeTransfer;
 use Fintech\Business\Facades\Business;
 use Fintech\Core\Abstracts\BaseModel;
 use Fintech\Core\Enums\Transaction\OrderStatus;
 use Fintech\Core\Exceptions\UpdateOperationException;
-use Fintech\Tab\Contracts\BillPayment;
 use Fintech\Tab\Exceptions\TabException;
 use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -17,7 +17,7 @@ class AssignVendorService
 {
     private BaseModel $serviceVendorModel;
 
-    private BillPayment $serviceVendorDriver;
+    private AirtimeTransfer $serviceVendorDriver;
 
     /**
      * @throws TabException
