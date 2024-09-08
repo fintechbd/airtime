@@ -50,7 +50,8 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_secret_key' => 'zKDSu0MJ2qWcRiI8',
                 ],
                 'service_settings' => [
-                    'operator_prefix' => '17'
+                    'operator_prefix' => '17',
+                    'amount_range' => '20,100,200,400'
                 ]
             ],
             [
@@ -67,7 +68,8 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_secret_key' => 'fyj8yjmgvJlI9ou8',
                 ],
                 'service_settings' => [
-                    'operator_prefix' => '16'
+                    'operator_prefix' => '16',
+                    'amount_range' => '20,100,200,400'
                 ]
             ],
             [
@@ -84,7 +86,8 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_secret_key' => 'fXJ0gotvoVHnyY3M',
                 ],
                 'service_settings' => [
-                    'operator_prefix' => '18'
+                    'operator_prefix' => '18',
+                    'amount_range' => '20,100,200,400'
                 ]
             ],
             [
@@ -101,7 +104,8 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_secret_key' => 'szbrpaBFunmpNBZ0',
                 ],
                 'service_settings' => [
-                    'operator_prefix' => '15'
+                    'operator_prefix' => '15',
+                    'amount_range' => '20,100,200,400'
                 ]
             ],
             [
@@ -114,10 +118,12 @@ class ServiceOperatorSeeder extends Seeder
                 'service_type_step' => '3',
                 'enabled' => true,
                 'service_stat_data' => [
-                    'utility_auth_key' => '', 'utility_secret_key' => '',
+                    'utility_auth_key' => '',
+                    'utility_secret_key' => '',
                 ],
                 'service_settings' => [
-                    'operator_prefix' => '13'
+                    'operator_prefix' => '13',
+                    'amount_range' => '20,100,200,400'
                 ]
             ],
             [
@@ -134,7 +140,8 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_secret_key' => 'MvJhdoFWAcf8ZkEi',
                 ],
                 'service_settings' => [
-                    'operator_prefix' => '19'
+                    'operator_prefix' => '19',
+                    'amount_range' => '20,100,200,400'
                 ]
             ],
         ];

@@ -53,19 +53,33 @@ class InstallCommand extends Command
     {
         $this->components->task("[<fg=yellow;options=bold>{$this->module}</>] Populating service setting data", function () {
 
-            $entry = [
-                'service_setting_type' => 'service',
-                'service_setting_name' => 'Operator Number Prefix',
-                'service_setting_field_name' => 'operator_prefix',
-                'service_setting_type_field' => 'text',
-                'service_setting_feature' => 'Operator Number Prefix',
-                'service_setting_rule' => 'string|nullable|size:2',
-                'service_setting_value' => '',
-                'enabled' => true
+            $entries = [
+                [
+                    'service_setting_type' => 'service',
+                    'service_setting_name' => 'Operator Number Prefix',
+                    'service_setting_field_name' => 'operator_prefix',
+                    'service_setting_type_field' => 'text',
+                    'service_setting_feature' => 'Operator Number Prefix',
+                    'service_setting_rule' => 'string|nullable|size:2',
+                    'service_setting_value' => '',
+                    'enabled' => true
+                ],
+                [
+                    'service_setting_type' => 'service',
+                    'service_setting_name' => 'Operator Amount Range',
+                    'service_setting_field_name' => 'amount_range',
+                    'service_setting_type_field' => 'text',
+                    'service_setting_feature' => 'Operator Amount Range',
+                    'service_setting_rule' => 'string|max:255',
+                    'service_setting_value' => '20,100,200,400',
+                    'enabled' => true
+                ],
             ];
 
-            if (Business::serviceSetting()->list(['service_setting_field_name' => 'operator_prefix'])->isEmpty()) {
-                Business::serviceSetting()->create($entry);
+            foreach ($entries as $entry) {
+                if (Business::serviceSetting()->list(['service_setting_field_name' => $entry['service_setting_field_name']])->isEmpty()) {
+                    Business::serviceSetting()->create($entry);
+                }
             }
         });
 
