@@ -137,6 +137,8 @@ class SSLVirtualRecharge implements AirtimeTransfer
     public function requestQuote(BaseModel $order): mixed
     {
         $params = $order->order_data['airtime_data'];
+        $params['amount'] = intval($params['amount']);
+        $params['recipient_msisdn'] = str_replace(['+88', '88'], '', $params['recipient_msisdn']);
         $params['transaction_id'] = $order->order_number;
         $params['utility_auth_key'] = '';
         $params['utility_secret_key'] = '';
@@ -164,15 +166,15 @@ class SSLVirtualRecharge implements AirtimeTransfer
     {
         $response = $this->client->post($url, $payload)->json();
 
-        if ($response['status'] == 'api_success') {
+        if ($response['status'] == 'error') {
             return [
                 'status' => true,
-                'amount' => $response['data']['total_amount'],
+                'amount' => $response['data']['total_amount'] ?? $payload['amount'],
                 'message' => self::ERROR_MESSAGES[$response['status_code']],
                 'origin_message' => $response,
                 'data' => [
-                    'bill_amount' => $response['data']['bill_amount'],
-                    'total_amount' => $response['data']['total_amount'],
+                    'bill_amount' => $response['data']['bill_amount'] ?? $payload['amount'],
+                    'total_amount' => $response['data']['total_amount'] ?? $payload['amount'],
                 ]
             ];
         }
