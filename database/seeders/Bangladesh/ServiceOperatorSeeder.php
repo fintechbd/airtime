@@ -49,6 +49,9 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_auth_key' => 'VR15208384253881',
                     'utility_secret_key' => 'zKDSu0MJ2qWcRiI8',
                 ],
+                'service_settings' => [
+                    'operator_prefix' => '17'
+                ]
             ],
             [
                 'service_type_name' => 'Airtel',
@@ -63,6 +66,9 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_auth_key' => 'VR15310354477640',
                     'utility_secret_key' => 'fyj8yjmgvJlI9ou8',
                 ],
+                'service_settings' => [
+                    'operator_prefix' => '16'
+                ]
             ],
             [
                 'service_type_name' => 'Robi',
@@ -77,6 +83,9 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_auth_key' => 'VR15310354922071',
                     'utility_secret_key' => 'fXJ0gotvoVHnyY3M',
                 ],
+                'service_settings' => [
+                    'operator_prefix' => '18'
+                ]
             ],
             [
                 'service_type_name' => 'Teletalk',
@@ -91,6 +100,9 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_auth_key' => 'VR15310355096848',
                     'utility_secret_key' => 'szbrpaBFunmpNBZ0',
                 ],
+                'service_settings' => [
+                    'operator_prefix' => '15'
+                ]
             ],
             [
                 'service_type_name' => 'GP Skitto',
@@ -104,6 +116,9 @@ class ServiceOperatorSeeder extends Seeder
                 'service_stat_data' => [
                     'utility_auth_key' => '', 'utility_secret_key' => '',
                 ],
+                'service_settings' => [
+                    'operator_prefix' => '13'
+                ]
             ],
             [
                 'service_type_name' => 'Banglalink',
@@ -118,6 +133,9 @@ class ServiceOperatorSeeder extends Seeder
                     'utility_auth_key' => 'VR15310354624794',
                     'utility_secret_key' => 'MvJhdoFWAcf8ZkEi',
                 ],
+                'service_settings' => [
+                    'operator_prefix' => '19'
+                ]
             ],
         ];
     }
