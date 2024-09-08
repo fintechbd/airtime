@@ -52,8 +52,8 @@ class ServiceOperatorSeeder extends Seeder
                 'service_settings' => [
                     'operator_prefix' => '17',
                     'amount_range' => '20,100,200,400',
-                    'operator_short_code' => '1'
-                ]
+                    'operator_short_code' => '1',
+                ],
             ],
             [
                 'service_type_name' => 'Banglalink',
@@ -71,8 +71,8 @@ class ServiceOperatorSeeder extends Seeder
                 'service_settings' => [
                     'operator_prefix' => '19',
                     'amount_range' => '20,100,200,400',
-                    'operator_short_code' => '2'
-                ]
+                    'operator_short_code' => '2',
+                ],
             ],
             [
                 'service_type_name' => 'Robi',
@@ -90,8 +90,8 @@ class ServiceOperatorSeeder extends Seeder
                 'service_settings' => [
                     'operator_prefix' => '18',
                     'amount_range' => '20,100,200,400',
-                    'operator_short_code' => '3'
-                ]
+                    'operator_short_code' => '3',
+                ],
             ],
 
             [
@@ -110,8 +110,8 @@ class ServiceOperatorSeeder extends Seeder
                 'service_settings' => [
                     'operator_prefix' => '15',
                     'amount_range' => '20,100,200,400',
-                    'operator_short_code' => '5'
-                ]
+                    'operator_short_code' => '5',
+                ],
             ],
             [
                 'service_type_name' => 'Airtel',
@@ -129,8 +129,8 @@ class ServiceOperatorSeeder extends Seeder
                 'service_settings' => [
                     'operator_prefix' => '16',
                     'amount_range' => '20,100,200,400',
-                    'operator_short_code' => '6'
-                ]
+                    'operator_short_code' => '6',
+                ],
             ],
             [
                 'service_type_name' => 'GP Skitto',
@@ -148,9 +148,9 @@ class ServiceOperatorSeeder extends Seeder
                 'service_settings' => [
                     'operator_prefix' => '13',
                     'amount_range' => '20,100,200,400',
-                    'operator_short_code' => '13'
-                ]
-            ]
+                    'operator_short_code' => '13',
+                ],
+            ],
         ];
     }
 }

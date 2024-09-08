@@ -16,9 +16,9 @@ class InstallCommand extends Command
 
     private string $module = 'Airtime';
 
-    private string $image_svg = __DIR__ . '/../../resources/img/service_type/logo_svg/';
+    private string $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';
 
-    private string $image_png = __DIR__ . '/../../resources/img/service_type/logo_png/';
+    private string $image_png = __DIR__.'/../../resources/img/service_type/logo_png/';
 
     public function handle(): int
     {
@@ -62,7 +62,7 @@ class InstallCommand extends Command
                     'service_setting_feature' => 'Operator Number Prefix',
                     'service_setting_rule' => 'string|nullable|size:2',
                     'service_setting_value' => '',
-                    'enabled' => true
+                    'enabled' => true,
                 ],
                 [
                     'service_setting_type' => 'service',
@@ -72,7 +72,7 @@ class InstallCommand extends Command
                     'service_setting_feature' => 'Operator Amount Range',
                     'service_setting_rule' => 'string|max:255',
                     'service_setting_value' => '20,100,200,400',
-                    'enabled' => true
+                    'enabled' => true,
                 ],
             ];
 
