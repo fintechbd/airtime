@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Http;
 class SSLVirtualRecharge implements AirtimeTransfer
 {
     const ERROR_MESSAGES = [
+        000 => 'API response success from utility',
         100 => 'The Recharge request has been created but is waiting for initiation.',
         200 => 'Recharge request has been initiated for processing.',
         201 => 'Processing has started.',
@@ -76,6 +77,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
         398 => 'General Exception.',
         399 => 'Unknown Status due to Technical fault or any other general or critical error.',
         400 => 'This Recharge has been canceled by the client.',
+        403 => 'Forbidden.',
         800 => 'Test Successful Recharge. Recharge is marked as complete for testing purpose.',
         900 => 'Successful Recharge.',
         999 => 'Other.',
@@ -106,7 +108,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
      */
     public function __construct()
     {
-        $this->config = config('fintech.airtime.providers.ssvr');
+        $this->config = config('fintech.airtime.providers.sslwireless');
 
         if ($this->config['mode'] === 'sandbox') {
             $this->apiUrl = $this->config[$this->status]['endpoint'];
@@ -139,16 +141,6 @@ class SSLVirtualRecharge implements AirtimeTransfer
         $params['utility_auth_key'] = '';
         $params['utility_secret_key'] = '';
 
-        $params = [
-            'transaction_id' => $order->order_data[''],
-            'operator_id' => $params['operator_short_code'],
-            'recipient_msisdn' => str_replace('+88', '', $params['recipient_msisdn']),
-            'amount' => (int) $params['amount'],
-            'connection_type' => $params['connection_type'],
-            'utility_auth_key' => $this->options[$order->order_data['']]['utility_auth_key'],
-            'utility_secret_key' => $this->options[$order->order_data['']]['utility_secret_key'],
-        ];
-
         $serviceStat = Business::serviceStat()->list([
             'role_id' => $order->order_data['service_stat_data']['role_id'],
             'service_id' => $order->order_data['service_stat_data']['service_id'],
@@ -170,7 +162,31 @@ class SSLVirtualRecharge implements AirtimeTransfer
 
     private function post($url = '', $payload = [])
     {
-        return $this->client->post($url, $payload)->json();
+        $response = $this->client->post($url, $payload)->json();
+
+        if ($response['status'] == 'api_success') {
+            return [
+                'status' => true,
+                'amount' => $response['data']['total_amount'],
+                'message' => self::ERROR_MESSAGES[$response['status_code']],
+                'origin_message' => $response,
+                'data' => [
+                    'bill_amount' => $response['data']['bill_amount'],
+                    'total_amount' => $response['data']['total_amount'],
+                ]
+            ];
+        }
+
+        return [
+            'status' => false,
+            'amount' => null,
+            'message' => self::ERROR_MESSAGES[$response['status_code']],
+            'origin_message' => $response,
+            'data' => [
+                'bill_amount' => null,
+                'total_amount' => null,
+            ]
+        ];
     }
 
     /**
