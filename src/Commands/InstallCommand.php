@@ -16,13 +16,15 @@ class InstallCommand extends Command
 
     private string $module = 'Airtime';
 
-    private string $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';
+    private string $image_svg = __DIR__ . '/../../resources/img/service_type/logo_svg/';
 
-    private string $image_png = __DIR__.'/../../resources/img/service_type/logo_png/';
+    private string $image_png = __DIR__ . '/../../resources/img/service_type/logo_png/';
 
     public function handle(): int
     {
         $this->addDefaultServiceTypes();
+
+        $this->addServiceSettings();
 
         $this->components->twoColumnDetail("[<fg=yellow;options=bold>{$this->module}</>] Installation", '<fg=green;options=bold>COMPLETED</>');
 
@@ -45,5 +47,27 @@ class InstallCommand extends Command
 
             Business::serviceTypeManager($entry)->execute();
         });
+    }
+
+    private function addServiceSettings(): void
+    {
+        $this->components->task("[<fg=yellow;options=bold>{$this->module}</>] Populating service setting data", function () {
+
+            $entry = [
+                'service_setting_type' => 'service',
+                'service_setting_name' => 'Operator Number Prefix',
+                'service_setting_field_name' => 'operator_prefix',
+                'service_setting_type_field' => 'text',
+                'service_setting_feature' => 'Operator Number Prefix',
+                'service_setting_rule' => 'string|nullable|size:2',
+                'service_setting_value' => '',
+                'enabled' => true
+            ];
+
+            if (Business::serviceSetting()->list(['service_setting_field_name' => 'operator_prefix'])->isEmpty()) {
+                Business::serviceSetting()->create($entry);
+            }
+        });
+
     }
 }
