@@ -51,79 +51,8 @@ class ServiceOperatorSeeder extends Seeder
                 ],
                 'service_settings' => [
                     'operator_prefix' => '17',
-                    'amount_range' => '20,100,200,400'
-                ]
-            ],
-            [
-                'service_type_name' => 'Airtel',
-                'service_type_slug' => 'airtel_bd',
-                'logo_svg' => $image_svg.'airtel_bd.svg',
-                'logo_png' => $image_png.'airtel_bd.png',
-                'service_type_is_parent' => 'no',
-                'service_type_is_description' => 'no',
-                'service_type_step' => '3',
-                'enabled' => true,
-                'service_stat_data' => [
-                    'utility_auth_key' => 'VR15310354477640',
-                    'utility_secret_key' => 'fyj8yjmgvJlI9ou8',
-                ],
-                'service_settings' => [
-                    'operator_prefix' => '16',
-                    'amount_range' => '20,100,200,400'
-                ]
-            ],
-            [
-                'service_type_name' => 'Robi',
-                'service_type_slug' => 'robi_bd',
-                'logo_svg' => $image_svg.'robi_bd.svg',
-                'logo_png' => $image_png.'robi_bd.png',
-                'service_type_is_parent' => 'no',
-                'service_type_is_description' => 'no',
-                'service_type_step' => '3',
-                'enabled' => true,
-                'service_stat_data' => [
-                    'utility_auth_key' => 'VR15310354922071',
-                    'utility_secret_key' => 'fXJ0gotvoVHnyY3M',
-                ],
-                'service_settings' => [
-                    'operator_prefix' => '18',
-                    'amount_range' => '20,100,200,400'
-                ]
-            ],
-            [
-                'service_type_name' => 'Teletalk',
-                'service_type_slug' => 'teletalk_bd',
-                'logo_svg' => $image_svg.'teletalk_bd.svg',
-                'logo_png' => $image_png.'teletalk_bd.png',
-                'service_type_is_parent' => 'no',
-                'service_type_is_description' => 'no',
-                'service_type_step' => '3',
-                'enabled' => true,
-                'service_stat_data' => [
-                    'utility_auth_key' => 'VR15310355096848',
-                    'utility_secret_key' => 'szbrpaBFunmpNBZ0',
-                ],
-                'service_settings' => [
-                    'operator_prefix' => '15',
-                    'amount_range' => '20,100,200,400'
-                ]
-            ],
-            [
-                'service_type_name' => 'GP Skitto',
-                'service_type_slug' => 'gp_skitto_bd',
-                'logo_svg' => $image_svg.'gp_skitto_bd.svg',
-                'logo_png' => $image_png.'gp_skitto_bd.png',
-                'service_type_is_parent' => 'no',
-                'service_type_is_description' => 'no',
-                'service_type_step' => '3',
-                'enabled' => true,
-                'service_stat_data' => [
-                    'utility_auth_key' => '',
-                    'utility_secret_key' => '',
-                ],
-                'service_settings' => [
-                    'operator_prefix' => '13',
-                    'amount_range' => '20,100,200,400'
+                    'amount_range' => '20,100,200,400',
+                    'operator_short_code' => '1'
                 ]
             ],
             [
@@ -141,9 +70,87 @@ class ServiceOperatorSeeder extends Seeder
                 ],
                 'service_settings' => [
                     'operator_prefix' => '19',
-                    'amount_range' => '20,100,200,400'
+                    'amount_range' => '20,100,200,400',
+                    'operator_short_code' => '2'
                 ]
             ],
+            [
+                'service_type_name' => 'Robi',
+                'service_type_slug' => 'robi_bd',
+                'logo_svg' => $image_svg.'robi_bd.svg',
+                'logo_png' => $image_png.'robi_bd.png',
+                'service_type_is_parent' => 'no',
+                'service_type_is_description' => 'no',
+                'service_type_step' => '3',
+                'enabled' => true,
+                'service_stat_data' => [
+                    'utility_auth_key' => 'VR15310354922071',
+                    'utility_secret_key' => 'fXJ0gotvoVHnyY3M',
+                ],
+                'service_settings' => [
+                    'operator_prefix' => '18',
+                    'amount_range' => '20,100,200,400',
+                    'operator_short_code' => '3'
+                ]
+            ],
+
+            [
+                'service_type_name' => 'Teletalk',
+                'service_type_slug' => 'teletalk_bd',
+                'logo_svg' => $image_svg.'teletalk_bd.svg',
+                'logo_png' => $image_png.'teletalk_bd.png',
+                'service_type_is_parent' => 'no',
+                'service_type_is_description' => 'no',
+                'service_type_step' => '3',
+                'enabled' => true,
+                'service_stat_data' => [
+                    'utility_auth_key' => 'VR15310355096848',
+                    'utility_secret_key' => 'szbrpaBFunmpNBZ0',
+                ],
+                'service_settings' => [
+                    'operator_prefix' => '15',
+                    'amount_range' => '20,100,200,400',
+                    'operator_short_code' => '5'
+                ]
+            ],
+            [
+                'service_type_name' => 'Airtel',
+                'service_type_slug' => 'airtel_bd',
+                'logo_svg' => $image_svg.'airtel_bd.svg',
+                'logo_png' => $image_png.'airtel_bd.png',
+                'service_type_is_parent' => 'no',
+                'service_type_is_description' => 'no',
+                'service_type_step' => '3',
+                'enabled' => true,
+                'service_stat_data' => [
+                    'utility_auth_key' => 'VR15310354477640',
+                    'utility_secret_key' => 'fyj8yjmgvJlI9ou8',
+                ],
+                'service_settings' => [
+                    'operator_prefix' => '16',
+                    'amount_range' => '20,100,200,400',
+                    'operator_short_code' => '6'
+                ]
+            ],
+            [
+                'service_type_name' => 'GP Skitto',
+                'service_type_slug' => 'gp_skitto_bd',
+                'logo_svg' => $image_svg.'gp_skitto_bd.svg',
+                'logo_png' => $image_png.'gp_skitto_bd.png',
+                'service_type_is_parent' => 'no',
+                'service_type_is_description' => 'no',
+                'service_type_step' => '3',
+                'enabled' => true,
+                'service_stat_data' => [
+                    'utility_auth_key' => '',
+                    'utility_secret_key' => '',
+                ],
+                'service_settings' => [
+                    'operator_prefix' => '13',
+                    'amount_range' => '20,100,200,400',
+                    'operator_short_code' => '13'
+                ]
+            ]
         ];
     }
 }
