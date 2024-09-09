@@ -106,7 +106,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
                 'data' => [
                     'bill_amount' => $response['data']['bill_amount'] ?? $payload['amount'],
                     'total_amount' => $response['data']['total_amount'] ?? $payload['amount'],
-                ]
+                ],
             ];
         }
 
@@ -118,7 +118,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
             'data' => [
                 'bill_amount' => null,
                 'total_amount' => null,
-            ]
+            ],
         ];
     }
 
