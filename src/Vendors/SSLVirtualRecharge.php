@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Http;
 
 class SSLVirtualRecharge implements AirtimeTransfer
 {
-    use SSLWirelessErrorMessage;
-
     /**
      * SSLVirtualRecharge configuration.
      *
@@ -97,28 +95,20 @@ class SSLVirtualRecharge implements AirtimeTransfer
     {
         $response = $this->client->post($url, $payload)->json();
 
-        if ($response['status'] == 'error') {
+        if ($response['status'] == 'api_success') {
             return [
                 'status' => true,
-                'amount' => $response['data']['total_amount'] ?? $payload['amount'],
-                'message' => $this->errorMessage($response['status_code']),
+                'amount' => intval($response['data']['total_amount']),
+                'message' => $response['status_title'] ?? null,
                 'origin_message' => $response,
-                'data' => [
-                    'bill_amount' => $response['data']['bill_amount'] ?? $payload['amount'],
-                    'total_amount' => $response['data']['total_amount'] ?? $payload['amount'],
-                ],
             ];
         }
 
         return [
             'status' => false,
             'amount' => null,
-            'message' => $this->errorMessage($response['status_code']),
-            'origin_message' => $response,
-            'data' => [
-                'bill_amount' => null,
-                'total_amount' => null,
-            ],
+            'message' => $response['status_title'] ?? null,
+            'origin_message' => $response
         ];
     }
 
