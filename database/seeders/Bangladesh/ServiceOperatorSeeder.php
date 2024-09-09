@@ -52,6 +52,9 @@ class ServiceOperatorSeeder extends Seeder
                     'higher_limit' => '11.00',
                     'local_currency_lower_limit' => '20',
                     'local_currency_higher_limit' => '1000',
+                    'charge' => '0',
+                    'discount' => '0',
+                    'commission' => '0',
                 ],
                 'service_settings' => [
                     'operator_prefix' => '17',
@@ -75,6 +78,9 @@ class ServiceOperatorSeeder extends Seeder
                     'higher_limit' => '11.00',
                     'local_currency_lower_limit' => '20',
                     'local_currency_higher_limit' => '1000',
+                    'charge' => '0',
+                    'discount' => '0',
+                    'commission' => '0',
                 ],
                 'service_settings' => [
                     'operator_prefix' => '19',
@@ -98,6 +104,9 @@ class ServiceOperatorSeeder extends Seeder
                     'higher_limit' => '11.00',
                     'local_currency_lower_limit' => '20',
                     'local_currency_higher_limit' => '1000',
+                    'charge' => '0',
+                    'discount' => '0',
+                    'commission' => '0',
                 ],
                 'service_settings' => [
                     'operator_prefix' => '18',
@@ -121,6 +130,9 @@ class ServiceOperatorSeeder extends Seeder
                     'higher_limit' => '11.00',
                     'local_currency_lower_limit' => '20',
                     'local_currency_higher_limit' => '1000',
+                    'charge' => '0',
+                    'discount' => '0',
+                    'commission' => '0',
                 ],
                 'service_settings' => [
                     'operator_prefix' => '15',
@@ -144,6 +156,9 @@ class ServiceOperatorSeeder extends Seeder
                     'higher_limit' => '11.00',
                     'local_currency_lower_limit' => '20',
                     'local_currency_higher_limit' => '1000',
+                    'charge' => '0',
+                    'discount' => '0',
+                    'commission' => '0',
                 ],
                 'service_settings' => [
                     'operator_prefix' => '16',
@@ -167,6 +182,9 @@ class ServiceOperatorSeeder extends Seeder
                     'higher_limit' => '11.00',
                     'local_currency_lower_limit' => '20',
                     'local_currency_higher_limit' => '1000',
+                    'charge' => '0',
+                    'discount' => '0',
+                    'commission' => '0',
                 ],
                 'service_settings' => [
                     'operator_prefix' => '13',
