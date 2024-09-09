@@ -6,7 +6,6 @@ use ErrorException;
 use Fintech\Airtime\Contracts\AirtimeTransfer;
 use Fintech\Business\Facades\Business;
 use Fintech\Core\Abstracts\BaseModel;
-use Fintech\Core\Traits\SSLWirelessErrorMessage;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -108,7 +107,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
             'status' => false,
             'amount' => null,
             'message' => $response['status_title'] ?? null,
-            'origin_message' => $response
+            'origin_message' => $response,
         ];
     }
 
