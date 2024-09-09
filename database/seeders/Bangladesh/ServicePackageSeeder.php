@@ -3,6 +3,7 @@
 namespace Fintech\Airtime\Seeders\Bangladesh;
 
 use Fintech\Business\Facades\Business;
+use Fintech\MetaData\Facades\MetaData;
 use Illuminate\Database\Seeder;
 
 class ServicePackageSeeder extends Seeder
@@ -21,13 +22,19 @@ class ServicePackageSeeder extends Seeder
         $operators[6] = Business::service()->list(['service_slug' => 'airtel_bd'])->first()->id;
         $operators[13] = Business::service()->list(['service_slug' => 'gp_skitto_bd'])->first()->id;
 
+        $bangladesh = MetaData::country()->list(['iso2' => 'BD'])->first()?->id ?? null;
+
         foreach ($this->triggerAmounts() as $triggerAmount) {
             $triggerAmount['service_id'] = $operators[$triggerAmount['service_id']];
+            $triggerAmount['country_id'] = $bangladesh ?? $triggerAmount['country_id'];
             Business::servicePackage()->create($triggerAmount);
         }
 
         foreach ($this->blockedAmounts() as $blockedAmount) {
             $blockedAmount['service_id'] = $operators[$blockedAmount['service_id']];
+            $blockedAmount['enabled'] = false;
+            $blockedAmount['service_package_data']['is_blocked'] = true;
+            $blockedAmount['country_id'] = $bangladesh ?? $blockedAmount['country_id'];
             Business::servicePackage()->create($blockedAmount);
         }
     }
@@ -35,7 +42,7 @@ class ServicePackageSeeder extends Seeder
     public function triggerAmounts(): array
     {
         return [
-            0 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '52 SMS + Priyotoma Movie Access',
@@ -43,7 +50,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '52-sms-priyotoma-movie-access-2-days',
                 'description' => '52 SMS + Priyotoma Movie Access',
                 'amount' => 18,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -51,7 +58,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            1 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '52 SMS + Priyotoma Movie Access',
@@ -59,7 +66,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '52-sms-priyotoma-movie-access-2-days',
                 'description' => '52 SMS + Priyotoma Movie Access',
                 'amount' => 18,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -67,7 +74,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            2 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '1GB',
@@ -75,7 +82,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-24-hrs',
                 'description' => '1GB',
                 'amount' => 28,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -83,7 +90,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            3 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '1GB',
@@ -91,7 +98,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-24-hrs',
                 'description' => '1GB',
                 'amount' => 28,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -99,7 +106,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            4 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '32 Min ',
@@ -107,7 +114,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '32-min-2-days',
                 'description' => '32 Min ',
                 'amount' => 29,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -115,7 +122,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            5 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '32 Min ',
@@ -123,7 +130,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '32-min-2-days',
                 'description' => '32 Min ',
                 'amount' => 29,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -131,7 +138,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            6 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '45 Min',
@@ -139,7 +146,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '45-min-2-days',
                 'description' => '45 Min',
                 'amount' => 34,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -147,7 +154,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            7 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '45 Min',
@@ -155,7 +162,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '45-min-2-days',
                 'description' => '45 Min',
                 'amount' => 34,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -163,7 +170,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            8 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '400 MB',
@@ -171,7 +178,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '400-mb-7-days',
                 'description' => '400 MB',
                 'amount' => 48,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -179,7 +186,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            9 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '400 MB',
@@ -187,7 +194,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '400-mb-7-days',
                 'description' => '400 MB',
                 'amount' => 48,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -195,7 +202,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            10 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '50 Min ',
@@ -203,7 +210,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-min-3-days',
                 'description' => '50 Min ',
                 'amount' => 49,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -211,7 +218,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            11 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '50 Min ',
@@ -219,7 +226,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-min-3-days',
                 'description' => '50 Min ',
                 'amount' => 49,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -227,7 +234,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            12 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '0.5 GB+30 Minute',
@@ -235,7 +242,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '05-gb30-minute-7-days',
                 'description' => '0.5 GB+30 Minute',
                 'amount' => 58,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -243,7 +250,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            13 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '0.5 GB+30 Minute',
@@ -251,7 +258,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '05-gb30-minute-7-days',
                 'description' => '0.5 GB+30 Minute',
                 'amount' => 58,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -259,7 +266,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            14 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '99 poisha /min',
@@ -267,7 +274,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-poisha-min-3-days',
                 'description' => '99 poisha /min',
                 'amount' => 59,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -275,7 +282,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            15 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '99 poisha /min',
@@ -283,7 +290,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-poisha-min-3-days',
                 'description' => '99 poisha /min',
                 'amount' => 59,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -291,7 +298,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            16 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '215 SMS ',
@@ -299,7 +306,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '215-sms-30-days',
                 'description' => '215 SMS ',
                 'amount' => 66,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -307,7 +314,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            17 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '215 SMS',
@@ -315,7 +322,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '215-sms-30-days',
                 'description' => '215 SMS',
                 'amount' => 66,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -323,7 +330,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            18 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '2GB',
@@ -331,7 +338,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2gb-72-hrs',
                 'description' => '2GB',
                 'amount' => 69,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -339,7 +346,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            19 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '2GB',
@@ -347,7 +354,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2gb-72-hrs',
                 'description' => '2GB',
                 'amount' => 69,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -355,7 +362,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            20 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '220 SMS + SonyLIV ',
@@ -363,7 +370,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '220-sms-sonyliv-30-days',
                 'description' => '220 SMS + SonyLIV ',
                 'amount' => 76,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -371,7 +378,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            21 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '220 SMS + SonyLIV ',
@@ -379,7 +386,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '220-sms-sonyliv-30-days',
                 'description' => '220 SMS + SonyLIV ',
                 'amount' => 76,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -387,7 +394,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            22 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Hoichoi, Chorki, Bioscope + 225 SMS',
@@ -395,7 +402,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'hoichoi-chorki-bioscope-225-sms-30-days',
                 'description' => 'Hoichoi, Chorki, Bioscope + 225 SMS',
                 'amount' => 77,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -403,7 +410,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            23 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Hoichoi, Chorki, Bioscope + 225 SMS',
@@ -411,7 +418,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'hoichoi-chorki-bioscope-225-sms-30-days',
                 'description' => 'Hoichoi, Chorki, Bioscope + 225 SMS',
                 'amount' => 77,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -419,7 +426,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            24 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '80 Min ',
@@ -427,7 +434,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '80-min-4-days',
                 'description' => '80 Min ',
                 'amount' => 79,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -435,7 +442,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '4 Day',
                 ],
             ],
-            25 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '80 Min ',
@@ -443,7 +450,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '80-min-4-days',
                 'description' => '80 Min ',
                 'amount' => 79,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -451,7 +458,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '4 Day',
                 ],
             ],
-            26 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'SonyLiv, T-Sports + 270 SMS',
@@ -459,7 +466,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'sonyliv-t-sports-270-sms-30-days',
                 'description' => 'SonyLiv, T-Sports + 270 SMS',
                 'amount' => 88,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -467,7 +474,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            27 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '99 poisha /min',
@@ -475,7 +482,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-poisha-min-7-days',
                 'description' => '99 poisha /min',
                 'amount' => 89,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -483,7 +490,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            28 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '99 poisha /min',
@@ -491,7 +498,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-poisha-min-7-days',
                 'description' => '99 poisha /min',
                 'amount' => 89,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -499,7 +506,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            29 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '69 poisha /min',
@@ -507,7 +514,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '69-poisha-min-7-days',
                 'description' => '69 poisha /min',
                 'amount' => 94,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -515,7 +522,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            30 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '69 poisha /min',
@@ -523,7 +530,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '69-poisha-min-7-days',
                 'description' => '69 poisha /min',
                 'amount' => 94,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -531,7 +538,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            31 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '500 SMS',
@@ -539,7 +546,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '500-sms-30-days',
                 'description' => '500 SMS',
                 'amount' => 96,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -547,7 +554,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            32 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '500 SMS',
@@ -555,7 +562,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '500-sms-30-days',
                 'description' => '500 SMS',
                 'amount' => 96,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -563,7 +570,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            33 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '50 Min + 1GB 7 Days',
@@ -571,7 +578,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-min-1gb-7-days',
                 'description' => '50 Min + 1GB 7 Days',
                 'amount' => 97,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -579,7 +586,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            34 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '50 Min + 1GB ',
@@ -587,7 +594,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-min-1gb-7-days',
                 'description' => '50 Min + 1GB ',
                 'amount' => 97,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -595,7 +602,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            35 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '2 GB ( 0.5GB Regular + 1.5GB WhatsApp, IMO, Instagram, Snapchat )',
@@ -603,7 +610,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2-gb-05gb-regular-15gb-whatsapp-imo-instagram-snapchat-7-days',
                 'description' => '2 GB ( 0.5GB Regular + 1.5GB WhatsApp, IMO, Instagram, Snapchat )',
                 'amount' => 98,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -611,7 +618,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            36 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '2 GB ( 0.5GB Regular + 1.5GB WhatsApp, IMO, Instagram, Snapchat )',
@@ -619,7 +626,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2-gb-05gb-regular-15gb-whatsapp-imo-instagram-snapchat-7-days',
                 'description' => '2 GB ( 0.5GB Regular + 1.5GB WhatsApp, IMO, Instagram, Snapchat )',
                 'amount' => 98,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -627,7 +634,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            37 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '110 Min',
@@ -635,7 +642,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '110-min-5-days',
                 'description' => '110 Min',
                 'amount' => 99,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -643,7 +650,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            38 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '110 Min',
@@ -651,7 +658,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '110-min-5-days',
                 'description' => '110 Min',
                 'amount' => 99,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -659,7 +666,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            39 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'T-sports + SonyLiv Access + 330 SMS',
@@ -667,7 +674,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 't-sports-sonyliv-access-330-sms-30-days',
                 'description' => 'T-sports + SonyLiv Access + 330 SMS',
                 'amount' => 106,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -675,7 +682,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            40 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -683,7 +690,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-72-hrs',
                 'description' => '5GB',
                 'amount' => 108,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -691,7 +698,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            41 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -699,7 +706,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-72-hrs',
                 'description' => '5GB',
                 'amount' => 108,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -707,7 +714,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            42 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '140 Min ',
@@ -715,7 +722,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '140-min-7-days',
                 'description' => '140 Min ',
                 'amount' => 109,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -723,7 +730,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            43 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '140 Min ',
@@ -731,7 +738,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '140-min-7-days',
                 'description' => '140 Min ',
                 'amount' => 109,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -739,7 +746,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            44 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '99 poisha /min',
@@ -747,7 +754,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-poisha-min-15-days',
                 'description' => '99 poisha /min',
                 'amount' => 119,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -755,7 +762,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '15 Day',
                 ],
             ],
-            45 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '99 poisha /min',
@@ -763,7 +770,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-poisha-min-15-days',
                 'description' => '99 poisha /min',
                 'amount' => 119,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -771,7 +778,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '15 Day',
                 ],
             ],
-            46 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Hoichoi, SonyLiv, Lionsgate+375 SMS',
@@ -779,7 +786,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'hoichoi-sonyliv-lionsgate375-sms-30-days',
                 'description' => 'Hoichoi, SonyLiv, Lionsgate+375 SMS',
                 'amount' => 127,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -787,7 +794,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            47 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Hoichoi, SonyLiv, Lionsgate+375 SMS',
@@ -795,7 +802,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'hoichoi-sonyliv-lionsgate375-sms-30-days',
                 'description' => 'Hoichoi, SonyLiv, Lionsgate+375 SMS',
                 'amount' => 127,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -803,7 +810,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            48 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '4 GB',
@@ -811,7 +818,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4-gb-7-days',
                 'description' => '4 GB',
                 'amount' => 129,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -819,7 +826,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            49 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '4 GB',
@@ -827,7 +834,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4-gb-7-days',
                 'description' => '4 GB',
                 'amount' => 129,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -835,7 +842,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            50 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '210 Min ',
@@ -843,7 +850,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '210-min-7-days',
                 'description' => '210 Min ',
                 'amount' => 139,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -851,7 +858,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            51 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '210 Min ',
@@ -859,7 +866,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '210-min-7-days',
                 'description' => '210 Min ',
                 'amount' => 139,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -867,7 +874,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            52 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '150 Min + 4GB ',
@@ -875,7 +882,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '150-min-4gb-7-days',
                 'description' => '150 Min + 4GB ',
                 'amount' => 147,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -883,7 +890,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            53 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '80 Min + 3GB 7 Days',
@@ -891,7 +898,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '80-min-3gb-7-days',
                 'description' => '80 Min + 3GB 7 Days',
                 'amount' => 149,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -899,7 +906,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            54 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '80 Min + 3GB 7 Days',
@@ -907,7 +914,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '80-min-3gb-7-days',
                 'description' => '80 Min + 3GB 7 Days',
                 'amount' => 149,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -915,7 +922,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            55 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '250 Min ',
@@ -923,7 +930,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '250-min-7-days',
                 'description' => '250 Min ',
                 'amount' => 158,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -931,7 +938,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            56 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '250 Min ',
@@ -939,7 +946,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '250-min-7-days',
                 'description' => '250 Min ',
                 'amount' => 158,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -947,7 +954,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            57 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '99 poisha /min',
@@ -955,7 +962,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-poisha-min-30-days',
                 'description' => '99 poisha /min',
                 'amount' => 159,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -963,7 +970,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            58 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '99 poisha /min',
@@ -971,7 +978,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-poisha-min-30-days',
                 'description' => '99 poisha /min',
                 'amount' => 159,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -979,7 +986,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            59 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Hoichoi, SonyLiv, Lionsgate, Chorki, Bioscope, T-Sports, ShemarooMe, i-Screen+500 SMS',
@@ -987,7 +994,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'hoichoi-sonyliv-lionsgate-chorki-bioscope-t-sports-shemaroome-i-screen500-sms-30-days',
                 'description' => 'Hoichoi, SonyLiv, Lionsgate, Chorki, Bioscope, T-Sports, ShemarooMe, i-Screen+500 SMS',
                 'amount' => 173,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -995,7 +1002,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            60 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Hoichoi, SonyLiv, Lionsgate, Chorki, Bioscope, T-Sports, ShemarooMe, i-Screen+500 SMS',
@@ -1003,7 +1010,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'hoichoi-sonyliv-lionsgate-chorki-bioscope-t-sports-shemaroome-i-screen500-sms-30-days',
                 'description' => 'Hoichoi, SonyLiv, Lionsgate, Chorki, Bioscope, T-Sports, ShemarooMe, i-Screen+500 SMS',
                 'amount' => 173,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1011,7 +1018,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            61 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '7 GB (Daily 1GB)',
@@ -1019,7 +1026,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '7-gb-daily-1gb-7-days',
                 'description' => '7 GB (Daily 1GB)',
                 'amount' => 179,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1027,7 +1034,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            62 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '7 GB (Daily 1GB)',
@@ -1035,7 +1042,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '7-gb-daily-1gb-7-days',
                 'description' => '7 GB (Daily 1GB)',
                 'amount' => 179,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1043,7 +1050,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            63 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '10GB',
@@ -1051,7 +1058,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-7-days',
                 'description' => '10GB',
                 'amount' => 198,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1059,7 +1066,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            64 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '10GB',
@@ -1067,7 +1074,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-7-days',
                 'description' => '10GB',
                 'amount' => 198,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1075,7 +1082,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            65 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '5 GB (2GB Regular + 3GB WhatsApp, IMO, Instagram, Snapchat)',
@@ -1083,7 +1090,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5-gb-2gb-regular-3gb-whatsapp-imo-instagram-snapchat-30-days',
                 'description' => '5 GB (2GB Regular + 3GB WhatsApp, IMO, Instagram, Snapchat)',
                 'amount' => 199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1091,7 +1098,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            66 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '5 GB (2GB Regular + 3GB WhatsApp, IMO, Instagram, Snapchat)',
@@ -1099,7 +1106,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5-gb-2gb-regular-3gb-whatsapp-imo-instagram-snapchat-30-days',
                 'description' => '5 GB (2GB Regular + 3GB WhatsApp, IMO, Instagram, Snapchat)',
                 'amount' => 199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1107,7 +1114,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            67 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '8GB + 150Min + 100 SMS ',
@@ -1115,7 +1122,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8gb-150min-100-sms-7-days',
                 'description' => '8GB + 150Min + 100 SMS ',
                 'amount' => 217,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1123,7 +1130,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            68 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '8GB + 150Min + 100 SMS ',
@@ -1131,7 +1138,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8gb-150min-100-sms-7-days',
                 'description' => '8GB + 150Min + 100 SMS ',
                 'amount' => 217,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1139,7 +1146,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            69 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '230 Min ',
@@ -1147,7 +1154,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '230-min-30-days',
                 'description' => '230 Min ',
                 'amount' => 218,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1155,7 +1162,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            70 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '230 Min ',
@@ -1163,7 +1170,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '230-min-30-days',
                 'description' => '230 Min ',
                 'amount' => 218,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1171,7 +1178,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            71 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '25 GB',
@@ -1179,7 +1186,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25-gb-7-days',
                 'description' => '25 GB',
                 'amount' => 229,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1187,7 +1194,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            72 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '25 GB',
@@ -1195,7 +1202,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25-gb-7-days',
                 'description' => '25 GB',
                 'amount' => 229,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1203,7 +1210,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            73 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '300 Min+100 MB ',
@@ -1211,7 +1218,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '300-min100-mb-30-days',
                 'description' => '300 Min+100 MB ',
                 'amount' => 248,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1219,7 +1226,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            74 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '300 Min+100 MB ',
@@ -1227,7 +1234,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '300-min100-mb-30-days',
                 'description' => '300 Min+100 MB ',
                 'amount' => 248,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1235,7 +1242,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            75 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '30GB ',
@@ -1243,7 +1250,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30gb-7-days',
                 'description' => '30GB ',
                 'amount' => 249,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1251,7 +1258,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            76 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '30GB ',
@@ -1259,7 +1266,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30gb-7-days',
                 'description' => '30GB ',
                 'amount' => 249,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1267,7 +1274,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            77 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '10GB + 150Min + 100 SMS ',
@@ -1275,7 +1282,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-150min-100-sms-7-days',
                 'description' => '10GB + 150Min + 100 SMS ',
                 'amount' => 258,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1283,7 +1290,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            78 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '10GB + 150Min + 100 SMS ',
@@ -1291,7 +1298,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-150min-100-sms-7-days',
                 'description' => '10GB + 150Min + 100 SMS ',
                 'amount' => 258,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1299,7 +1306,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            79 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '350 Min+100 MB',
@@ -1307,7 +1314,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '350-min100-mb-30-days',
                 'description' => '350 Min+100 MB',
                 'amount' => 259,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1315,7 +1322,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            80 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '350 Min+100 MB',
@@ -1323,7 +1330,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '350-min100-mb-30-days',
                 'description' => '350 Min+100 MB',
                 'amount' => 259,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1331,7 +1338,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            81 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Uninterrupted Internet ',
@@ -1339,7 +1346,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'uninterrupted-internet-7-days',
                 'description' => 'Uninterrupted Internet ',
                 'amount' => 269,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1347,7 +1354,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            82 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Uninterrupted Internet ',
@@ -1355,7 +1362,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'uninterrupted-internet-7-days',
                 'description' => 'Uninterrupted Internet ',
                 'amount' => 269,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1363,7 +1370,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            83 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '400 Min ',
@@ -1371,7 +1378,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '400-min-30-days',
                 'description' => '400 Min ',
                 'amount' => 279,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1379,7 +1386,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            84 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '400 Min ',
@@ -1387,7 +1394,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '400-min-30-days',
                 'description' => '400 Min ',
                 'amount' => 279,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1395,7 +1402,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            85 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '8 GB',
@@ -1403,7 +1410,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8-gb-30-days',
                 'description' => '8 GB',
                 'amount' => 296,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1411,7 +1418,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            86 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '8 GB',
@@ -1419,7 +1426,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8-gb-30-days',
                 'description' => '8 GB',
                 'amount' => 296,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1427,7 +1434,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            87 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '10 GB (5GB Regular + 5GB WhatsApp, IMO, Instagram, Snapchat)',
@@ -1435,7 +1442,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10-gb-5gb-regular-5gb-whatsapp-imo-instagram-snapchat-30-days',
                 'description' => '10 GB (5GB Regular + 5GB WhatsApp, IMO, Instagram, Snapchat)',
                 'amount' => 298,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1443,7 +1450,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            88 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '10 GB (5GB Regular + 5GB WhatsApp, IMO, Instagram, Snapchat)',
@@ -1451,7 +1458,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10-gb-5gb-regular-5gb-whatsapp-imo-instagram-snapchat-30-days',
                 'description' => '10 GB (5GB Regular + 5GB WhatsApp, IMO, Instagram, Snapchat)',
                 'amount' => 298,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1459,7 +1466,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            89 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '375 Min ',
@@ -1467,7 +1474,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '375-min-30-days',
                 'description' => '375 Min ',
                 'amount' => 299,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1475,7 +1482,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Days',
                 ],
             ],
-            90 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '375 Min ',
@@ -1483,7 +1490,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '375-min-30-days',
                 'description' => '375 Min ',
                 'amount' => 299,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1491,7 +1498,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            91 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '60 Paisa/min',
@@ -1499,7 +1506,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60-paisamin-60-days',
                 'description' => '60 Paisa/min',
                 'amount' => 309,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1507,7 +1514,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '60 Day',
                 ],
             ],
-            92 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '60 Paisa/min',
@@ -1515,7 +1522,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60-paisamin-60-days',
                 'description' => '60 Paisa/min',
                 'amount' => 309,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1523,7 +1530,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '60 Day',
                 ],
             ],
-            93 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '550 Min ',
@@ -1531,7 +1538,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '550-min-30-days',
                 'description' => '550 Min ',
                 'amount' => 379,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1539,7 +1546,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            94 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '550 Min ',
@@ -1547,7 +1554,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '550-min-30-days',
                 'description' => '550 Min ',
                 'amount' => 379,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1555,7 +1562,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            95 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '200 Min + 8GB ',
@@ -1563,7 +1570,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '200-min-8gb-30-day',
                 'description' => '200 Min + 8GB ',
                 'amount' => 398,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1571,7 +1578,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            96 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '200 Min + 8GB ',
@@ -1579,7 +1586,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '200-min-8gb-30-day',
                 'description' => '200 Min + 8GB ',
                 'amount' => 398,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1587,7 +1594,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            97 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '15 GB',
@@ -1595,7 +1602,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15-gb-30-days',
                 'description' => '15 GB',
                 'amount' => 399,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1603,7 +1610,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            98 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '15 GB',
@@ -1611,7 +1618,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15-gb-30-days',
                 'description' => '15 GB',
                 'amount' => 399,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1619,7 +1626,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            99 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '30 GB (Daily 1 GB)',
@@ -1627,7 +1634,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30-gb-daily-1-gb-30-days',
                 'description' => '30 GB (Daily 1 GB)',
                 'amount' => 499,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1635,7 +1642,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Days',
                 ],
             ],
-            100 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '30 GB (Daily 1 GB)',
@@ -1643,7 +1650,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30-gb-daily-1-gb-30-days',
                 'description' => '30 GB (Daily 1 GB)',
                 'amount' => 499,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1651,7 +1658,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            101 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '54 Paisa/min',
@@ -1659,7 +1666,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '54-paisamin-90-days',
                 'description' => '54 Paisa/min',
                 'amount' => 509,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1667,7 +1674,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '90 Day',
                 ],
             ],
-            102 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '54 Paisa/min',
@@ -1675,7 +1682,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '54-paisamin-90-days',
                 'description' => '54 Paisa/min',
                 'amount' => 509,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1683,7 +1690,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '90 Day',
                 ],
             ],
-            103 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '800 Min ',
@@ -1691,7 +1698,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '800-min-30-days',
                 'description' => '800 Min ',
                 'amount' => 519,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1699,7 +1706,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            104 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '25 GB',
@@ -1707,7 +1714,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25-gb-30-days',
                 'description' => '25 GB',
                 'amount' => 549,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1715,7 +1722,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            105 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '25 GB',
@@ -1723,7 +1730,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25-gb-30-days',
                 'description' => '25 GB',
                 'amount' => 549,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1731,7 +1738,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            106 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '550 Min + 35GB ',
@@ -1739,7 +1746,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '550-min-35gb-30-days',
                 'description' => '550 Min + 35GB  ',
                 'amount' => 597,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1747,7 +1754,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            107 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '400 Min + 20GB (Hoichoi , Chorki)  ',
@@ -1755,7 +1762,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '400-min-20gb-hoichoi-chorki-30-days',
                 'description' => '400 Min + 20GB (Hoichoi , Chorki)  ',
                 'amount' => 598,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1763,7 +1770,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            108 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '400 Min + 20GB (Hoichoi , Chorki)  ',
@@ -1771,7 +1778,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '400-min-20gb-hoichoi-chorki-30-days',
                 'description' => '400 Min + 20GB (Hoichoi , Chorki)  ',
                 'amount' => 598,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1779,7 +1786,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            109 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '40 GB',
@@ -1787,7 +1794,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40-gb-30-days',
                 'description' => '40 GB',
                 'amount' => 649,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1795,7 +1802,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            110 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '40 GB',
@@ -1803,7 +1810,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40-gb-30-days',
                 'description' => '40 GB',
                 'amount' => 649,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1811,7 +1818,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            111 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '1150 Min ',
@@ -1819,7 +1826,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1150-min-30-days',
                 'description' => '1150 Min ',
                 'amount' => 729,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1827,7 +1834,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            112 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '1150 Min ',
@@ -1835,7 +1842,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1150-min-30-days',
                 'description' => '1150 Min ',
                 'amount' => 729,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1843,7 +1850,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            113 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '60 GB',
@@ -1851,7 +1858,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60-gb-30-days',
                 'description' => '60 GB',
                 'amount' => 749,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1859,7 +1866,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            114 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '60 GB',
@@ -1867,7 +1874,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60-gb-30-days',
                 'description' => '60 GB',
                 'amount' => 749,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1875,7 +1882,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            115 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '30 GB + 700 Minutes',
@@ -1883,7 +1890,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30-gb-700-minutes-30-days',
                 'description' => '30 GB + 700 Minutes',
                 'amount' => 799,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1891,7 +1898,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Days',
                 ],
             ],
-            116 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '30 GB + 700 Minutes',
@@ -1899,7 +1906,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30-gb-700-minutes-30-days',
                 'description' => '30 GB + 700 Minutes',
                 'amount' => 799,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1907,7 +1914,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            117 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '100 GB',
@@ -1915,7 +1922,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '100-gb-30-days',
                 'description' => '100 GB',
                 'amount' => 849,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1923,7 +1930,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            118 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '100 GB',
@@ -1931,7 +1938,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '100-gb-30-days',
                 'description' => '100 GB',
                 'amount' => 849,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1939,7 +1946,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            119 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '54 Paisa/min ',
@@ -1947,7 +1954,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '54-paisamin-365-days',
                 'description' => '54 Paisa/min ',
                 'amount' => 989,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -1955,7 +1962,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '365 Day',
                 ],
             ],
-            120 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '54 Paisa/min ',
@@ -1963,7 +1970,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '54-paisamin-365-days',
                 'description' => '54 Paisa/min ',
                 'amount' => 989,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -1971,7 +1978,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '365 Day',
                 ],
             ],
-            121 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Unlimited Incoming Roaming SMS + 3 GB Data Bonus for Bangladesh + Account Validity',
@@ -1979,7 +1986,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'unlimited-incoming-roaming-sms-3-gb-data-bonus-for-bangladesh-account-validity-3-years',
                 'description' => 'Unlimited Incoming Roaming SMS + 3 GB Data Bonus for Bangladesh + Account Validity',
                 'amount' => 994,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -1987,7 +1994,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '1095 Day',
                 ],
             ],
-            122 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Unlimited Incoming Roaming SMS + 3 GB Data Bonus for Bangladesh + Account Validity',
@@ -1995,7 +2002,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'unlimited-incoming-roaming-sms-3-gb-data-bonus-for-bangladesh-account-validity-3-years',
                 'description' => 'Unlimited Incoming Roaming SMS + 3 GB Data Bonus for Bangladesh + Account Validity',
                 'amount' => 994,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -2003,7 +2010,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '1095 Day',
                 ],
             ],
-            123 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '3 Years Account  Validity + 600 Mins',
@@ -2011,7 +2018,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3-years-account-validity-600-mins-30-days',
                 'description' => '3 Years Account  Validity + 600 Mins',
                 'amount' => 997,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2019,7 +2026,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            124 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '3 Years Account  Validity + 600 Mins',
@@ -2027,7 +2034,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3-years-account-validity-600-mins-30-days',
                 'description' => '3 Years Account  Validity + 600 Mins',
                 'amount' => 997,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2035,7 +2042,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            125 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Uninterrupted Internet + Hoichoi, T-sports, SonyLiv, Lionsgate play',
@@ -2043,7 +2050,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'uninterrupted-internet-hoichoi-t-sports-sonyliv-lionsgate-play-30-days',
                 'description' => 'Uninterrupted Internet + Hoichoi, T-sports, SonyLiv, Lionsgate play',
                 'amount' => 998,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2051,7 +2058,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            126 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Uninterrupted Internet + Hoichoi, T-sports, SonyLiv, Lionsgate play',
@@ -2059,7 +2066,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'uninterrupted-internet-hoichoi-t-sports-sonyliv-lionsgate-play-30-days',
                 'description' => 'Uninterrupted Internet + Hoichoi, T-sports, SonyLiv, Lionsgate play',
                 'amount' => 998,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2067,7 +2074,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            127 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '50GB + 1500Min + 500 SMS + hoichoi, chorki,t-sports, sonyliv ',
@@ -2075,7 +2082,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb-1500min-500-sms-hoichoi-chorkit-sports-sonyliv-30-days',
                 'description' => '50GB + 1500Min + 500 SMS + hoichoi, chorki,t-sports, sonyliv ',
                 'amount' => 999,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2083,7 +2090,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            128 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '50GB + 1500Min + 500 SMS + hoichoi, chorki,t-sports, sonyliv ',
@@ -2091,7 +2098,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb-1500min-500-sms-hoichoi-chorkit-sports-sonyliv-30-days',
                 'description' => '50GB + 1500Min + 500 SMS + hoichoi, chorki,t-sports, sonyliv ',
                 'amount' => 999,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2099,7 +2106,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            129 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '25 GB ',
@@ -2107,7 +2114,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25-gb-unlimited-validity',
                 'description' => '25 GB ',
                 'amount' => 1049,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2115,7 +2122,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            130 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '25 GB ',
@@ -2123,7 +2130,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25-gb-unlimited-validity',
                 'description' => '25 GB ',
                 'amount' => 1049,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2131,7 +2138,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            131 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '60GB + 1800Min + 500 SMS + t-sports, sonyliv,hoichoi, chorki, lionsgate,i-screen ',
@@ -2139,7 +2146,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60gb-1800min-500-sms-t-sports-sonylivhoichoi-chorki-lionsgatei-screen-30-days',
                 'description' => '60GB + 1800Min + 500 SMS + t-sports, sonyliv,hoichoi, chorki, lionsgate,i-screen ',
                 'amount' => 1199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2147,7 +2154,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            132 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '60GB + 1800Min + 500 SMS + t-sports, sonyliv,hoichoi, chorki, lionsgate,i-screen ',
@@ -2155,7 +2162,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60gb-1800min-500-sms-t-sports-sonylivhoichoi-chorki-lionsgatei-screen-30-days',
                 'description' => '60GB + 1800Min + 500 SMS + t-sports, sonyliv,hoichoi, chorki, lionsgate,i-screen ',
                 'amount' => 1199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2163,7 +2170,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            133 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Unlimited Incoming Roaming SMS + 5 GB Data Bonus for Bangladesh + Account Validity',
@@ -2171,7 +2178,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'unlimited-incoming-roaming-sms-5-gb-data-bonus-for-bangladesh-account-validity-5-years',
                 'description' => 'Unlimited Incoming Roaming SMS + 5 GB Data Bonus for Bangladesh + Account Validity',
                 'amount' => 1494,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -2179,7 +2186,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '1825 Day',
                 ],
             ],
-            134 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => 'Unlimited Incoming Roaming SMS + 5 GB Data Bonus for Bangladesh + Account Validity',
@@ -2187,7 +2194,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'unlimited-incoming-roaming-sms-5-gb-data-bonus-for-bangladesh-account-validity-5-years',
                 'description' => 'Unlimited Incoming Roaming SMS + 5 GB Data Bonus for Bangladesh + Account Validity',
                 'amount' => 1494,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -2195,7 +2202,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '1825 Day',
                 ],
             ],
-            135 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '5 Years Account Validity + 900 Min',
@@ -2203,7 +2210,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5-years-account-validity-900-min-30-days',
                 'description' => '5 Years Account Validity + 900 Min',
                 'amount' => 1498,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2211,7 +2218,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            136 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '5 Years Account Validity + 900 Min',
@@ -2219,7 +2226,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5-years-account-validity-900-min-30-days',
                 'description' => '5 Years Account Validity + 900 Min',
                 'amount' => 1498,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2227,7 +2234,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            137 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '120 GB (40 GB every 30th Day)',
@@ -2235,7 +2242,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '120-gb-40-gb-every-30th-day-30-days',
                 'description' => '120 GB (40 GB every 30th Day)',
                 'amount' => 1647,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2243,7 +2250,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            138 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '120 GB (40 GB every 30th Day)',
@@ -2251,7 +2258,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '120-gb-40-gb-every-30th-day-30-days',
                 'description' => '120 GB (40 GB every 30th Day)',
                 'amount' => 1647,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2259,7 +2266,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            139 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '50 GB ',
@@ -2267,7 +2274,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-gb-unlimited-validity',
                 'description' => '50 GB ',
                 'amount' => 1649,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2275,7 +2282,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            140 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '50 GB ',
@@ -2283,7 +2290,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-gb-unlimited-validity',
                 'description' => '50 GB ',
                 'amount' => 1649,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2291,7 +2298,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            141 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '180 GB (60 GB every 30th Day)',
@@ -2299,7 +2306,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '180-gb-60-gb-every-30th-day-30-days',
                 'description' => '180 GB (60 GB every 30th Day)',
                 'amount' => 1947,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2307,7 +2314,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            142 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '180 GB (60 GB every 30th Day)',
@@ -2315,7 +2322,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '180-gb-60-gb-every-30th-day-30-days',
                 'description' => '180 GB (60 GB every 30th Day)',
                 'amount' => 1947,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2323,7 +2330,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            143 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '100 GB + 2500 Mins',
@@ -2331,7 +2338,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '100-gb-2500-mins-30-days',
                 'description' => '100 GB + 2500 Mins',
                 'amount' => 1999,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2339,7 +2346,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            144 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '75 GB ',
@@ -2347,7 +2354,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '75-gb-unlimited-validity',
                 'description' => '75 GB ',
                 'amount' => 2149,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2355,7 +2362,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            145 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '75 GB ',
@@ -2363,7 +2370,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '75-gb-unlimited-validity',
                 'description' => '75 GB ',
                 'amount' => 2149,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2371,7 +2378,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            146 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '240 GB (80 GB every 30th Day)',
@@ -2379,7 +2386,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '240-gb-80-gb-every-30th-day-30-days',
                 'description' => '240 GB (80 GB every 30th Day)',
                 'amount' => 2247,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2387,7 +2394,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            147 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '240 GB (80 GB every 30th Day)',
@@ -2395,7 +2402,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '240-gb-80-gb-every-30th-day-30-days',
                 'description' => '240 GB (80 GB every 30th Day)',
                 'amount' => 2247,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2403,7 +2410,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            148 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '375 GB (125 GB every 30th Day)',
@@ -2411,7 +2418,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '375-gb-125-gb-every-30th-day-30-days',
                 'description' => '375 GB (125 GB every 30th Day)',
                 'amount' => 2547,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2419,7 +2426,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            149 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '375 GB (125 GB every 30th Day)',
@@ -2427,7 +2434,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '375-gb-125-gb-every-30th-day-30-days',
                 'description' => '375 GB (125 GB every 30th Day)',
                 'amount' => 2547,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -2435,7 +2442,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            150 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 21 min',
@@ -2443,7 +2450,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-21-min-24-hours',
                 'description' => 'Anynet 21 min',
                 'amount' => 19,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2451,7 +2458,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            151 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 35 min',
@@ -2459,7 +2466,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-35-min-2-days',
                 'description' => 'Anynet 35 min',
                 'amount' => 27,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2467,7 +2474,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            152 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1GB-24Hr',
@@ -2475,7 +2482,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-24hr',
                 'description' => '1GB-24Hr',
                 'amount' => 31,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2483,7 +2490,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            153 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '99 P/Min any local number',
@@ -2491,7 +2498,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-pmin-any-local-number-3-days',
                 'description' => '99 P/Min any local number',
                 'amount' => 34,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2499,7 +2506,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            154 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '2 GB ',
@@ -2507,7 +2514,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2-gb-24-hours',
                 'description' => '2 GB ',
                 'amount' => 38,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2515,7 +2522,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            155 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1.40 Tk/Min any local number',
@@ -2523,7 +2530,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '140-tkmin-any-local-number-5-days',
                 'description' => '1.40 Tk/Min any local number',
                 'amount' => 39,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2531,7 +2538,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            156 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '500MB+15Min+2GB BiP - 72Hrs',
@@ -2539,7 +2546,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '500mb15min2gb-bip-72hrs',
                 'description' => '500MB+15Min+2GB BiP - 72Hrs',
                 'amount' => 44,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2547,7 +2554,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            157 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 52 min',
@@ -2555,7 +2562,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-52-min-3-days',
                 'description' => 'Anynet 52 min',
                 'amount' => 47,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2563,7 +2570,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '4 Day',
                 ],
             ],
-            158 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1GB-72Hrs',
@@ -2571,7 +2578,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-72hrs',
                 'description' => '1GB-72Hrs',
                 'amount' => 49,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2579,7 +2586,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            159 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 65 min',
@@ -2587,7 +2594,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-65-min-5-days',
                 'description' => 'Anynet 65 min',
                 'amount' => 57,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2595,7 +2602,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            160 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1.40 Tk/Min any local number',
@@ -2603,7 +2610,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '140-tkmin-any-local-number-7-days',
                 'description' => '1.40 Tk/Min any local number',
                 'amount' => 59,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2611,7 +2618,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            161 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '99 P/Min any local number',
@@ -2619,7 +2626,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-pmin-any-local-number-5-days',
                 'description' => '99 P/Min any local number',
                 'amount' => 64,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2627,7 +2634,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            162 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '2GB - 72Hrs',
@@ -2635,7 +2642,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2gb-72hrs',
                 'description' => '2GB - 72Hrs',
                 'amount' => 69,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2643,7 +2650,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            163 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 90 min',
@@ -2651,7 +2658,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-90-min-5-days',
                 'description' => 'Anynet 90 min',
                 'amount' => 77,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -2659,7 +2666,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            164 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1GB+30Min+2GB BiP - 72Hrs',
@@ -2667,7 +2674,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb30min2gb-bip-72hrs',
                 'description' => '1GB+30Min+2GB BiP - 72Hrs',
                 'amount' => 78,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2675,7 +2682,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            165 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1GB+1GB Toffee+1GB BiP-7Days',
@@ -2683,7 +2690,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb1gb-toffee1gb-bip-7days',
                 'description' => '1GB+1GB Toffee+1GB BiP-7Days',
                 'amount' => 79,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2691,7 +2698,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            166 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '99p/min+tax to any local number',
@@ -2699,7 +2706,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmintax-to-any-local-number-7-days',
                 'description' => '99p/min+tax to any local number',
                 'amount' => 89,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2707,7 +2714,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            167 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 115 min',
@@ -2715,7 +2722,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-115-min-7-days',
                 'description' => 'Anynet 115 min',
                 'amount' => 97,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2723,7 +2730,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            168 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1GB+5GB BiP+30 Mins',
@@ -2731,7 +2738,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb5gb-bip30-mins-7-days',
                 'description' => '1GB+5GB BiP+30 Mins',
                 'amount' => 98,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2739,7 +2746,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            169 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '2GB ',
@@ -2747,7 +2754,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2gb-7-days',
                 'description' => '2GB ',
                 'amount' => 99,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -2755,7 +2762,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            170 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1.40 Tk/Min any local number',
@@ -2763,7 +2770,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '140-tkmin-any-local-number-30-days',
                 'description' => '1.40 Tk/Min any local number',
                 'amount' => 109,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2771,7 +2778,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            171 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 160 min',
@@ -2779,7 +2786,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-160-min-7-days',
                 'description' => 'Anynet 160 min',
                 'amount' => 117,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2787,7 +2794,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            172 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '99 P/Min any local number',
@@ -2795,7 +2802,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99-pmin-any-local-number-30-days',
                 'description' => '99 P/Min any local number',
                 'amount' => 119,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2803,7 +2810,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            173 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 180 min',
@@ -2811,7 +2818,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-180-min-7-days',
                 'description' => 'Anynet 180 min',
                 'amount' => 127,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2819,7 +2826,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            174 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -2827,7 +2834,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb7days',
                 'description' => '5GB',
                 'amount' => 129,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2835,7 +2842,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            175 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 220 min + Free T20 World Cup Subscription',
@@ -2843,7 +2850,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-220-min-free-t20-world-cup-subscription-7-days',
                 'description' => 'Anynet 220 min + Free T20 World Cup Subscription',
                 'amount' => 147,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2851,7 +2858,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            176 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '4GB+5GB BiP+50 Mins',
@@ -2859,7 +2866,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb5gb-bip50-mins-7-days',
                 'description' => '4GB+5GB BiP+50 Mins',
                 'amount' => 148,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2867,7 +2874,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            177 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '6GB ',
@@ -2875,7 +2882,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb-7-days',
                 'description' => '6GB ',
                 'amount' => 149,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2883,7 +2890,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            178 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1 P/sec any local number',
@@ -2891,7 +2898,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1-psec-any-local-number-30-days',
                 'description' => '1 P/sec any local number',
                 'amount' => 159,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2899,7 +2906,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            179 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 175 min',
@@ -2907,7 +2914,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-175-min-30-days',
                 'description' => 'Anynet 175 min',
                 'amount' => 167,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2915,7 +2922,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            180 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '7GB(1GB/Day)',
@@ -2923,7 +2930,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '7gb1gbday-7-days',
                 'description' => '7GB(1GB/Day)',
                 'amount' => 169,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2931,7 +2938,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            181 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1 P/sec any local number',
@@ -2939,7 +2946,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1-psec-any-local-number-60-days',
                 'description' => '1 P/sec any local number',
                 'amount' => 189,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2947,7 +2954,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '60 Day',
                 ],
             ],
-            182 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '5GB (+ Free Hoichoi, Chorki & Toffee Free Content)',
@@ -2955,7 +2962,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-free-hoichoi-chorki-toffee-free-content-7days',
                 'description' => '5GB (+ Free Hoichoi, Chorki & Toffee Free Content)',
                 'amount' => 196,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2963,7 +2970,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            183 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 220 min',
@@ -2971,7 +2978,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-220-min-30-days',
                 'description' => 'Anynet 220 min',
                 'amount' => 197,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2979,7 +2986,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            184 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '6GB+5GB Toffee+100 Mins',
@@ -2987,7 +2994,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb5gb-toffee100-mins-7-days',
                 'description' => '6GB+5GB Toffee+100 Mins',
                 'amount' => 198,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -2995,7 +3002,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            185 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '15GB',
@@ -3003,7 +3010,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-7-days',
                 'description' => '15GB',
                 'amount' => 199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3011,7 +3018,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            186 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -3019,7 +3026,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-30-days',
                 'description' => '5GB',
                 'amount' => 209,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3027,7 +3034,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            187 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '25GB+5GB Toffee+5GB BiP - 7 Days',
@@ -3035,7 +3042,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb5gb-toffee5gb-bip-7-days',
                 'description' => '25GB+5GB Toffee+5GB BiP - 7 Days',
                 'amount' => 229,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3043,7 +3050,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            188 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 330 min',
@@ -3051,7 +3058,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-330-min-30-days',
                 'description' => 'Anynet 330 min',
                 'amount' => 247,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3059,7 +3066,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            189 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '12GB+5GB Toffee+150 Mins',
@@ -3067,7 +3074,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12gb5gb-toffee150-mins-7-days',
                 'description' => '12GB+5GB Toffee+150 Mins',
                 'amount' => 248,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3075,7 +3082,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            190 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '35GB',
@@ -3083,7 +3090,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '35gb-7-days',
                 'description' => '35GB',
                 'amount' => 249,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3091,7 +3098,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            191 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '55GB',
@@ -3099,7 +3106,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '55gb-7-days',
                 'description' => '55GB',
                 'amount' => 279,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3107,7 +3114,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            192 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 400 min',
@@ -3115,7 +3122,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-400-min-30-days',
                 'description' => 'Anynet 400 min',
                 'amount' => 297,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3123,7 +3130,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            193 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '5GB+10GB Toffee+100 Mins',
@@ -3131,7 +3138,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb10gb-toffee100-mins-30-days',
                 'description' => '5GB+10GB Toffee+100 Mins',
                 'amount' => 298,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3139,7 +3146,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            194 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '10GB',
@@ -3147,7 +3154,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-30-days',
                 'description' => '10GB',
                 'amount' => 299,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3155,7 +3162,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            195 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '1 P/sec any local number',
@@ -3163,7 +3170,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1-psec-any-local-number-90-days',
                 'description' => '1 P/sec any local number',
                 'amount' => 309,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3171,7 +3178,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '90 Day',
                 ],
             ],
-            196 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 500 min + Free T20 World Cup Subscription',
@@ -3179,7 +3186,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-500-min-free-t20-world-cup-subscription-30-days',
                 'description' => 'Anynet 500 min + Free T20 World Cup Subscription',
                 'amount' => 337,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3187,7 +3194,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            197 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '5GB (+ Free Hoichoi, Chorki & Toffee Free Content)',
@@ -3195,7 +3202,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-free-hoichoi-chorki-toffee-free-content-30days',
                 'description' => '5GB (+ Free Hoichoi, Chorki & Toffee Free Content)',
                 'amount' => 396,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3203,7 +3210,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            198 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 600 min',
@@ -3211,7 +3218,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-600-min-30-days',
                 'description' => 'Anynet 600 min',
                 'amount' => 397,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3219,7 +3226,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            199 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '10GB+10GB Toffee+150 Mins',
@@ -3227,7 +3234,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb10gb-toffee150-mins-30-days',
                 'description' => '10GB+10GB Toffee+150 Mins',
                 'amount' => 398,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3235,7 +3242,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            200 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '15GB+5GB Toffee+5GB BiP - 30 Days',
@@ -3243,7 +3250,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb5gb-toffee5gb-bip-30-days',
                 'description' => '15GB+5GB Toffee+5GB BiP - 30 Days',
                 'amount' => 399,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3251,7 +3258,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            201 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '30GB(1GB/Day)',
@@ -3259,7 +3266,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30gb1gbday-30-days',
                 'description' => '30GB(1GB/Day)',
                 'amount' => 489,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3267,7 +3274,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            202 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 755 min',
@@ -3275,7 +3282,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-755-min-30-days',
                 'description' => 'Anynet 755 min',
                 'amount' => 497,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3283,7 +3290,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            203 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '15GB+10GB Toffee+300 Mins',
@@ -3291,7 +3298,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb10gb-toffee300-mins-30-days',
                 'description' => '15GB+10GB Toffee+300 Mins',
                 'amount' => 498,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3299,7 +3306,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            204 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '25GB',
@@ -3307,7 +3314,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-30-days',
                 'description' => '25GB',
                 'amount' => 499,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3315,7 +3322,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            205 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '35GB',
@@ -3323,7 +3330,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '35gb-30-days',
                 'description' => '35GB',
                 'amount' => 599,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3331,7 +3338,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            206 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 880 min',
@@ -3339,7 +3346,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-880-min-30-days',
                 'description' => 'Anynet 880 min',
                 'amount' => 607,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3347,7 +3354,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            207 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 1000 min',
@@ -3355,7 +3362,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-1000-min-30-days',
                 'description' => 'Anynet 1000 min',
                 'amount' => 647,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3363,7 +3370,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            208 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '45GB+10GB Toffee+600 Mins',
@@ -3371,7 +3378,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '45gb10gb-toffee600-mins-30-days',
                 'description' => '45GB+10GB Toffee+600 Mins',
                 'amount' => 798,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3379,7 +3386,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            209 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '80GB+5GB Toffee+5GB BiP - 30 Days',
@@ -3387,7 +3394,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '80gb5gb-toffee5gb-bip-30-days',
                 'description' => '80GB+5GB Toffee+5GB BiP - 30 Days',
                 'amount' => 799,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3395,7 +3402,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            210 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '69 P/Min any local number',
@@ -3403,7 +3410,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '69-pmin-any-local-number-365-days',
                 'description' => '69 P/Min any local number',
                 'amount' => 889,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3411,7 +3418,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '365 Day',
                 ],
             ],
-            211 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 600 min + 3 years main account validity',
@@ -3419,7 +3426,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-600-min-3-years-main-account-validity-30-days',
                 'description' => 'Anynet 600 min + 3 years main account validity',
                 'amount' => 897,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3427,7 +3434,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            212 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '120GB',
@@ -3435,7 +3442,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '120gb-30-days',
                 'description' => '120GB',
                 'amount' => 899,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3443,7 +3450,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            213 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '60GB+10GB Toffee+1000 Mins',
@@ -3451,7 +3458,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60gb10gb-toffee1000-mins-30-days',
                 'description' => '60GB+10GB Toffee+1000 Mins',
                 'amount' => 998,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3459,7 +3466,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            214 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => 'Anynet 900 Min + 5 years main account validity',
@@ -3467,7 +3474,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => 'anynet-900-min-5-years-main-account-validity-30-days',
                 'description' => 'Anynet 900 Min + 5 years main account validity',
                 'amount' => 1397,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3475,7 +3482,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            215 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '23 Minute ',
@@ -3483,7 +3490,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '23-minute-24-hours',
                 'description' => '23 Minute ',
                 'amount' => 19,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3491,7 +3498,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            216 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '23 Minute ',
@@ -3499,7 +3506,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '23-minute-24-hours',
                 'description' => '23 Minute ',
                 'amount' => 19,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3507,7 +3514,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            217 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '32 Minute ',
@@ -3515,7 +3522,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '32-minute-24-hours',
                 'description' => '32 Minute ',
                 'amount' => 24,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3523,7 +3530,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            218 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '32 Minute ',
@@ -3531,7 +3538,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '32-minute-24-hours',
                 'description' => '32 Minute ',
                 'amount' => 24,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3539,7 +3546,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            219 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -3547,7 +3554,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-2-days',
                 'description' => '99P/Min ',
                 'amount' => 26,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3555,7 +3562,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            220 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -3563,7 +3570,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-2-days',
                 'description' => '99P/Min ',
                 'amount' => 26,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3571,7 +3578,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            221 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1GB',
@@ -3579,7 +3586,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-24-hours',
                 'description' => '1GB',
                 'amount' => 28,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3587,7 +3594,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            222 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1GB',
@@ -3595,7 +3602,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-24-hours',
                 'description' => '1GB',
                 'amount' => 28,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3603,7 +3610,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            223 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '512MB ',
@@ -3611,7 +3618,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '512mb-3-days',
                 'description' => '512MB ',
                 'amount' => 29,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3619,7 +3626,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            224 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '512MB ',
@@ -3627,7 +3634,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '512mb-3-days',
                 'description' => '512MB ',
                 'amount' => 29,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3635,7 +3642,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            225 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -3643,7 +3650,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-2-days',
                 'description' => '1P/Sec ',
                 'amount' => 34,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3651,7 +3658,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            226 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -3659,7 +3666,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-2-days',
                 'description' => '1P/Sec ',
                 'amount' => 34,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3667,7 +3674,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            227 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '2GB',
@@ -3675,7 +3682,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2gb-24-hours',
                 'description' => '2GB',
                 'amount' => 38,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3683,7 +3690,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            228 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '2GB',
@@ -3691,7 +3698,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2gb-24-hours',
                 'description' => '2GB',
                 'amount' => 38,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3699,7 +3706,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            229 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '55 Minute ',
@@ -3707,7 +3714,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '55-minute-2-days',
                 'description' => '55 Minute ',
                 'amount' => 39,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3715,7 +3722,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            230 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '55 Minute ',
@@ -3723,7 +3730,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '55-minute-2-days',
                 'description' => '55 Minute ',
                 'amount' => 39,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3731,7 +3738,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            231 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -3739,7 +3746,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-5-days',
                 'description' => '99P/Min ',
                 'amount' => 44,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3747,7 +3754,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            232 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -3755,7 +3762,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-5-days',
                 'description' => '99P/Min ',
                 'amount' => 44,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3763,7 +3770,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            233 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '4GB',
@@ -3771,7 +3778,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb-24-hours',
                 'description' => '4GB',
                 'amount' => 48,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3779,7 +3786,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            234 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '4GB',
@@ -3787,7 +3794,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb-24-hours',
                 'description' => '4GB',
                 'amount' => 48,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3795,7 +3802,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            235 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '55 Minute ',
@@ -3803,7 +3810,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '55-minute-3-days',
                 'description' => '55 Minute ',
                 'amount' => 49,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3811,7 +3818,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            236 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '55 Minute ',
@@ -3819,7 +3826,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '55-minute-3-days',
                 'description' => '55 Minute ',
                 'amount' => 49,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3827,7 +3834,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            237 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -3835,7 +3842,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-7-days',
                 'description' => '99P/Min ',
                 'amount' => 56,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3843,7 +3850,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            238 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -3851,7 +3858,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-7-days',
                 'description' => '99P/Min ',
                 'amount' => 56,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3859,7 +3866,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            239 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '60 Minute ',
@@ -3867,7 +3874,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60-minute-5-days',
                 'description' => '60 Minute ',
                 'amount' => 59,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3875,7 +3882,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            240 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '60 Minute ',
@@ -3883,7 +3890,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60-minute-5-days',
                 'description' => '60 Minute ',
                 'amount' => 59,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3891,7 +3898,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            241 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -3899,7 +3906,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-5-days',
                 'description' => '1P/Sec ',
                 'amount' => 64,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3907,7 +3914,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            242 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -3915,7 +3922,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-5-days',
                 'description' => '1P/Sec ',
                 'amount' => 64,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3923,7 +3930,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            243 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '80 Minute ',
@@ -3931,7 +3938,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '80-minute-5-days',
                 'description' => '80 Minute ',
                 'amount' => 69,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3939,7 +3946,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            244 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '80 Minute ',
@@ -3947,7 +3954,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '80-minute-5-days',
                 'description' => '80 Minute ',
                 'amount' => 69,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -3955,7 +3962,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            245 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -3963,7 +3970,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-30-days',
                 'description' => '1.39tk/min ',
                 'amount' => 94,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3971,7 +3978,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            246 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -3979,7 +3986,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-3-days',
                 'description' => '5GB',
                 'amount' => 98,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -3987,7 +3994,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            247 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -3995,7 +4002,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-3-days',
                 'description' => '5GB',
                 'amount' => 98,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4003,7 +4010,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            248 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '110 Minute ',
@@ -4011,7 +4018,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '110-minute-7-days',
                 'description' => '110 Minute ',
                 'amount' => 99,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4019,7 +4026,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            249 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '110 Minute ',
@@ -4027,7 +4034,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '110-minute-7-days',
                 'description' => '110 Minute ',
                 'amount' => 99,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4035,7 +4042,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            250 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -4043,7 +4050,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-30-days',
                 'description' => '99P/Min ',
                 'amount' => 106,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4051,7 +4058,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            251 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -4059,7 +4066,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-30-days',
                 'description' => '99P/Min ',
                 'amount' => 106,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4067,7 +4074,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            252 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -4075,7 +4082,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-30-days',
                 'description' => '99P/Min ',
                 'amount' => 114,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4083,7 +4090,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            253 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '99P/Min ',
@@ -4091,7 +4098,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '99pmin-30-days',
                 'description' => '99P/Min ',
                 'amount' => 114,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4099,7 +4106,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            254 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '10GB',
@@ -4107,7 +4114,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-3-days',
                 'description' => '10GB',
                 'amount' => 118,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4115,7 +4122,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            255 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '10GB',
@@ -4123,7 +4130,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-3-days',
                 'description' => '10GB',
                 'amount' => 118,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4131,7 +4138,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            256 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '170 Minute ',
@@ -4139,7 +4146,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '170-minute-7-days',
                 'description' => '170 Minute ',
                 'amount' => 119,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4147,7 +4154,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            257 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '170 Minute ',
@@ -4155,7 +4162,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '170-minute-7-days',
                 'description' => '170 Minute ',
                 'amount' => 119,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4163,7 +4170,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            258 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -4171,7 +4178,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-30-days',
                 'description' => '1P/Sec ',
                 'amount' => 124,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4179,7 +4186,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            259 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -4187,7 +4194,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-30-days',
                 'description' => '1P/Sec ',
                 'amount' => 124,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4195,7 +4202,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            260 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -4203,7 +4210,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-7-days',
                 'description' => '5GB',
                 'amount' => 128,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -4211,7 +4218,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            261 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -4219,7 +4226,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-7-days',
                 'description' => '5GB',
                 'amount' => 128,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -4227,7 +4234,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            262 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '130 Minute ',
@@ -4235,7 +4242,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '130-minute-30-days',
                 'description' => '130 Minute ',
                 'amount' => 129,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4243,7 +4250,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            263 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '130 Minute ',
@@ -4251,7 +4258,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '130-minute-30-days',
                 'description' => '130 Minute ',
                 'amount' => 129,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4259,7 +4266,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            264 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '220 Minute ',
@@ -4267,7 +4274,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '220-minute-7-days',
                 'description' => '220 Minute ',
                 'amount' => 139,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4275,7 +4282,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            265 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '220 Minute ',
@@ -4283,7 +4290,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '220-minute-7-days',
                 'description' => '220 Minute ',
                 'amount' => 139,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4291,7 +4298,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            266 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '3GB',
@@ -4299,7 +4306,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-30-days',
                 'description' => '3GB',
                 'amount' => 148,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -4307,7 +4314,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            267 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '3GB',
@@ -4315,7 +4322,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-30-days',
                 'description' => '3GB',
                 'amount' => 148,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -4323,7 +4330,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            268 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '8GB ',
@@ -4331,7 +4338,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8gb-7-days',
                 'description' => '8GB ',
                 'amount' => 168,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4339,7 +4346,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            269 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '8GB ',
@@ -4347,7 +4354,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8gb-7-days',
                 'description' => '8GB ',
                 'amount' => 168,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4355,7 +4362,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            270 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '175 Minute ',
@@ -4363,7 +4370,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '175-minute-30-days',
                 'description' => '175 Minute ',
                 'amount' => 169,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4371,7 +4378,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            271 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '175 Minute ',
@@ -4379,7 +4386,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '175-minute-30-days',
                 'description' => '175 Minute ',
                 'amount' => 169,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4387,7 +4394,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            272 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '3GB , 150 Mins ',
@@ -4395,7 +4402,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-150-mins-7-days',
                 'description' => '3GB , 150 Mins ',
                 'amount' => 179,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4403,7 +4410,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            273 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '3GB , 150 Mins ',
@@ -4411,7 +4418,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-150-mins-7-days',
                 'description' => '3GB , 150 Mins ',
                 'amount' => 179,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4419,7 +4426,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            274 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '240 Minute ',
@@ -4427,7 +4434,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '240-minute-15-days',
                 'description' => '240 Minute ',
                 'amount' => 189,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4435,7 +4442,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '15 Day',
                 ],
             ],
-            275 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '240 Minute ',
@@ -4443,7 +4450,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '240-minute-15-days',
                 'description' => '240 Minute ',
                 'amount' => 189,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4451,7 +4458,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '15 Day',
                 ],
             ],
-            276 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '15GB ',
@@ -4459,7 +4466,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-7-days',
                 'description' => '15GB ',
                 'amount' => 198,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4467,7 +4474,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            277 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '15GB ',
@@ -4475,7 +4482,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-7-days',
                 'description' => '15GB ',
                 'amount' => 198,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4483,7 +4490,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            278 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '215 Minute ',
@@ -4491,7 +4498,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '215-minute-30-days',
                 'description' => '215 Minute ',
                 'amount' => 199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4499,7 +4506,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            279 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '215 Minute ',
@@ -4507,7 +4514,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '215-minute-30-days',
                 'description' => '215 Minute ',
                 'amount' => 199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4515,7 +4522,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            280 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -4523,7 +4530,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-60-days',
                 'description' => '1P/Sec ',
                 'amount' => 204,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4531,7 +4538,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '60 Day',
                 ],
             ],
-            281 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -4539,7 +4546,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-60-days',
                 'description' => '1P/Sec ',
                 'amount' => 204,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4547,7 +4554,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '60 Day',
                 ],
             ],
-            282 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '25GB',
@@ -4555,7 +4562,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-7-days',
                 'description' => '25GB',
                 'amount' => 228,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -4563,7 +4570,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            283 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '25GB',
@@ -4571,7 +4578,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-7-days',
                 'description' => '25GB',
                 'amount' => 228,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -4579,7 +4586,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            284 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '270 Minute ',
@@ -4587,7 +4594,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '270-minute-30-days',
                 'description' => '270 Minute ',
                 'amount' => 239,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4595,7 +4602,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            285 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '270 Minute ',
@@ -4603,7 +4610,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '270-minute-30-days',
                 'description' => '270 Minute ',
                 'amount' => 239,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4611,7 +4618,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            286 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '7GB',
@@ -4619,7 +4626,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '7gb-30-days',
                 'description' => '7GB',
                 'amount' => 248,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4627,7 +4634,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            287 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '7GB',
@@ -4635,7 +4642,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '7gb-30-days',
                 'description' => '7GB',
                 'amount' => 248,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4643,7 +4650,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            288 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '5GB , 200 Mins ',
@@ -4651,7 +4658,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-200-mins-7-days',
                 'description' => '5GB , 200 Mins ',
                 'amount' => 249,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4659,7 +4666,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            289 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '5GB , 200 Mins ',
@@ -4667,7 +4674,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-200-mins-7-days',
                 'description' => '5GB , 200 Mins ',
                 'amount' => 249,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4675,7 +4682,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            290 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '55GB',
@@ -4683,7 +4690,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '55gb-7-days',
                 'description' => '55GB',
                 'amount' => 278,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4691,7 +4698,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            291 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '55GB',
@@ -4699,7 +4706,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '55gb-7-days',
                 'description' => '55GB',
                 'amount' => 278,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4707,7 +4714,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            292 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '375 Minute ',
@@ -4715,7 +4722,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '375-minute-30-days',
                 'description' => '375 Minute ',
                 'amount' => 289,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4723,7 +4730,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            293 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '375 Minute ',
@@ -4731,7 +4738,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '375-minute-30-days',
                 'description' => '375 Minute ',
                 'amount' => 289,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4739,7 +4746,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            294 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '4GB , 100 Mins ',
@@ -4747,7 +4754,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb-100-mins-30-days',
                 'description' => '4GB , 100 Mins ',
                 'amount' => 299,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4755,7 +4762,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            295 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '4GB , 100 Mins ',
@@ -4763,7 +4770,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb-100-mins-30-days',
                 'description' => '4GB , 100 Mins ',
                 'amount' => 299,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4771,7 +4778,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            296 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -4779,7 +4786,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-90-days',
                 'description' => '1P/Sec ',
                 'amount' => 304,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4787,7 +4794,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '90 Day',
                 ],
             ],
-            297 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -4795,7 +4802,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-90-days',
                 'description' => '1P/Sec ',
                 'amount' => 304,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4803,7 +4810,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '90 Day',
                 ],
             ],
-            298 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '25GB , 400 Mins ',
@@ -4811,7 +4818,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-400-mins-7-days',
                 'description' => '25GB , 400 Mins ',
                 'amount' => 309,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4819,7 +4826,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            299 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '25GB , 400 Mins ',
@@ -4827,7 +4834,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-400-mins-7-days',
                 'description' => '25GB , 400 Mins ',
                 'amount' => 309,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4835,7 +4842,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            300 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '475 Minute ',
@@ -4843,7 +4850,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '475-minute-30-days',
                 'description' => '475 Minute ',
                 'amount' => 319,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4851,7 +4858,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            301 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '475 Minute ',
@@ -4859,7 +4866,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '475-minute-30-days',
                 'description' => '475 Minute ',
                 'amount' => 319,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4867,7 +4874,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            302 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '13GB',
@@ -4875,7 +4882,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '13gb-30-days',
                 'description' => '13GB',
                 'amount' => 348,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4883,7 +4890,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            303 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '13GB',
@@ -4891,7 +4898,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '13gb-30-days',
                 'description' => '13GB',
                 'amount' => 348,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4899,7 +4906,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            304 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '550 Minute ',
@@ -4907,7 +4914,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '550-minute-30-days',
                 'description' => '550 Minute ',
                 'amount' => 359,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4915,7 +4922,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            305 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '550 Minute ',
@@ -4923,7 +4930,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '550-minute-30-days',
                 'description' => '550 Minute ',
                 'amount' => 359,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4931,7 +4938,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            306 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '10GB , 150 Mins ',
@@ -4939,7 +4946,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-150-mins-30-days',
                 'description' => '10GB , 150 Mins ',
                 'amount' => 399,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4947,7 +4954,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            307 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '10GB , 150 Mins ',
@@ -4955,7 +4962,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-150-mins-30-days',
                 'description' => '10GB , 150 Mins ',
                 'amount' => 399,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4963,7 +4970,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            308 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '640 Minute ',
@@ -4971,7 +4978,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '640-minute-30-days',
                 'description' => '640 Minute ',
                 'amount' => 409,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -4979,7 +4986,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            309 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '640 Minute ',
@@ -4987,7 +4994,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '640-minute-30-days',
                 'description' => '640 Minute ',
                 'amount' => 409,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -4995,7 +5002,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            310 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '15GB , 300 Mins ',
@@ -5003,7 +5010,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-300-mins-30-days',
                 'description' => '15GB , 300 Mins ',
                 'amount' => 499,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5011,7 +5018,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            311 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '15GB , 300 Mins ',
@@ -5019,7 +5026,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-300-mins-30-days',
                 'description' => '15GB , 300 Mins ',
                 'amount' => 499,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5027,7 +5034,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            312 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '750 Minute ',
@@ -5035,7 +5042,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '750-minute-60-days',
                 'description' => '750 Minute ',
                 'amount' => 509,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5043,7 +5050,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '60 Day',
                 ],
             ],
-            313 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '750 Minute ',
@@ -5051,7 +5058,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '750-minute-60-days',
                 'description' => '750 Minute ',
                 'amount' => 509,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5059,7 +5066,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '60 Day',
                 ],
             ],
-            314 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '25GB , 400 Mins ',
@@ -5067,7 +5074,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-400-mins-30-days',
                 'description' => '25GB , 400 Mins ',
                 'amount' => 599,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5075,7 +5082,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            315 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '25GB , 400 Mins ',
@@ -5083,7 +5090,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-400-mins-30-days',
                 'description' => '25GB , 400 Mins ',
                 'amount' => 599,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5091,7 +5098,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            316 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1000 Minute ',
@@ -5099,7 +5106,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1000-minute-30-days',
                 'description' => '1000 Minute ',
                 'amount' => 639,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5107,7 +5114,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            317 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1000 Mins ',
@@ -5115,7 +5122,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1000-mins-30-days',
                 'description' => '1000 Mins ',
                 'amount' => 639,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5123,7 +5130,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            318 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1050 Minute ',
@@ -5131,7 +5138,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1050-minute-90-days',
                 'description' => '1050 Minute ',
                 'amount' => 689,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5139,7 +5146,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '90 Day',
                 ],
             ],
-            319 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1050 Minute ',
@@ -5147,7 +5154,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1050-minute-90-days',
                 'description' => '1050 Minute ',
                 'amount' => 689,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5155,7 +5162,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '90 Day',
                 ],
             ],
-            320 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '35GB , 500 Mins ',
@@ -5163,7 +5170,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '35gb-500-mins-30-days',
                 'description' => '35GB , 500 Mins ',
                 'amount' => 699,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5171,7 +5178,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            321 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '35GB , 500 Mins ',
@@ -5179,7 +5186,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '35gb-500-mins-30-days',
                 'description' => '35GB , 500 Mins ',
                 'amount' => 699,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5187,7 +5194,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            322 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '70GB',
@@ -5195,7 +5202,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '70gb-30-days',
                 'description' => '70GB',
                 'amount' => 748,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5203,7 +5210,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            323 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '70GB',
@@ -5211,7 +5218,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '70gb-30-days',
                 'description' => '70GB',
                 'amount' => 748,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5219,7 +5226,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            324 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '40GB , 700 Mins ',
@@ -5227,7 +5234,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40gb-700-mins-30-days',
                 'description' => '40GB , 700 Mins ',
                 'amount' => 799,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5235,7 +5242,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            325 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '40GB , 700 Mins ',
@@ -5243,7 +5250,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40gb-700-mins-30-days',
                 'description' => '40GB , 700 Mins ',
                 'amount' => 799,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5251,7 +5258,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            326 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '120GB',
@@ -5259,7 +5266,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '120gb-30-days',
                 'description' => '120GB',
                 'amount' => 898,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -5267,7 +5274,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            327 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '120GB',
@@ -5275,7 +5282,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '120gb-30-days',
                 'description' => '120GB',
                 'amount' => 898,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -5283,7 +5290,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            328 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -5291,7 +5298,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-365-days',
                 'description' => '1P/Sec ',
                 'amount' => 904,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5299,7 +5306,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '365 Day',
                 ],
             ],
-            329 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1P/Sec ',
@@ -5307,7 +5314,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1psec-365-days',
                 'description' => '1P/Sec ',
                 'amount' => 904,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5315,7 +5322,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '365 Day',
                 ],
             ],
-            330 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1500 Minute ',
@@ -5323,7 +5330,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1500-minute-150-days',
                 'description' => '1500 Minute ',
                 'amount' => 989,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5331,7 +5338,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '150 Day',
                 ],
             ],
-            331 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '1500 Minute ',
@@ -5339,7 +5346,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1500-minute-150-days',
                 'description' => '1500 Minute ',
                 'amount' => 989,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5347,7 +5354,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '150 Day',
                 ],
             ],
-            332 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '50GB, 1500 Mins',
@@ -5355,7 +5362,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb-1500-mins-30-days',
                 'description' => '50GB, 1500 Mins',
                 'amount' => 999,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5363,7 +5370,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            333 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '50GB, 1500 Mins',
@@ -5371,7 +5378,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb-1500-mins-30-days',
                 'description' => '50GB, 1500 Mins',
                 'amount' => 999,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5379,7 +5386,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            334 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '80GB , 1600 Mins ',
@@ -5387,7 +5394,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '80gb-1600-mins-30-days',
                 'description' => '80GB , 1600 Mins ',
                 'amount' => 1299,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5395,7 +5402,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            335 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '80GB , 1600 Mins ',
@@ -5403,7 +5410,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '80gb-1600-mins-30-days',
                 'description' => '80GB , 1600 Mins ',
                 'amount' => 1299,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -5411,7 +5418,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            336 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '50 SMS ',
@@ -5419,7 +5426,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-sms-3-days',
                 'description' => '50 SMS ',
                 'amount' => 7,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5427,7 +5434,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            337 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '100 MB',
@@ -5435,7 +5442,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '100-mb-7-days',
                 'description' => '100 MB',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5443,7 +5450,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            338 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '100 SMS ',
@@ -5451,7 +5458,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '100-sms-7-days',
                 'description' => '100 SMS ',
                 'amount' => 14,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5459,7 +5466,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            339 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '23 Mins ',
@@ -5467,7 +5474,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '23-mins-3-days',
                 'description' => '23 Mins ',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5475,7 +5482,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            340 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '1.0 GB',
@@ -5483,7 +5490,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10-gb-7-days',
                 'description' => '1.0 GB',
                 'amount' => 22,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5491,7 +5498,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            341 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '100 MB',
@@ -5499,7 +5506,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '100-mb-30-days',
                 'description' => '100 MB',
                 'amount' => 23,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5507,7 +5514,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            342 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '53 Mins ',
@@ -5515,7 +5522,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '53-mins-3-days',
                 'description' => '53 Mins ',
                 'amount' => 34,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5523,7 +5530,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            343 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '2.0 GB',
@@ -5531,7 +5538,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '20-gb-7-days',
                 'description' => '2.0 GB',
                 'amount' => 38,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5539,7 +5546,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            344 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '1 GB+25 minute+10 SMS ',
@@ -5547,7 +5554,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1-gb25-minute10-sms-7-days',
                 'description' => '1 GB+25 minute+10 SMS ',
                 'amount' => 39,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5555,7 +5562,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            345 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '500 MB',
@@ -5563,7 +5570,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '500-mb-30-days',
                 'description' => '500 MB',
                 'amount' => 41,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5571,7 +5578,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            346 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '1 GB+25 minute+10 SMS ',
@@ -5579,7 +5586,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1-gb25-minute10-sms-30-days',
                 'description' => '1 GB+25 minute+10 SMS ',
                 'amount' => 45,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5587,7 +5594,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            347 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '3.0 GB',
@@ -5595,7 +5602,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30-gb-7-days',
                 'description' => '3.0 GB',
                 'amount' => 46,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5603,7 +5610,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            348 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '1 GB+55 minute+50 SMS ',
@@ -5611,7 +5618,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1-gb55-minute50-sms-7-days',
                 'description' => '1 GB+55 minute+50 SMS ',
                 'amount' => 52,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5619,7 +5626,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            349 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '4.0 GB',
@@ -5627,7 +5634,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40-gb-7-days',
                 'description' => '4.0 GB',
                 'amount' => 58,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5635,7 +5642,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            350 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '500 SMS ',
@@ -5643,7 +5650,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '500-sms-30-days',
                 'description' => '500 SMS ',
                 'amount' => 61,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5651,7 +5658,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            351 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '1 GB',
@@ -5659,7 +5666,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1-gb-30-days',
                 'description' => '1 GB',
                 'amount' => 62,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5667,7 +5674,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            352 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '1 GB+55 minute+50 SMS ',
@@ -5675,7 +5682,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1-gb55-minute50-sms-30-days',
                 'description' => '1 GB+55 minute+50 SMS ',
                 'amount' => 66,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5683,7 +5690,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            353 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '5.0 GB',
@@ -5691,7 +5698,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-gb-7-days',
                 'description' => '5.0 GB',
                 'amount' => 67,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5699,7 +5706,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            354 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '143 Mins ',
@@ -5707,7 +5714,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '143-mins-7-days',
                 'description' => '143 Mins ',
                 'amount' => 91,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5715,7 +5722,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            355 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '2 GB',
@@ -5723,7 +5730,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2-gb-30-days',
                 'description' => '2 GB',
                 'amount' => 98,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5731,7 +5738,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            356 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '1.2 GB+150 minute+120 SMS ',
@@ -5739,7 +5746,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12-gb150-minute120-sms-7-days',
                 'description' => '1.2 GB+150 minute+120 SMS ',
                 'amount' => 100,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5747,7 +5754,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            357 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '10 GB',
@@ -5755,7 +5762,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10-gb-7-days',
                 'description' => '10 GB',
                 'amount' => 102,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5763,7 +5770,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            358 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '1.2 GB+150 minute+120 SMS ',
@@ -5771,7 +5778,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12-gb150-minute120-sms-30-days',
                 'description' => '1.2 GB+150 minute+120 SMS ',
                 'amount' => 105,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5779,7 +5786,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            359 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '15 GB',
@@ -5787,7 +5794,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15-gb-7-days',
                 'description' => '15 GB',
                 'amount' => 135,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5795,7 +5802,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            360 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '3 GB',
@@ -5803,7 +5810,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3-gb-30-days',
                 'description' => '3 GB',
                 'amount' => 145,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5811,7 +5818,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            361 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '4 GB',
@@ -5819,7 +5826,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4-gb-30-days',
                 'description' => '4 GB',
                 'amount' => 184,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5827,7 +5834,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            362 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '5 GB+250 minute+300 SMS ',
@@ -5835,7 +5842,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5-gb250-minute300-sms-7-days',
                 'description' => '5 GB+250 minute+300 SMS ',
                 'amount' => 189,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5843,7 +5850,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            363 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '5 GB+250 minute+300 SMS ',
@@ -5851,7 +5858,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5-gb250-minute300-sms-30-days',
                 'description' => '5 GB+250 minute+300 SMS ',
                 'amount' => 208,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5859,7 +5866,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            364 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '5 GB',
@@ -5867,7 +5874,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5-gb-30-days',
                 'description' => '5 GB',
                 'amount' => 211,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5875,7 +5882,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            365 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '10 GB+100 minute+50 SMS ',
@@ -5883,7 +5890,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10-gb100-minute50-sms-30-days',
                 'description' => '10 GB+100 minute+50 SMS ',
                 'amount' => 218,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5891,7 +5898,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            366 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '2 GB+350 minute+20 SMS ',
@@ -5899,7 +5906,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2-gb350-minute20-sms-7-days',
                 'description' => '2 GB+350 minute+20 SMS ',
                 'amount' => 226,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5907,7 +5914,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            367 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '2 GB+350 minute+20 SMS ',
@@ -5915,7 +5922,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '2-gb350-minute20-sms-30-days',
                 'description' => '2 GB+350 minute+20 SMS ',
                 'amount' => 234,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5923,7 +5930,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            368 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '10 GB',
@@ -5931,7 +5938,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10-gb-30-days',
                 'description' => '10 GB',
                 'amount' => 251,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5939,7 +5946,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            369 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '15 GB',
@@ -5947,7 +5954,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15-gb-30-days',
                 'description' => '15 GB',
                 'amount' => 288,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5955,7 +5962,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            370 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '5 GB+450 minute+50 SMS ',
@@ -5963,7 +5970,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5-gb450-minute50-sms-7-days',
                 'description' => '5 GB+450 minute+50 SMS ',
                 'amount' => 298,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5971,7 +5978,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            371 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '477 Mins ',
@@ -5979,7 +5986,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '477-mins-30-days',
                 'description' => '477 Mins ',
                 'amount' => 301,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -5987,7 +5994,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            372 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '5 GB+450 minute+50 SMS ',
@@ -5995,7 +6002,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5-gb450-minute50-sms-30-days',
                 'description' => '5 GB+450 minute+50 SMS ',
                 'amount' => 310,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6003,7 +6010,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            373 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '10 GB+350 minute+100 SMS ',
@@ -6011,7 +6018,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10-gb350-minute100-sms-30-days',
                 'description' => '10 GB+350 minute+100 SMS ',
                 'amount' => 312,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6019,7 +6026,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            374 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '25 GB',
@@ -6027,7 +6034,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25-gb-unlimited',
                 'description' => '25 GB',
                 'amount' => 323,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6035,7 +6042,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            375 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '30 GB',
@@ -6043,7 +6050,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30-gb-30-days',
                 'description' => '30 GB',
                 'amount' => 359,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6051,7 +6058,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            376 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '12 GB+500 minute+350 SMS ',
@@ -6059,7 +6066,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12-gb500-minute350-sms-30-days',
                 'description' => '12 GB+500 minute+350 SMS ',
                 'amount' => 416,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6067,7 +6074,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            377 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '45 GB',
@@ -6075,7 +6082,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '45-gb-30-days',
                 'description' => '45 GB',
                 'amount' => 465,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6083,7 +6090,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            378 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '35 GB+800 minute+100SMS ',
@@ -6091,7 +6098,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '35-gb800-minute100sms-30-days',
                 'description' => '35 GB+800 minute+100SMS ',
                 'amount' => 572,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6099,7 +6106,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            379 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '50GB+1000 minute+200SMS ',
@@ -6107,7 +6114,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb1000-minute200sms-30-days',
                 'description' => '50GB+1000 minute+200SMS ',
                 'amount' => 576,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6115,7 +6122,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            380 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '40GB+900 minute+100SMS ',
@@ -6123,7 +6130,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40gb900-minute100sms-30-days',
                 'description' => '40GB+900 minute+100SMS ',
                 'amount' => 624,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6131,7 +6138,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            381 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '50 GB',
@@ -6139,7 +6146,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-gb-unlimited',
                 'description' => '50 GB',
                 'amount' => 626,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6147,7 +6154,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            382 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '50GB+1000 minute+200SMS ',
@@ -6155,7 +6162,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb1000-minute200sms-30-days',
                 'description' => '50GB+1000 minute+200SMS ',
                 'amount' => 676,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6163,7 +6170,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            383 => [
+            [
                 'service_id' => 5,
                 'country_id' => 19,
                 'name' => '75 GB',
@@ -6171,7 +6178,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '75-gb-unlimited',
                 'description' => '75 GB',
                 'amount' => 833,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6179,7 +6186,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            384 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15 Mins ',
@@ -6187,7 +6194,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15-mins-24-hrs',
                 'description' => '15 Mins ',
                 'amount' => 14,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6195,7 +6202,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            385 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15 Mins ',
@@ -6203,7 +6210,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15-mins-24-hrs',
                 'description' => '15 Mins ',
                 'amount' => 14,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6211,7 +6218,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            386 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '25 Mins ',
@@ -6219,7 +6226,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25-mins-2-days',
                 'description' => '25 Mins ',
                 'amount' => 19,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6227,7 +6234,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            387 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '25 Mins ',
@@ -6235,7 +6242,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25-mins-2-days',
                 'description' => '25 Mins ',
                 'amount' => 19,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6243,7 +6250,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            388 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1GB',
@@ -6251,7 +6258,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-24-hours',
                 'description' => '1GB',
                 'amount' => 23,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6259,7 +6266,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            389 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1GB',
@@ -6267,7 +6274,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-24-hours',
                 'description' => '1GB',
                 'amount' => 23,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6275,7 +6282,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            390 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -6283,7 +6290,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-2-days',
                 'description' => '1.39tk/min ',
                 'amount' => 24,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6291,7 +6298,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            391 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -6299,7 +6306,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-2-days',
                 'description' => '1.39tk/min ',
                 'amount' => 24,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6307,7 +6314,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            392 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -6315,7 +6322,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-3-days',
                 'description' => '1.39tk/min ',
                 'amount' => 26,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6323,7 +6330,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            393 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -6331,7 +6338,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-3-days',
                 'description' => '1.39tk/min ',
                 'amount' => 26,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6339,7 +6346,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            394 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '38 Mins',
@@ -6347,7 +6354,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '38-mins-2-days',
                 'description' => '38 Mins',
                 'amount' => 28,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6355,7 +6362,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            395 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '38 Mins',
@@ -6363,7 +6370,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '38-mins-2-days',
                 'description' => '38 Mins',
                 'amount' => 28,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6371,7 +6378,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            396 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '500MB',
@@ -6379,7 +6386,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '500mb-7-days',
                 'description' => '500MB',
                 'amount' => 29,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6387,7 +6394,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            397 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '500MB',
@@ -6395,7 +6402,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '500mb-7-days',
                 'description' => '500MB',
                 'amount' => 29,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6403,7 +6410,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            398 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -6411,7 +6418,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-2-days',
                 'description' => '1p/s ',
                 'amount' => 32,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6419,7 +6426,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            399 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -6427,7 +6434,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-2-days',
                 'description' => '1p/s ',
                 'amount' => 32,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6435,7 +6442,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '2 Day',
                 ],
             ],
-            400 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '50 Mins ',
@@ -6443,7 +6450,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-mins-3-days',
                 'description' => '50 Mins ',
                 'amount' => 34,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6451,7 +6458,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            401 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '50 Mins ',
@@ -6459,7 +6466,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50-mins-3-days',
                 'description' => '50 Mins ',
                 'amount' => 34,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6467,7 +6474,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '3 Day',
                 ],
             ],
-            402 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '3GB',
@@ -6475,7 +6482,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-24-hours',
                 'description' => '3GB',
                 'amount' => 38,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6483,7 +6490,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            403 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '3GB',
@@ -6491,7 +6498,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-24-hours',
                 'description' => '3GB',
                 'amount' => 38,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6499,7 +6506,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            404 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -6507,7 +6514,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-5-days',
                 'description' => '1.39tk/min ',
                 'amount' => 39,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6515,7 +6522,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            405 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -6523,7 +6530,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-5-days',
                 'description' => '1.39tk/min ',
                 'amount' => 39,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6531,7 +6538,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            406 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -6539,7 +6546,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-7-days',
                 'description' => '1.39tk/min ',
                 'amount' => 42,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6547,7 +6554,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            407 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -6555,7 +6562,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-7-days',
                 'description' => '1.39tk/min ',
                 'amount' => 42,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6563,7 +6570,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            408 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '512MB+10min ',
@@ -6571,7 +6578,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '512mb10min-7-days',
                 'description' => '512MB+10min ',
                 'amount' => 46,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6579,7 +6586,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            409 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '512MB+10min ',
@@ -6587,7 +6594,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '512mb10min-7-days',
                 'description' => '512MB+10min ',
                 'amount' => 46,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6595,7 +6602,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            410 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '65 Mins',
@@ -6603,7 +6610,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '65-mins-4-days',
                 'description' => '65 Mins',
                 'amount' => 48,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6611,7 +6618,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '4 Day',
                 ],
             ],
-            411 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '65 Mins',
@@ -6619,7 +6626,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '65-mins-4-days',
                 'description' => '65 Mins',
                 'amount' => 48,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6627,7 +6634,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '4 Day',
                 ],
             ],
-            412 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1GB ',
@@ -6635,7 +6642,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-72-hours',
                 'description' => '1GB ',
                 'amount' => 49,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6643,7 +6650,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            413 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1GB ',
@@ -6651,7 +6658,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb-72-hours',
                 'description' => '1GB ',
                 'amount' => 49,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6659,7 +6666,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            414 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '6GB',
@@ -6667,7 +6674,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb-24-hours',
                 'description' => '6GB',
                 'amount' => 54,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6675,7 +6682,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            415 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '6GB',
@@ -6683,7 +6690,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb-24-hours',
                 'description' => '6GB',
                 'amount' => 54,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6691,7 +6698,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '24 Hour',
                 ],
             ],
-            416 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '70 mins ',
@@ -6699,7 +6706,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '70-mins-5-days',
                 'description' => '70 mins ',
                 'amount' => 57,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6707,7 +6714,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            417 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '70 mins ',
@@ -6715,7 +6722,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '70-mins-5-days',
                 'description' => '70 mins ',
                 'amount' => 57,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6723,7 +6730,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            418 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.5GB',
@@ -6731,7 +6738,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-7-days',
                 'description' => '1.5GB',
                 'amount' => 59,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6739,7 +6746,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            419 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.5GB',
@@ -6747,7 +6754,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-7-days',
                 'description' => '1.5GB',
                 'amount' => 59,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6755,7 +6762,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            420 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '3GB ',
@@ -6763,7 +6770,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-72-hours',
                 'description' => '3GB ',
                 'amount' => 68,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6771,7 +6778,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            421 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '3GB ',
@@ -6779,7 +6786,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-72-hours',
                 'description' => '3GB ',
                 'amount' => 68,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6787,7 +6794,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            422 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -6795,7 +6802,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-5-days',
                 'description' => '1p/s ',
                 'amount' => 69,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6803,7 +6810,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            423 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -6811,7 +6818,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-5-days',
                 'description' => '1p/s ',
                 'amount' => 69,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6819,7 +6826,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '5 Day',
                 ],
             ],
-            424 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -6827,7 +6834,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-15-days',
                 'description' => '1p/s ',
                 'amount' => 77,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6835,7 +6842,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '15 Day',
                 ],
             ],
-            425 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -6843,7 +6850,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-15-days',
                 'description' => '1p/s ',
                 'amount' => 77,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6851,7 +6858,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '15 Day',
                 ],
             ],
-            426 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '90 Mins',
@@ -6859,7 +6866,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '90-mins-7-days',
                 'description' => '90 Mins',
                 'amount' => 78,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6867,7 +6874,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            427 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '90 Mins',
@@ -6875,7 +6882,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '90-mins-7-days',
                 'description' => '90 Mins',
                 'amount' => 78,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6883,7 +6890,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            428 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.5GB',
@@ -6891,7 +6898,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-7-days',
                 'description' => '1.5GB',
                 'amount' => 79,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6899,7 +6906,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            429 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.5GB',
@@ -6907,7 +6914,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-7-days',
                 'description' => '1.5GB',
                 'amount' => 79,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6915,7 +6922,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            430 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '120 Mins ',
@@ -6923,7 +6930,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '120-mins-7-days',
                 'description' => '120 Mins ',
                 'amount' => 84,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6931,7 +6938,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            431 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '120 Mins ',
@@ -6939,7 +6946,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '120-mins-7-days',
                 'description' => '120 Mins ',
                 'amount' => 84,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6947,7 +6954,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            432 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '4GB IMO+Messenger+Whatsapp+Snapchat+Telegram',
@@ -6955,7 +6962,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb-imomessengerwhatsappsnapchattelegram-30-days',
                 'description' => '4GB IMO+Messenger+Whatsapp+Snapchat+Telegram',
                 'amount' => 88,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6963,7 +6970,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            433 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '4GB IMO+Messenger+Whatsapp+Snapchat+Telegram',
@@ -6971,7 +6978,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb-imomessengerwhatsappsnapchattelegram-30-days',
                 'description' => '4GB IMO+Messenger+Whatsapp+Snapchat+Telegram',
                 'amount' => 88,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -6979,7 +6986,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            434 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -6987,7 +6994,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-30-days',
                 'description' => '1.39tk/min ',
                 'amount' => 94,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -6995,7 +7002,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            435 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -7003,7 +7010,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-30-days',
                 'description' => '1.39tk/min ',
                 'amount' => 94,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7011,7 +7018,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            436 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '130 Mins',
@@ -7019,7 +7026,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '130-mins-7-days',
                 'description' => '130 Mins',
                 'amount' => 97,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7027,7 +7034,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            437 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '130 Mins',
@@ -7035,7 +7042,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '130-mins-7-days',
                 'description' => '130 Mins',
                 'amount' => 97,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7043,7 +7050,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            438 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '6GB ',
@@ -7051,7 +7058,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb-72-hours',
                 'description' => '6GB ',
                 'amount' => 98,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7059,7 +7066,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            439 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '6GB ',
@@ -7067,7 +7074,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb-72-hours',
                 'description' => '6GB ',
                 'amount' => 98,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7075,7 +7082,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            440 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1GB+30min ',
@@ -7083,7 +7090,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb30min-7-days',
                 'description' => '1GB+30min ',
                 'amount' => 99,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7091,7 +7098,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            441 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1GB+30min ',
@@ -7099,7 +7106,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1gb30min-7-days',
                 'description' => '1GB+30min ',
                 'amount' => 99,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7107,7 +7114,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            442 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -7115,7 +7122,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-30-days',
                 'description' => '1p/s ',
                 'amount' => 108,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7123,7 +7130,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            443 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -7131,7 +7138,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-30-days',
                 'description' => '1p/s ',
                 'amount' => 108,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7139,7 +7146,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            444 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '4GB',
@@ -7147,7 +7154,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb-7-days',
                 'description' => '4GB',
                 'amount' => 109,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7155,7 +7162,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            445 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '4GB',
@@ -7163,7 +7170,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb-7-days',
                 'description' => '4GB',
                 'amount' => 109,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7171,7 +7178,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            446 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '180 Mins ',
@@ -7179,7 +7186,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '180-mins-7-days',
                 'description' => '180 Mins ',
                 'amount' => 118,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7187,7 +7194,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            447 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '180 Mins ',
@@ -7195,7 +7202,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '180-mins-7-days',
                 'description' => '180 Mins ',
                 'amount' => 118,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7203,7 +7210,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            448 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '12GB ',
@@ -7211,7 +7218,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12gb-72-hours',
                 'description' => '12GB ',
                 'amount' => 119,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7219,7 +7226,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            449 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '12GB ',
@@ -7227,7 +7234,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12gb-72-hours',
                 'description' => '12GB ',
                 'amount' => 119,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7235,7 +7242,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '72 Hour',
                 ],
             ],
-            450 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '6GB ',
@@ -7243,7 +7250,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb-7-days',
                 'description' => '6GB ',
                 'amount' => 128,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7251,7 +7258,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            451 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '6GB ',
@@ -7259,7 +7266,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb-7-days',
                 'description' => '6GB ',
                 'amount' => 128,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7267,7 +7274,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            452 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '200 Mins ',
@@ -7275,7 +7282,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '200-mins-10-days',
                 'description' => '200 Mins ',
                 'amount' => 129,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7283,7 +7290,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '10 Day',
                 ],
             ],
-            453 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '200 Mins ',
@@ -7291,7 +7298,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '200-mins-10-days',
                 'description' => '200 Mins ',
                 'amount' => 129,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7299,7 +7306,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '10 Day',
                 ],
             ],
-            454 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -7307,7 +7314,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-60-days',
                 'description' => '1.39tk/min ',
                 'amount' => 133,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7315,7 +7322,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '60 Day',
                 ],
             ],
-            455 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1.39tk/min ',
@@ -7323,7 +7330,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '139tkmin-60-days',
                 'description' => '1.39tk/min ',
                 'amount' => 133,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7331,7 +7338,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '60 Day',
                 ],
             ],
-            456 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15GB Youtube+TikTok',
@@ -7339,7 +7346,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-youtubetiktok-7-days',
                 'description' => '15GB Youtube+TikTok',
                 'amount' => 138,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7347,7 +7354,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            457 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15GB Youtube+TikTok',
@@ -7355,7 +7362,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-youtubetiktok-7-days',
                 'description' => '15GB Youtube+TikTok',
                 'amount' => 138,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7363,7 +7370,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            458 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '150 Mins',
@@ -7371,7 +7378,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '150-mins-30-days',
                 'description' => '150 Mins',
                 'amount' => 139,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7379,7 +7386,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            459 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '150 Mins',
@@ -7387,7 +7394,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '150-mins-30-days',
                 'description' => '150 Mins',
                 'amount' => 139,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7395,7 +7402,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            460 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '3GB ',
@@ -7403,7 +7410,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-30-days',
                 'description' => '3GB ',
                 'amount' => 148,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7411,7 +7418,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            461 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '3GB ',
@@ -7419,7 +7426,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '3gb-30-days',
                 'description' => '3GB ',
                 'amount' => 148,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7427,7 +7434,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            462 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '4GB+100Min ',
@@ -7435,7 +7442,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb100min-7-days',
                 'description' => '4GB+100Min ',
                 'amount' => 149,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7443,7 +7450,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            463 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '4GB+100Min ',
@@ -7451,7 +7458,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb100min-7-days',
                 'description' => '4GB+100Min ',
                 'amount' => 149,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7459,7 +7466,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            464 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '10GB(5GB+5GB Hoichoi+Bogo+T-Sports) ',
@@ -7467,7 +7474,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb5gb5gb-hoichoibogot-sports-7-days',
                 'description' => '10GB(5GB+5GB Hoichoi+Bogo+T-Sports) ',
                 'amount' => 158,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7475,7 +7482,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            465 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '10GB(5GB+5GB Hoichoi+Bogo+T-Sports) ',
@@ -7483,7 +7490,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb5gb5gb-hoichoibogot-sports-7-days',
                 'description' => '10GB(5GB+5GB Hoichoi+Bogo+T-Sports) ',
                 'amount' => 158,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7491,7 +7498,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            466 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '8GB',
@@ -7499,7 +7506,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8gb-7-days',
                 'description' => '8GB',
                 'amount' => 168,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7507,7 +7514,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            467 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '10GB ',
@@ -7515,7 +7522,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb-7-days',
                 'description' => '10GB ',
                 'amount' => 168,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7523,7 +7530,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            468 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '190 Mins ',
@@ -7531,7 +7538,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '190-mins-30-days',
                 'description' => '190 Mins ',
                 'amount' => 169,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7539,7 +7546,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            469 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '190 Mins ',
@@ -7547,7 +7554,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '190-mins-30-days',
                 'description' => '190 Mins ',
                 'amount' => 169,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7555,7 +7562,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            470 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '220 Mins ',
@@ -7563,7 +7570,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '220-mins-30-days',
                 'description' => '220 Mins ',
                 'amount' => 178,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7571,7 +7578,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            471 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '220 Mins ',
@@ -7579,7 +7586,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '220-mins-30-days',
                 'description' => '220 Mins ',
                 'amount' => 178,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7587,7 +7594,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            472 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '6GB+130min ',
@@ -7595,7 +7602,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb130min-7-days',
                 'description' => '6GB+130min ',
                 'amount' => 179,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7603,7 +7610,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            473 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '6GB+130min ',
@@ -7611,7 +7618,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '6gb130min-7-days',
                 'description' => '6GB+130min ',
                 'amount' => 179,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7619,7 +7626,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            474 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -7627,7 +7634,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-30-days',
                 'description' => '5GB',
                 'amount' => 197,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7635,7 +7642,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            475 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '5GB',
@@ -7643,7 +7650,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '5gb-30-days',
                 'description' => '5GB',
                 'amount' => 197,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7651,7 +7658,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            476 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '12GB',
@@ -7659,7 +7666,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12gb-7-days',
                 'description' => '12GB',
                 'amount' => 198,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7667,7 +7674,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            477 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '12GB',
@@ -7675,7 +7682,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12gb-7-days',
                 'description' => '12GB',
                 'amount' => 198,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7683,7 +7690,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            478 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '8GB+150min ',
@@ -7691,7 +7698,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8gb150min-7-days',
                 'description' => '8GB+150min ',
                 'amount' => 199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7699,7 +7706,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            479 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '8GB+150min ',
@@ -7707,7 +7714,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8gb150min-7-days',
                 'description' => '8GB+150min ',
                 'amount' => 199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7715,7 +7722,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            480 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '300 Mins ',
@@ -7723,7 +7730,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '300-mins-30-days',
                 'description' => '300 Mins ',
                 'amount' => 207,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7731,7 +7738,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            481 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '300 Mins ',
@@ -7739,7 +7746,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '300-mins-30-days',
                 'description' => '300 Mins ',
                 'amount' => 207,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7747,7 +7754,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            482 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '250 Mins ',
@@ -7755,7 +7762,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '250-mins-30-days',
                 'description' => '250 Mins ',
                 'amount' => 209,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7763,7 +7770,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            483 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '250 Mins ',
@@ -7771,7 +7778,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '250-mins-30-days',
                 'description' => '250 Mins ',
                 'amount' => 209,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7779,7 +7786,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            484 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '12GB+150min',
@@ -7787,7 +7794,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12gb150min-7-days',
                 'description' => '12GB+150min',
                 'amount' => 218,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7795,7 +7802,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            485 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '12GB+150min',
@@ -7803,7 +7810,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12gb150min-7-days',
                 'description' => '12GB+150min',
                 'amount' => 218,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7811,7 +7818,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            486 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '20GB ',
@@ -7819,7 +7826,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '20gb-7-days',
                 'description' => '20GB ',
                 'amount' => 219,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7827,7 +7834,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            487 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '20GB ',
@@ -7835,7 +7842,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '20gb-7-days',
                 'description' => '20GB ',
                 'amount' => 219,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7843,7 +7850,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            488 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '28GB ',
@@ -7851,7 +7858,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '28gb-7-days',
                 'description' => '28GB ',
                 'amount' => 228,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7859,7 +7866,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            489 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '28GB ',
@@ -7867,7 +7874,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '28gb-7-days',
                 'description' => '28GB ',
                 'amount' => 228,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7875,7 +7882,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            490 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '8GB ',
@@ -7883,7 +7890,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8gb-30-days',
                 'description' => '8GB ',
                 'amount' => 247,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7891,7 +7898,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            491 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '8GB ',
@@ -7899,7 +7906,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '8gb-30-days',
                 'description' => '8GB ',
                 'amount' => 247,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7907,7 +7914,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            492 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '40GB ',
@@ -7915,7 +7922,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40gb-7-days',
                 'description' => '40GB ',
                 'amount' => 248,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7923,7 +7930,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            493 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '40GB ',
@@ -7931,7 +7938,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40gb-7-days',
                 'description' => '40GB ',
                 'amount' => 248,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7939,7 +7946,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            494 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15GB+200min ',
@@ -7947,7 +7954,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb200min-7-days',
                 'description' => '15GB+200min ',
                 'amount' => 249,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7955,7 +7962,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            495 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15GB+200min ',
@@ -7963,7 +7970,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb200min-7-days',
                 'description' => '15GB+200min ',
                 'amount' => 249,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -7971,7 +7978,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            496 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '370 Mins ',
@@ -7979,7 +7986,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '370-mins-30-days',
                 'description' => '370 Mins ',
                 'amount' => 257,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -7987,7 +7994,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            497 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '370 Mins ',
@@ -7995,7 +8002,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '370-mins-30-days',
                 'description' => '370 Mins ',
                 'amount' => 257,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8003,7 +8010,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            498 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '4GB+100Min ',
@@ -8011,7 +8018,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb100min-30-days',
                 'description' => '4GB+100Min ',
                 'amount' => 259,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8019,7 +8026,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            499 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '4GB+100Min ',
@@ -8027,7 +8034,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '4gb100min-30-days',
                 'description' => '4GB+100Min ',
                 'amount' => 259,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8035,7 +8042,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            500 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '25GB Youtube+TikTok ',
@@ -8043,7 +8050,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-youtubetiktok-30-days',
                 'description' => '25GB Youtube+TikTok ',
                 'amount' => 288,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8051,7 +8058,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            501 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '25GB Youtube+TikTok ',
@@ -8059,7 +8066,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-youtubetiktok-30-days',
                 'description' => '25GB Youtube+TikTok ',
                 'amount' => 288,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8067,7 +8074,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            502 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '10GB+100min ',
@@ -8075,7 +8082,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb100min-30-days',
                 'description' => '10GB+100min ',
                 'amount' => 297,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8083,7 +8090,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            503 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '10GB+100min ',
@@ -8091,7 +8098,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '10gb100min-30-days',
                 'description' => '10GB+100min ',
                 'amount' => 297,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8099,7 +8106,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            504 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '20GB+300min ',
@@ -8107,7 +8114,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '20gb300min-7-days',
                 'description' => '20GB+300min ',
                 'amount' => 298,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8115,7 +8122,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            505 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '20GB+300min ',
@@ -8123,7 +8130,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '20gb300min-7-days',
                 'description' => '20GB+300min ',
                 'amount' => 298,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8131,7 +8138,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '7 Day',
                 ],
             ],
-            506 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15GB',
@@ -8139,7 +8146,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-30-days',
                 'description' => '15GB',
                 'amount' => 299,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8147,7 +8154,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            507 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15GB',
@@ -8155,7 +8162,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb-30-days',
                 'description' => '15GB',
                 'amount' => 299,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8163,7 +8170,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            508 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '500 Mins',
@@ -8171,7 +8178,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '500-mins-30-days',
                 'description' => '500 Mins',
                 'amount' => 319,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8179,7 +8186,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            509 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '500 Mins',
@@ -8187,7 +8194,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '500-mins-30-days',
                 'description' => '500 Mins',
                 'amount' => 319,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8195,7 +8202,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            510 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '14GB (7GB+7GB Hoichoi+Bogo+T-Sports) ',
@@ -8203,7 +8210,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '14gb-7gb7gb-hoichoibogot-sports-30-days',
                 'description' => '14GB (7GB+7GB Hoichoi+Bogo+T-Sports) ',
                 'amount' => 338,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8211,7 +8218,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            511 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '14GB (7GB+7GB Hoichoi+Bogo+T-Sports) ',
@@ -8219,7 +8226,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '14gb-7gb7gb-hoichoibogot-sports-30-days',
                 'description' => '14GB (7GB+7GB Hoichoi+Bogo+T-Sports) ',
                 'amount' => 338,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8227,7 +8234,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            512 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '12GB+150min ',
@@ -8235,7 +8242,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12gb150min-30-days',
                 'description' => '12GB+150min ',
                 'amount' => 348,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8243,7 +8250,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            513 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '12GB+150min ',
@@ -8251,7 +8258,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '12gb150min-30-days',
                 'description' => '12GB+150min ',
                 'amount' => 348,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8259,7 +8266,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            514 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '18GB ',
@@ -8267,7 +8274,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '18gb-30-days',
                 'description' => '18GB ',
                 'amount' => 349,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8275,7 +8282,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            515 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '18GB ',
@@ -8283,7 +8290,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '18gb-30-days',
                 'description' => '18GB ',
                 'amount' => 349,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8291,7 +8298,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            516 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '570 Mins ',
@@ -8299,7 +8306,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '570-mins-30-days',
                 'description' => '570 Mins ',
                 'amount' => 367,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8307,7 +8314,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            517 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '570 Mins ',
@@ -8315,7 +8322,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '570-mins-30-days',
                 'description' => '570 Mins ',
                 'amount' => 367,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8323,7 +8330,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            518 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15GB+300min ',
@@ -8331,7 +8338,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb300min-30-days',
                 'description' => '15GB+300min ',
                 'amount' => 397,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8339,7 +8346,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            519 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '15GB+300min ',
@@ -8347,7 +8354,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '15gb300min-30-days',
                 'description' => '15GB+300min ',
                 'amount' => 397,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8355,7 +8362,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            520 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '20GB ',
@@ -8363,7 +8370,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '20gb-30-days',
                 'description' => '20GB ',
                 'amount' => 398,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8371,7 +8378,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            521 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '20GB ',
@@ -8379,7 +8386,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '20gb-30-days',
                 'description' => '20GB ',
                 'amount' => 398,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8387,7 +8394,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            522 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '650 Mins',
@@ -8395,7 +8402,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '650-mins-30-days',
                 'description' => '650 Mins',
                 'amount' => 409,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8403,7 +8410,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            523 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '650 Mins',
@@ -8411,7 +8418,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '650-mins-30-days',
                 'description' => '650 Mins',
                 'amount' => 409,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8419,7 +8426,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            524 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '22GB',
@@ -8427,7 +8434,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '22gb-30-days',
                 'description' => '22GB',
                 'amount' => 448,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -8435,7 +8442,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            525 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '22GB',
@@ -8443,7 +8450,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '22gb-30-days',
                 'description' => '22GB',
                 'amount' => 448,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -8451,7 +8458,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            526 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '28GB',
@@ -8459,7 +8466,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '28gb-30-days',
                 'description' => '28GB',
                 'amount' => 497,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8467,7 +8474,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            527 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '28GB',
@@ -8475,7 +8482,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '28gb-30-days',
                 'description' => '28GB',
                 'amount' => 497,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8483,7 +8490,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            528 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '22GB+400min ',
@@ -8491,7 +8498,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '22gb400min-30-days',
                 'description' => '22GB+400min ',
                 'amount' => 499,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8499,7 +8506,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            529 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '22GB+400min ',
@@ -8507,7 +8514,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '22gb400min-30-days',
                 'description' => '22GB+400min ',
                 'amount' => 499,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8515,7 +8522,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            530 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '800 Mins ',
@@ -8523,7 +8530,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '800-mins-30-days',
                 'description' => '800 Mins ',
                 'amount' => 507,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8531,7 +8538,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            531 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '800 Mins ',
@@ -8539,7 +8546,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '800-mins-30-days',
                 'description' => '800 Mins ',
                 'amount' => 507,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8547,7 +8554,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            532 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '800 Mins',
@@ -8555,7 +8562,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '800-mins-30-days',
                 'description' => '800 Mins',
                 'amount' => 509,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8563,7 +8570,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            533 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '800 Mins',
@@ -8571,7 +8578,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '800-mins-30-days',
                 'description' => '800 Mins',
                 'amount' => 509,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8579,7 +8586,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            534 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '35GB',
@@ -8587,7 +8594,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '35gb-30-days',
                 'description' => '35GB',
                 'amount' => 548,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -8595,7 +8602,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            535 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '35GB',
@@ -8603,7 +8610,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '35gb-30-days',
                 'description' => '35GB',
                 'amount' => 548,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -8611,7 +8618,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            536 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '40GB',
@@ -8619,7 +8626,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40gb-30-days',
                 'description' => '40GB',
                 'amount' => 598,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8627,7 +8634,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            537 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '40GB',
@@ -8635,7 +8642,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '40gb-30-days',
                 'description' => '40GB',
                 'amount' => 598,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8643,7 +8650,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            538 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '30GB+500min ',
@@ -8651,7 +8658,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30gb500min-30-days',
                 'description' => '30GB+500min ',
                 'amount' => 599,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8659,7 +8666,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            539 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '30GB+500min ',
@@ -8667,7 +8674,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '30gb500min-30-days',
                 'description' => '30GB+500min ',
                 'amount' => 599,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8675,7 +8682,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            540 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1000 Mins',
@@ -8683,7 +8690,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1000-mins-30-days',
                 'description' => '1000 Mins',
                 'amount' => 629,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8691,7 +8698,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            541 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1000 Mins',
@@ -8699,7 +8706,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1000-mins-30-days',
                 'description' => '1000 Mins',
                 'amount' => 629,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8707,7 +8714,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            542 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '55GB',
@@ -8715,7 +8722,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '55gb-30-days',
                 'description' => '55GB',
                 'amount' => 648,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -8723,7 +8730,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Days',
                 ],
             ],
-            543 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '55GB',
@@ -8731,7 +8738,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '55gb-30-days',
                 'description' => '55GB',
                 'amount' => 648,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -8739,7 +8746,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Days',
                 ],
             ],
-            544 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '45GB+600min',
@@ -8747,7 +8754,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '45gb600min-30-days',
                 'description' => '45GB+600min',
                 'amount' => 699,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8755,7 +8762,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            545 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '45GB+600min',
@@ -8763,7 +8770,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '45gb600min-30-days',
                 'description' => '45GB+600min',
                 'amount' => 699,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8771,7 +8778,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            546 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '75GB',
@@ -8779,7 +8786,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '75gb-30-days',
                 'description' => '75GB',
                 'amount' => 748,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -8787,7 +8794,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            547 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '75GB',
@@ -8795,7 +8802,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '75gb-30-days',
                 'description' => '75GB',
                 'amount' => 748,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -8803,7 +8810,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            548 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '50GB+700min',
@@ -8811,7 +8818,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb700min-30-days',
                 'description' => '50GB+700min',
                 'amount' => 799,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8819,7 +8826,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            549 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '50GB+700min',
@@ -8827,7 +8834,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb700min-30-days',
                 'description' => '50GB+700min',
                 'amount' => 799,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8835,7 +8842,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            550 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '25GB ',
@@ -8843,7 +8850,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-unlimited',
                 'description' => '25GB ',
                 'amount' => 848,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8851,7 +8858,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            551 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '25GB ',
@@ -8859,7 +8866,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '25gb-unlimited',
                 'description' => '25GB ',
                 'amount' => 848,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8867,7 +8874,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            552 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -8875,7 +8882,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-365-days',
                 'description' => '1p/s ',
                 'amount' => 869,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8883,7 +8890,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '365 Day',
                 ],
             ],
-            553 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '1p/s ',
@@ -8891,7 +8898,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '1ps-365-days',
                 'description' => '1p/s ',
                 'amount' => 869,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8899,7 +8906,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '365 Day',
                 ],
             ],
-            554 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '150GB',
@@ -8907,7 +8914,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '150gb-30-days',
                 'description' => '150GB',
                 'amount' => 898,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'prepaid',
@@ -8915,7 +8922,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            555 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '150GB',
@@ -8923,7 +8930,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '150gb-30-days',
                 'description' => '150GB',
                 'amount' => 898,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 1,
                     'connection_type' => 'postpaid',
@@ -8931,7 +8938,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            556 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '50GB+900min ',
@@ -8939,7 +8946,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb900min-30-days',
                 'description' => '50GB+900min ',
                 'amount' => 899,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8947,7 +8954,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            557 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '50GB+900min ',
@@ -8955,7 +8962,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb900min-30-days',
                 'description' => '50GB+900min ',
                 'amount' => 899,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8963,7 +8970,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            558 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '60GB+1400min ',
@@ -8971,7 +8978,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60gb1400min-30-days',
                 'description' => '60GB+1400min ',
                 'amount' => 999,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -8979,7 +8986,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            559 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '60GB+1400min ',
@@ -8987,7 +8994,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '60gb1400min-30-days',
                 'description' => '60GB+1400min ',
                 'amount' => 999,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -8995,7 +9002,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => '30 Day',
                 ],
             ],
-            560 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '50GB',
@@ -9003,7 +9010,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb-unlimited',
                 'description' => '50GB',
                 'amount' => 1298,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -9011,7 +9018,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            561 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '50GB',
@@ -9019,7 +9026,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '50gb-unlimited',
                 'description' => '50GB',
                 'amount' => 1298,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -9027,7 +9034,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            562 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '75GB',
@@ -9035,7 +9042,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '75gb-unlimited',
                 'description' => '75GB',
                 'amount' => 1598,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'prepaid',
@@ -9043,7 +9050,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => 'Unlimited Days',
                 ],
             ],
-            563 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '75GB',
@@ -9051,7 +9058,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '75gb-unlimited',
                 'description' => '75GB',
                 'amount' => 1598,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => 0,
                     'connection_type' => 'postpaid',
@@ -9065,7 +9072,7 @@ class ServicePackageSeeder extends Seeder
     public function blockedAmounts(): array
     {
         return [
-            0 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9073,7 +9080,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9081,7 +9088,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            1 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9089,7 +9096,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9097,7 +9104,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            2 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9105,7 +9112,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9113,7 +9120,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            3 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9121,7 +9128,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9129,7 +9136,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            4 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9137,7 +9144,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 12,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9145,7 +9152,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            5 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9153,7 +9160,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 12,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9161,7 +9168,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            6 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9169,7 +9176,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 13,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9177,7 +9184,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            7 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9185,7 +9192,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 13,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9193,7 +9200,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            8 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9201,7 +9208,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 14,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9209,7 +9216,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            9 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9217,7 +9224,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 14,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9225,7 +9232,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            10 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9233,7 +9240,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9241,7 +9248,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            11 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9249,7 +9256,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9257,7 +9264,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            12 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9265,7 +9272,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 16,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9273,7 +9280,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            13 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9281,7 +9288,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 16,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9289,7 +9296,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            14 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9297,7 +9304,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 17,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9305,7 +9312,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            15 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9313,7 +9320,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 17,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9321,7 +9328,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            16 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9329,7 +9336,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 21,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9337,7 +9344,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            17 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9345,7 +9352,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 21,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9353,7 +9360,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            18 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9361,7 +9368,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 37,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9369,7 +9376,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            19 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9377,7 +9384,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 37,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9385,7 +9392,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            20 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9393,7 +9400,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 68,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9401,7 +9408,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            21 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9409,7 +9416,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 68,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9417,7 +9424,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            22 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9425,7 +9432,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 78,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9433,7 +9440,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            23 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9441,7 +9448,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 78,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9449,7 +9456,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            24 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9457,7 +9464,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 93,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9465,7 +9472,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            25 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9473,7 +9480,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 93,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9481,7 +9488,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            26 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9489,7 +9496,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 123,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9497,7 +9504,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            27 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9505,7 +9512,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 123,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9513,7 +9520,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            28 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9521,7 +9528,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 124,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9529,7 +9536,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            29 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9537,7 +9544,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 124,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9545,7 +9552,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            30 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9553,7 +9560,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 156,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9561,7 +9568,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            31 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9569,7 +9576,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 156,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9577,7 +9584,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            32 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9585,7 +9592,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 169,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9593,7 +9600,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            33 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9601,7 +9608,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 169,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9609,7 +9616,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            34 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9617,7 +9624,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 177,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9625,7 +9632,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            35 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9633,7 +9640,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 177,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9641,7 +9648,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            36 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9649,7 +9656,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 189,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9657,7 +9664,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            37 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9665,7 +9672,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 189,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9673,7 +9680,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            38 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9681,7 +9688,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 194,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9689,7 +9696,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            39 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9697,7 +9704,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 194,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9705,7 +9712,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            40 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9713,7 +9720,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 196,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9721,7 +9728,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            41 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9729,7 +9736,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 196,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9737,7 +9744,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            42 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9745,7 +9752,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 197,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9753,7 +9760,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            43 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9761,7 +9768,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 197,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9769,7 +9776,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            44 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9777,7 +9784,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 209,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9785,7 +9792,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            45 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9793,7 +9800,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 209,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9801,7 +9808,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            46 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9809,7 +9816,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 228,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9817,7 +9824,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            47 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9825,7 +9832,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 228,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9833,7 +9840,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            48 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9841,7 +9848,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 233,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9849,7 +9856,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            49 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9857,7 +9864,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 233,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9865,7 +9872,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            50 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9873,7 +9880,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 288,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9881,7 +9888,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            51 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9889,7 +9896,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 288,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9897,7 +9904,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            52 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9905,7 +9912,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 289,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9913,7 +9920,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            53 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9921,7 +9928,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 289,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9929,7 +9936,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            54 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9937,7 +9944,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 294,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9945,7 +9952,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            55 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9953,7 +9960,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 294,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9961,7 +9968,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            56 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9969,7 +9976,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 308,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -9977,7 +9984,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            57 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -9985,7 +9992,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 308,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -9993,7 +10000,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            58 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10001,7 +10008,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 318,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10009,7 +10016,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            59 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10017,7 +10024,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 318,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10025,7 +10032,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            60 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10033,7 +10040,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 339,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10041,7 +10048,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            61 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10049,7 +10056,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 339,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10057,7 +10064,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            62 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10065,7 +10072,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 358,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10073,7 +10080,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            63 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10081,7 +10088,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 358,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10089,7 +10096,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            64 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10097,7 +10104,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 359,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10105,7 +10112,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            65 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10113,7 +10120,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 359,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10121,7 +10128,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            66 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10129,7 +10136,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 389,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10137,7 +10144,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            67 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10145,7 +10152,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 389,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10153,7 +10160,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            68 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10161,7 +10168,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 397,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10169,7 +10176,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            69 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10177,7 +10184,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 397,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10185,7 +10192,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            70 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10193,7 +10200,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 409,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10201,7 +10208,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            71 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10209,7 +10216,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 409,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10217,7 +10224,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            72 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10225,7 +10232,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 439,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10233,7 +10240,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            73 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10241,7 +10248,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 439,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10249,7 +10256,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            74 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10257,7 +10264,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 448,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10265,7 +10272,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            75 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10273,7 +10280,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 448,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10281,7 +10288,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            76 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10289,7 +10296,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 448,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10297,7 +10304,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            77 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10305,7 +10312,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 448,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10313,7 +10320,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            78 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10321,7 +10328,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 488,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10329,7 +10336,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            79 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10337,7 +10344,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 488,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10345,7 +10352,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            80 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10353,7 +10360,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 497,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10361,7 +10368,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            81 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10369,7 +10376,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 497,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10377,7 +10384,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            82 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10385,7 +10392,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 516,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10393,7 +10400,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            83 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10401,7 +10408,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 516,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10409,7 +10416,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            84 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10417,7 +10424,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 548,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10425,7 +10432,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            85 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10433,7 +10440,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 548,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10441,7 +10448,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            86 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10449,7 +10456,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 594,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10457,7 +10464,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            87 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10465,7 +10472,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 594,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10473,7 +10480,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            88 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10481,7 +10488,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 604,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10489,7 +10496,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            89 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10497,7 +10504,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 604,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10505,7 +10512,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            90 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10513,7 +10520,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 639,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10521,7 +10528,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            91 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10529,7 +10536,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 639,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10537,7 +10544,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            92 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10545,7 +10552,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 698,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10553,7 +10560,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            93 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10561,7 +10568,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 698,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10569,7 +10576,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            94 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10577,7 +10584,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 704,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10585,7 +10592,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            95 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10593,7 +10600,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 704,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10601,7 +10608,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            96 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10609,7 +10616,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 796,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10617,7 +10624,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            97 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10625,7 +10632,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 796,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10633,7 +10640,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            98 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10641,7 +10648,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 898,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10649,7 +10656,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            99 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10657,7 +10664,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 898,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10665,7 +10672,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            100 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10673,7 +10680,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 899,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10681,7 +10688,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            101 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10689,7 +10696,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 899,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10697,7 +10704,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            102 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10705,7 +10712,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1096,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10713,7 +10720,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            103 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10721,7 +10728,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1096,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10729,7 +10736,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            104 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10737,7 +10744,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1099,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10745,7 +10752,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            105 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10753,7 +10760,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1099,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10761,7 +10768,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            106 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10769,7 +10776,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1349,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10777,7 +10784,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            107 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10785,7 +10792,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1349,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10793,7 +10800,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            108 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10801,7 +10808,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1499,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10809,7 +10816,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            109 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10817,7 +10824,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1499,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10825,7 +10832,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            110 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10833,7 +10840,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1749,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10841,7 +10848,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            111 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10849,7 +10856,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1749,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10857,7 +10864,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            112 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10865,7 +10872,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 2697,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10873,7 +10880,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            113 => [
+            [
                 'service_id' => 1,
                 'country_id' => 19,
                 'name' => '',
@@ -10881,7 +10888,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 2697,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10889,7 +10896,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            114 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -10897,7 +10904,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10905,7 +10912,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            115 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -10913,7 +10920,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -10921,7 +10928,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            116 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -10929,7 +10936,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10937,7 +10944,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            117 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -10945,7 +10952,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 12,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10953,7 +10960,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            118 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -10961,7 +10968,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 13,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10969,7 +10976,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            119 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -10977,7 +10984,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -10985,7 +10992,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            120 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -10993,7 +11000,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 16,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11001,7 +11008,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            121 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11009,7 +11016,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 17,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11017,7 +11024,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            122 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11025,7 +11032,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 18,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11033,7 +11040,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            123 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11041,7 +11048,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 23,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11049,7 +11056,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            124 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11057,7 +11064,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 36,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11065,7 +11072,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            125 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11073,7 +11080,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 41,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11081,7 +11088,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            126 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11089,7 +11096,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 46,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11097,7 +11104,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            127 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11105,7 +11112,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 73,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11113,7 +11120,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            128 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11121,7 +11128,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 76,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11129,7 +11136,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            129 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11137,7 +11144,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 96,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11145,7 +11152,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            130 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11153,7 +11160,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 178,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11161,7 +11168,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            131 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11169,7 +11176,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 194,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11177,7 +11184,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            132 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11185,7 +11192,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 294,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11193,7 +11200,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            133 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11201,7 +11208,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 348,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11209,7 +11216,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            134 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11217,7 +11224,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 394,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11225,7 +11232,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            135 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11233,7 +11240,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 429,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11241,7 +11248,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            136 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11249,7 +11256,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 698,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11257,7 +11264,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            137 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11265,7 +11272,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 794,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11273,7 +11280,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            138 => [
+            [
                 'service_id' => 2,
                 'country_id' => 19,
                 'name' => '',
@@ -11281,7 +11288,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 907,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11289,7 +11296,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            139 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11297,7 +11304,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11305,7 +11312,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            140 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11313,7 +11320,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11321,7 +11328,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            141 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11329,7 +11336,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11337,7 +11344,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            142 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11345,7 +11352,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11353,7 +11360,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            143 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11361,7 +11368,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 12,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11369,7 +11376,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            144 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11377,7 +11384,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 12,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11385,7 +11392,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            145 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11393,7 +11400,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 13,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11401,7 +11408,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            146 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11409,7 +11416,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 13,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11417,7 +11424,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            147 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11425,7 +11432,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 14,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11433,7 +11440,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            148 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11441,7 +11448,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 14,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11449,7 +11456,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            149 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11457,7 +11464,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11465,7 +11472,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            150 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11473,7 +11480,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11481,7 +11488,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            151 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11489,7 +11496,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 16,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11497,7 +11504,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            152 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11505,7 +11512,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 16,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11513,7 +11520,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            153 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11521,7 +11528,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 17,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11529,7 +11536,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            154 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11537,7 +11544,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 17,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11545,7 +11552,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            155 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11553,7 +11560,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 18,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11561,7 +11568,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            156 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11569,7 +11576,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 18,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11577,7 +11584,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            157 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11585,7 +11592,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 37,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11593,7 +11600,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            158 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11601,7 +11608,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 37,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11609,7 +11616,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            159 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11617,7 +11624,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 42,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11625,7 +11632,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            160 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11633,7 +11640,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 42,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11641,7 +11648,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            161 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11649,7 +11656,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 51,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11657,7 +11664,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            162 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11665,7 +11672,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 51,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11673,7 +11680,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            163 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11681,7 +11688,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 67,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11689,7 +11696,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            164 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11697,7 +11704,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 67,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11705,7 +11712,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            165 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11713,7 +11720,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 74,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11721,7 +11728,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            166 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11729,7 +11736,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 74,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11737,7 +11744,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            167 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11745,7 +11752,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 88,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11753,7 +11760,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            168 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11761,7 +11768,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 88,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11769,7 +11776,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            169 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11777,7 +11784,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 109,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11785,7 +11792,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            170 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11793,7 +11800,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 109,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11801,7 +11808,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            171 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11809,7 +11816,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 112,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11817,7 +11824,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            172 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11825,7 +11832,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 112,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11833,7 +11840,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            173 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11841,7 +11848,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 121,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11849,7 +11856,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            174 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11857,7 +11864,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 121,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11865,7 +11872,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            175 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11873,7 +11880,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 122,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11881,7 +11888,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            176 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11889,7 +11896,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 122,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11897,7 +11904,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            177 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11905,7 +11912,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 127,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11913,7 +11920,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            178 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11921,7 +11928,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 127,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11929,7 +11936,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            179 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11937,7 +11944,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 136,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11945,7 +11952,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            180 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11953,7 +11960,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 136,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11961,7 +11968,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            181 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11969,7 +11976,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 144,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -11977,7 +11984,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            182 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -11985,7 +11992,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 144,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -11993,7 +12000,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            183 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12001,7 +12008,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 146,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12009,7 +12016,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            184 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12017,7 +12024,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 146,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12025,7 +12032,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            185 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12033,7 +12040,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 149,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12041,7 +12048,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            186 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12049,7 +12056,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 149,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12057,7 +12064,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            187 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12065,7 +12072,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 159,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12073,7 +12080,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            188 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12081,7 +12088,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 159,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12089,7 +12096,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            189 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12097,7 +12104,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 178,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12105,7 +12112,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            190 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12113,7 +12120,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 178,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12121,7 +12128,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            191 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12129,7 +12136,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 206,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12137,7 +12144,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            192 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12145,7 +12152,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 206,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12153,7 +12160,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            193 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12161,7 +12168,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 238,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12169,7 +12176,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            194 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12177,7 +12184,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 238,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12185,7 +12192,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            195 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12193,7 +12200,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 244,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12201,7 +12208,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            196 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12209,7 +12216,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 244,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12217,7 +12224,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            197 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12225,7 +12232,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 307,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12233,7 +12240,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            198 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12241,7 +12248,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 307,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12249,7 +12256,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            199 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12257,7 +12264,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 358,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12265,7 +12272,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            200 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12273,7 +12280,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 358,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12281,7 +12288,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            201 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12289,7 +12296,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 407,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12297,7 +12304,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            202 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12305,7 +12312,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 407,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12313,7 +12320,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            203 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12321,7 +12328,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 489,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12329,7 +12336,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            204 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12337,7 +12344,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 489,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12345,7 +12352,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            205 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12353,7 +12360,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 496,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12361,7 +12368,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            206 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12369,7 +12376,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 496,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12377,7 +12384,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            207 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12385,7 +12392,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 516,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12393,7 +12400,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            208 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12401,7 +12408,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 516,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12409,7 +12416,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            209 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12417,7 +12424,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 589,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12425,7 +12432,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            210 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12433,7 +12440,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 589,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12441,7 +12448,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            211 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12449,7 +12456,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 591,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12457,7 +12464,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            212 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12465,7 +12472,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 591,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12473,7 +12480,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            213 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12481,7 +12488,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 609,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12489,7 +12496,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            214 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12497,7 +12504,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 609,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12505,7 +12512,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            215 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12513,7 +12520,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 649,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12521,7 +12528,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            216 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12529,7 +12536,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 649,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12537,7 +12544,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            217 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12545,7 +12552,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 729,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12553,7 +12560,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            218 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12561,7 +12568,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 729,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12569,7 +12576,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            219 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12577,7 +12584,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 796,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12585,7 +12592,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            220 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12593,7 +12600,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 796,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12601,7 +12608,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            221 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12609,7 +12616,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 848,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12617,7 +12624,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            222 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12625,7 +12632,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 848,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12633,7 +12640,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            223 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12641,7 +12648,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 911,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12649,7 +12656,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            224 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12657,7 +12664,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 911,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12665,7 +12672,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            225 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12673,7 +12680,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12681,7 +12688,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            226 => [
+            [
                 'service_id' => 3,
                 'country_id' => 19,
                 'name' => '',
@@ -12689,7 +12696,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12697,7 +12704,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            227 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12705,7 +12712,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12713,7 +12720,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            228 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12721,7 +12728,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12729,7 +12736,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            229 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12737,7 +12744,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12745,7 +12752,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            230 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12753,7 +12760,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12761,7 +12768,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            231 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12769,7 +12776,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 12,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12777,7 +12784,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            232 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12785,7 +12792,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 12,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12793,7 +12800,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            233 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12801,7 +12808,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 13,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12809,7 +12816,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            234 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12817,7 +12824,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 13,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12825,7 +12832,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            235 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12833,7 +12840,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12841,7 +12848,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            236 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12849,7 +12856,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12857,7 +12864,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            237 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12865,7 +12872,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 16,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12873,7 +12880,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            238 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12881,7 +12888,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 16,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12889,7 +12896,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            239 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12897,7 +12904,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 17,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12905,7 +12912,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            240 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12913,7 +12920,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 17,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12921,7 +12928,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            241 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12929,7 +12936,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 41,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12937,7 +12944,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            242 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12945,7 +12952,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 41,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12953,7 +12960,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            243 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12961,7 +12968,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 73,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -12969,7 +12976,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            244 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12977,7 +12984,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 73,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -12985,7 +12992,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            245 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -12993,7 +13000,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 89,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13001,7 +13008,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            246 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13009,7 +13016,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 89,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13017,7 +13024,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            247 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13025,7 +13032,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 96,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13033,7 +13040,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            248 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13041,7 +13048,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 96,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13049,7 +13056,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            249 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13057,7 +13064,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 97,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13065,7 +13072,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            250 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13073,7 +13080,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 97,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13081,7 +13088,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            251 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13089,7 +13096,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 161,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13097,7 +13104,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            252 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13105,7 +13112,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 161,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13113,7 +13120,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            253 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13121,7 +13128,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 221,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13129,7 +13136,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            254 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13137,7 +13144,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 221,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13145,7 +13152,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            255 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13153,7 +13160,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 238,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13161,7 +13168,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            256 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13169,7 +13176,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 238,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13177,7 +13184,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            257 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13185,7 +13192,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 239,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13193,7 +13200,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            258 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13201,7 +13208,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 239,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13209,7 +13216,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            259 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13217,7 +13224,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 278,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13225,7 +13232,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            260 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13233,7 +13240,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 278,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13241,7 +13248,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            261 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13249,7 +13256,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 289,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13257,7 +13264,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            262 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13265,7 +13272,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 289,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13273,7 +13280,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            263 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13281,7 +13288,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 307,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13289,7 +13296,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            264 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13297,7 +13304,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 307,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13305,7 +13312,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            265 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13313,7 +13320,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 399,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13321,7 +13328,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            266 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13329,7 +13336,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 399,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13337,7 +13344,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            267 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13345,7 +13352,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 496,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13353,7 +13360,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            268 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13361,7 +13368,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 496,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13369,7 +13376,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            269 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13377,7 +13384,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 498,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13385,7 +13392,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            270 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13393,7 +13400,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 498,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13401,7 +13408,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            271 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13409,7 +13416,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 609,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13417,7 +13424,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            272 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13425,7 +13432,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 609,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13433,7 +13440,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            273 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13441,7 +13448,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 698,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13449,7 +13456,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            274 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13457,7 +13464,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 698,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13465,7 +13472,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            275 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13473,7 +13480,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 798,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13481,7 +13488,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            276 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13489,7 +13496,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 798,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13497,7 +13504,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            277 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13505,7 +13512,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13513,7 +13520,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            278 => [
+            [
                 'service_id' => 6,
                 'country_id' => 19,
                 'name' => '',
@@ -13521,7 +13528,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 1199,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13529,7 +13536,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            279 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13537,7 +13544,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13545,7 +13552,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            280 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13553,7 +13560,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 10,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13561,7 +13568,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            281 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13569,7 +13576,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13577,7 +13584,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            282 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13585,7 +13592,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 11,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13593,7 +13600,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            283 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13601,7 +13608,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 12,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13609,7 +13616,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            284 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13617,7 +13624,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 12,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13625,7 +13632,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            285 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13633,7 +13640,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 13,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13641,7 +13648,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            286 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13649,7 +13656,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 13,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13657,7 +13664,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            287 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13665,7 +13672,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 14,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13673,7 +13680,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            288 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13681,7 +13688,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 14,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13689,7 +13696,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            289 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13697,7 +13704,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13705,7 +13712,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            290 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13713,7 +13720,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 15,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13721,7 +13728,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            291 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13729,7 +13736,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 16,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13737,7 +13744,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            292 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13745,7 +13752,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 16,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13753,7 +13760,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            293 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13761,7 +13768,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 17,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13769,7 +13776,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            294 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13777,7 +13784,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 17,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
@@ -13785,7 +13792,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            295 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13793,7 +13800,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 18,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'prepaid',
@@ -13801,7 +13808,7 @@ class ServicePackageSeeder extends Seeder
                     'validity' => null,
                 ],
             ],
-            296 => [
+            [
                 'service_id' => 13,
                 'country_id' => 19,
                 'name' => '',
@@ -13809,7 +13816,7 @@ class ServicePackageSeeder extends Seeder
                 'slug' => '',
                 'description' => '',
                 'amount' => 18,
-                'enabled' => false,
+                'enabled' => true,
                 'service_package_data' => [
                     'is_popular' => null,
                     'connection_type' => 'postpaid',
