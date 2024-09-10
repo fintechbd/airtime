@@ -29,8 +29,6 @@ class SSLVirtualRecharge implements AirtimeTransfer
 
     private PendingRequest $client;
 
-    private mixed $options;
-
     /**
      * SSLVirtualRecharge constructor.
      */
@@ -90,7 +88,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
         return $this->post('/bill-info', $params);
     }
 
-    private function post($url = '', $payload = [])
+    private function post($url = '', $payload = []): array
     {
         $response = $this->client->post($url, $payload)->json();
 
