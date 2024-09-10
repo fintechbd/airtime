@@ -51,6 +51,8 @@ class AirtimeServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'airtime');
 
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/airtime'),
         ]);
