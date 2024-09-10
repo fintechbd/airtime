@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 if (Config::get('fintech.airtime.enabled')) {
-//dd(Config::get('fintech.airtime.enabled'));
-Route::prefix(config('fintech.airtime.root_prefix', 'api/'))->middleware(['api', 'http_log', 'encrypted'])->group(function () {
+    //dd(Config::get('fintech.airtime.enabled'));
+    Route::prefix(config('fintech.airtime.root_prefix', 'api/'))->middleware(['api', 'http_log', 'encrypted'])->group(function () {
         Route::prefix('airtime')->name('airtime.')
             ->middleware(config('fintech.auth.middleware'))
             ->group(function () {
