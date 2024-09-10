@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "API" middleware group. Enjoy building your API!
 |
 */
-
 if (Config::get('fintech.airtime.enabled')) {
+//dd(Config::get('fintech.airtime.enabled'));
 Route::prefix(config('fintech.airtime.root_prefix', 'api/'))->middleware(['api', 'http_log', 'encrypted'])->group(function () {
         Route::prefix('airtime')->name('airtime.')
             ->middleware(config('fintech.auth.middleware'))
