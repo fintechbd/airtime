@@ -20,9 +20,12 @@ class ServiceOperatorSeeder extends Seeder
 
             $country = MetaData::country()->list(['iso2' => 'BD'])->first()->id;
 
+            $vendor = Business::serviceVendor()->list(['service_vendor_slug' => 'sslwireless'])->first();
+
             foreach ($this->data() as $entry) {
                 Business::serviceTypeManager($entry, $parent)
                     ->hasService()
+                    ->vendor($vendor)
                     ->distCountries([$country])
                     ->enabled()
                     ->execute();
