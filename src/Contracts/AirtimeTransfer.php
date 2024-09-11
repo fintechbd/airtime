@@ -47,4 +47,12 @@ interface AirtimeTransfer
      * @throws ErrorException
      */
     public function cancelOrder(BaseModel $order): mixed;
+
+    /**
+     * Method to request all the service packages available through
+     * this service vendor
+     *
+     * @return array
+     */
+    public function servicePackages() : array;
 }

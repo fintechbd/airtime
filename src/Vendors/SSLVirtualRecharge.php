@@ -6,8 +6,10 @@ use ErrorException;
 use Fintech\Airtime\Contracts\AirtimeTransfer;
 use Fintech\Business\Facades\Business;
 use Fintech\Core\Abstracts\BaseModel;
+use Fintech\MetaData\Facades\MetaData;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class SSLVirtualRecharge implements AirtimeTransfer
 {
@@ -85,12 +87,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
             $params['utility_secret_key'] = $serviceStatData['utility_secret_key'] ?? null;
         }
 
-        return $this->post('/bill-info', $params);
-    }
-
-    private function post($url = '', $payload = []): array
-    {
-        $response = $this->client->post($url, $payload)->json();
+        $response = $this->post('/bill-info', $params);
 
         if ($response['status'] == 'api_success') {
             return [
@@ -107,6 +104,11 @@ class SSLVirtualRecharge implements AirtimeTransfer
             'message' => $response['status_title'] ?? null,
             'origin_message' => $response,
         ];
+    }
+
+    private function post($url = '', $payload = []): mixed
+    {
+        return $this->client->post($url, $payload)->body();
     }
 
     /**
@@ -177,9 +179,76 @@ class SSLVirtualRecharge implements AirtimeTransfer
         return $this->post('/bill-cancel', $params);
     }
 
-    private function get($url = '', $payload = [])
+    /**
+     * Method to request all the service packages available through
+     * this service vendor
+     *
+     * @return array
+     */
+    public function servicePackages(): array
     {
-        return $this->client->get($url, $payload)->json();
+        $response = (!config('fintech.airtime.providers.sslwireless.test'))
+            ? $this->post("/vr/package-list")
+            : json_decode(file_get_contents(base_path('some.js')), true);
 
+        $packages = [];
+        $operators = [];
+        $operators[1] = Business::service()->list(['service_slug' => 'grameen_phone_bd'])->first()->id;
+        $operators[2] = Business::service()->list(['service_slug' => 'banglalink_bd'])->first()->id;
+        $operators[3] = Business::service()->list(['service_slug' => 'robi_bd'])->first()->id;
+        $operators[5] = Business::service()->list(['service_slug' => 'teletalk_bd'])->first()->id;
+        $operators[6] = Business::service()->list(['service_slug' => 'airtel_bd'])->first()->id;
+        $operators[13] = Business::service()->list(['service_slug' => 'gp_skitto_bd'])->first()->id;
+
+        $bangladesh = MetaData::country()->list(['iso2' => 'BD'])->first();
+
+        if ($response['status'] == 'success') {
+
+            if (!empty($response['data']['triggerAmount']['list'])) {
+                foreach ($response['data']['triggerAmount']['list'] as $package) {
+                    $temp = $this->mapToServicePackage($package);
+                    $temp['service_id'] = $operators[$package['operator_id']] ?? null;
+                    $temp['country_id'] = $bangladesh->getkey();
+
+                    $packages[] = $temp;
+                }
+            }
+
+            if (!empty($response['data']['blockedAmount']['list'])) {
+                foreach ($response['data']['blockedAmount']['list'] as $package) {
+                    $temp = $this->mapToServicePackage($package, true);
+                    $temp['service_id'] = $operators[$package['operator_id']] ?? null;
+                    $temp['country_id'] = $bangladesh->getkey();
+
+                    $packages[] = $temp;
+                }
+            }
+        }
+
+        return $packages;
+    }
+
+    private function mapToServicePackage(array $package, bool $blocked = false): array
+    {
+        $model = [
+            'name' => $package['offer_title'] ? filter_var($package['offer_title'], FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH) : null,
+            'description' => $package['offer_description'] ? filter_var($package['offer_description'], FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH) : null,
+            'type' => $package['offer_type'] ?? 'combo',
+            'amount' => intval($package['amount'] ?? '0'),
+            'enabled' => !$blocked,
+            'blocked' => $blocked,
+            'service_package_data' => [
+                'is_popular' => (bool)($package['is_popular'] ?? 0),
+                'connection_type' => $package['connection_type'] ?? 'prepaid',
+                'validity_seconds' => $package['offer_validity_seconds'] ?? 999999999,
+                'validity' => $package['offer_validity'] ?? 'N/A'
+            ],
+        ];
+
+        $model['slug'] = Str::slug($model['name']);
+
+        $model['name'] = preg_replace('/^(.*), (.*)$/i', '$1', $model['name']);
+
+        return $model;
     }
 }
