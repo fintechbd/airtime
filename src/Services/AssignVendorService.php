@@ -86,6 +86,7 @@ class AssignVendorService
 
     /**
      * @throws ErrorException
+     * @throws AirtimeException
      */
     public function cancelOrder(BaseModel $order): mixed
     {
@@ -96,6 +97,7 @@ class AssignVendorService
 
     /**
      * @throws AirtimeException
+     * @throws ErrorException
      */
     public function orderStatus(BaseModel $order): mixed
     {
@@ -109,10 +111,26 @@ class AssignVendorService
         return $this->serviceVendorDriver->orderStatus($order);
     }
 
+    /**
+     * @throws ErrorException
+     * @throws AirtimeException
+     */
     public function amendmentOrder(BaseModel $order): mixed
     {
         $this->initiateVendor($order->vendor);
 
         return $this->serviceVendorDriver->orderStatus($order);
+    }
+
+    /**
+     * Recharge Service Packages
+     *
+     * @throws AirtimeException
+     */
+    public function rechargePackages(string $slug): array
+    {
+        $this->initiateVendor($slug);
+
+        return $this->serviceVendorDriver->servicePackages();
     }
 }

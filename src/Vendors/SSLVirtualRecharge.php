@@ -187,9 +187,9 @@ class SSLVirtualRecharge implements AirtimeTransfer
      */
     public function servicePackages(): array
     {
-        $response = (!config('fintech.airtime.providers.sslwireless.test'))
-            ? $this->post("/vr/package-list")
-            : json_decode(file_get_contents(base_path('some.js')), true);
+        $response = (config('fintech.airtime.providers.sslwireless.test'))
+            ? json_decode(file_get_contents(base_path('sslvr.json')), true)
+            : $this->post("/vr/package-list");
 
         $packages = [];
         $operators = [];
