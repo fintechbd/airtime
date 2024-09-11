@@ -62,7 +62,7 @@ class AirtimeServiceProvider extends ServiceProvider
             $this->commands([
                 InstallCommand::class,
                 SSLWirelessSetupCommand::class,
-                SyncSslWirelessTopUpPackageCommand::class
+                SyncSslWirelessTopUpPackageCommand::class,
             ]);
         }
     }

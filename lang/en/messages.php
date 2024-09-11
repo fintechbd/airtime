@@ -22,5 +22,5 @@ return [
         'success' => 'Successfully assigned order to requested vendor [:slug].',
         'quote_failed' => 'Something went wrong. Please try again later.',
     ],
-    'synchronize-queued' => 'Bangladesh top up service package catalog synchronization queued.'
+    'synchronize-queued' => 'Bangladesh top up service package catalog synchronization queued.',
 ];

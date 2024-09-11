@@ -51,8 +51,6 @@ interface AirtimeTransfer
     /**
      * Method to request all the service packages available through
      * this service vendor
-     *
-     * @return array
      */
-    public function servicePackages() : array;
+    public function servicePackages(): array;
 }
