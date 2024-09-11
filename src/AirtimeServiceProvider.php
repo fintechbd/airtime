@@ -4,6 +4,7 @@ namespace Fintech\Airtime;
 
 use Fintech\Airtime\Commands\InstallCommand;
 use Fintech\Airtime\Commands\SSLWirelessSetupCommand;
+use Fintech\Airtime\Commands\SyncSslWirelessTopUpPackageCommand;
 use Fintech\Airtime\Providers\EventServiceProvider;
 use Fintech\Airtime\Providers\RepositoryServiceProvider;
 use Fintech\Core\Traits\RegisterPackageTrait;
@@ -61,6 +62,7 @@ class AirtimeServiceProvider extends ServiceProvider
             $this->commands([
                 InstallCommand::class,
                 SSLWirelessSetupCommand::class,
+                SyncSslWirelessTopUpPackageCommand::class
             ]);
         }
     }

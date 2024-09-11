@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 if (Config::get('fintech.airtime.enabled')) {
-    //dd(Config::get('fintech.airtime.enabled'));
     Route::prefix(config('fintech.airtime.root_prefix', 'api/'))->middleware(['api', 'http_log', 'encrypted'])->group(function () {
         Route::prefix('airtime')->name('airtime.')
             ->middleware(config('fintech.auth.middleware'))
@@ -26,6 +25,10 @@ if (Config::get('fintech.airtime.enabled')) {
 
                 Route::post('airtime/calculate-cost', CalculateCostController::class)
                     ->name('airtime.calculate-cost');
+
+                Route::post('bangladesh-top-ups/synchronize', [BangladeshTopUpController::class, 'sync'])
+                    ->name('bangladesh-top-ups.synchronize')
+                    ->middleware('imposter');
 
                 Route::apiResource('bangladesh-top-ups', BangladeshTopUpController::class)
                     ->only('index', 'store', 'show');
