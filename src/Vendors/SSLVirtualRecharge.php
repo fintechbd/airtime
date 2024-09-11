@@ -247,7 +247,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
 
         $model['slug'] = Str::slug($model['name']);
 
-        $model['name'] = preg_replace('/^(.*), (.*)$/i', '$1', $model['name']);
+        $model['name'] = trim(preg_replace('/^(.*), (.*)$/i', '$1', $model['name']));
 
         return $model;
     }

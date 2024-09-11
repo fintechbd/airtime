@@ -2,6 +2,8 @@
 
 namespace Fintech\Airtime\Commands;
 
+use Fintech\Airtime\Exceptions\AirtimeException;
+use Fintech\Airtime\Facades\Airtime;
 use Fintech\Airtime\Jobs\SyncSslWirelessTopUpPackageJob;
 use Fintech\Business\Facades\Business;
 use Illuminate\Console\Command;
@@ -24,13 +26,22 @@ class SyncSslWirelessTopUpPackageCommand extends Command
 
     /**
      * Execute the console command.
+     * @throws AirtimeException
      */
     public function handle()
     {
         $serviceVendor = Business::serviceVendor()->list(['service_vendor_slug' => 'sslwireless', 'enabled' => true])->first();
 
         if ($serviceVendor) {
-            SyncSslWirelessTopUpPackageJob::dispatch();
+
+            $existingPackages = Business::servicePackage()->list([
+                'service_slug_in' => ['grameen_phone_bd', 'banglalink_bd', 'robi_bd', 'teletalk_bd', 'airtel_bd', 'gp_skitto_bd']
+            ])->count();
+
+            $updatedPackages = Airtime::assignVendor()->rechargePackages('sslwireless');
+
+            dd($existingPackages);
+//            SyncSslWirelessTopUpPackageJob::dispatch();
         }
 
         return self::SUCCESS;
