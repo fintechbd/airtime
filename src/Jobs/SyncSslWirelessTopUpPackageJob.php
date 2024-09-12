@@ -34,6 +34,6 @@ class SyncSslWirelessTopUpPackageJob implements ShouldQueue
 
         $updatedPackages = Airtime::assignVendor()->rechargePackages('sslwireless');
 
-        logger("Test", [$existingPackages, $updatedPackages]);
+        logger('Test', [$existingPackages, $updatedPackages]);
     }
 }
