@@ -3,10 +3,8 @@
 namespace Fintech\Airtime\Commands;
 
 use Fintech\Airtime\Exceptions\AirtimeException;
-use Fintech\Airtime\Facades\Airtime;
 use Fintech\Airtime\Jobs\SyncSslWirelessTopUpPackageJob;
 use Fintech\Business\Facades\Business;
-use Fintech\MetaData\Facades\MetaData;
 use Illuminate\Console\Command;
 
 class SyncSslWirelessTopUpPackageCommand extends Command
