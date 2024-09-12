@@ -25,15 +25,29 @@ class SyncSslWirelessTopUpPackageJob implements ShouldQueue
             'country_id' => MetaData::country()->list(['iso2' => 'BD'])->first()->id,
         ]);
 
-        echo "Disabling All Service Packages\n";
+        echo "Timestamp: " . date('c') . " Disabling all service " . $existingPackages->count() . " packages.\n";
 
         foreach ($existingPackages as $package) {
             $package->enabled = false;
+            $package->blocked = true;
             $package->save();
         }
 
-        $updatedPackages = Airtime::assignVendor()->rechargePackages('sslwireless');
+        $updatedPackages = collect(Airtime::assignVendor()->rechargePackages('sslwireless'));
 
-        logger('Test', [$existingPackages, $updatedPackages]);
+        foreach ($updatedPackages as $package) {
+
+            if ($existingPackage = $existingPackages->firstWhere('slug', $package['slug'])) {
+
+                $existingPackage = Business::servicePackage()->update($existingPackage->getKey(), $package);
+
+                echo "Timestamp: " . date('c') . " Updated Package ID: {$existingPackage->getKey()} package.\n";
+            } else {
+
+                $existingPackage = Business::servicePackage()->create($package);
+
+                echo "Timestamp: " . date('c') . " Created Package ID: {$existingPackage->getKey()} package.\n";
+            }
+        }
     }
 }
