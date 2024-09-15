@@ -42,6 +42,8 @@ class SSLWirelessSetupCommand extends Command
                 $this->info('`fintech/business` is not installed. Skipped');
             }
 
+            $this->addSchedulerTasks();
+
             $this->info('SSLWireless Utility service vendor setup completed.');
 
             return self::SUCCESS;
@@ -84,14 +86,14 @@ class SSLWirelessSetupCommand extends Command
 
     private function addServiceVendor(): void
     {
-        $dir = __DIR__.'/../../resources/img/service_vendor/';
+        $dir = __DIR__ . '/../../resources/img/service_vendor/';
 
         $vendor = [
             'service_vendor_name' => 'SSL Wireless',
             'service_vendor_slug' => 'sslwireless',
             'service_vendor_data' => [],
-            'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents("{$dir}/logo_png/ssl-wireless.png")),
-            'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents("{$dir}/logo_svg/ssl-wireless.svg")),
+            'logo_png' => 'data:image/png;base64,' . base64_encode(file_get_contents("{$dir}/logo_png/ssl-wireless.png")),
+            'logo_svg' => 'data:image/svg+xml;base64,' . base64_encode(file_get_contents("{$dir}/logo_svg/ssl-wireless.svg")),
             'enabled' => false,
         ];
 
@@ -101,5 +103,34 @@ class SSLWirelessSetupCommand extends Command
             Business::serviceVendor()->create($vendor);
             $this->info('Service vendor created successfully.');
         }
+    }
+
+    private function addSchedulerTasks(): void
+    {
+        $tasks = [
+            [
+                'name' => 'Sync SSLWireless airtime packages.',
+                'description' => 'This schedule program sync all the top-up packages from ssl virtual recharge package endpoint to system `service_packages` table.',
+                'command' => 'airtime:airtime:sync-ssl-wireless-top-up-package',
+                'enabled' => false,
+                'timezone' => 'Asia/Dhaka',
+                'interval' => '0 */6 * * *',
+                'priority' => 10
+            ]
+        ];
+
+        $this->components->task("[<fg=yellow;options=bold>Airtime</>] Register schedule tasks", function () use (&$tasks) {
+
+            foreach ($tasks as $task) {
+
+                $taskModel = Core::schedule()->list(['command' => $task['command']])->first();
+
+                if ($taskModel) {
+                    continue;
+                }
+
+                Core::schedule()->create($task);
+            }
+        });
     }
 }
