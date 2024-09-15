@@ -26,13 +26,15 @@ class InstallCommand extends Command
      */
     public function handle(): int
     {
+        $this->infoMessage("Module Installation", 'RUNNING');
+
         $this->task("Module Installation", function () {
 
             $this->addDefaultServiceTypes();
 
             $this->addServiceSettings();
 
-        }, "COMPETED");
+        });
 
         return self::SUCCESS;
     }
@@ -42,7 +44,7 @@ class InstallCommand extends Command
      */
     private function addDefaultServiceTypes(): void
     {
-        $this->task("<fg=bright-white;bg=bright-blue;options=bold> {$this->module} </> Creating system default service types", function () {
+        $this->task("Creating system default service types", function () {
 
             $entry = [
                 'service_type_name' => 'Airtime',
