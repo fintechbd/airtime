@@ -119,7 +119,7 @@ class SSLWirelessSetupCommand extends Command
             ],
         ];
 
-        $this->components->task('[<fg=yellow;options=bold>Airtime</>] Register schedule tasks', function () use (&$tasks) {
+        $this->components->task('<fg=black;bg=bright-yellow;options=bold> Airtime </> Register schedule tasks', function () use (&$tasks) {
 
             foreach ($tasks as $task) {
 

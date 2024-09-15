@@ -26,14 +26,14 @@ class InstallCommand extends Command
 
         $this->addServiceSettings();
 
-        $this->components->twoColumnDetail("[<fg=yellow;options=bold>{$this->module}</>] Installation", '<fg=green;options=bold>COMPLETED</>');
+        $this->components->twoColumnDetail("<fg=black;bg=bright-yellow;options=bold> {$this->module} </> Installation", '<fg=green;options=bold>COMPLETED</>');
 
         return self::SUCCESS;
     }
 
     private function addDefaultServiceTypes(): void
     {
-        $this->components->task("[<fg=yellow;options=bold>{$this->module}</>] Creating system default service types", function () {
+        $this->components->task("<fg=black;bg=bright-yellow;options=bold> {$this->module} </> Creating system default service types", function () {
 
             $entry = [
                 'service_type_name' => 'Airtime',
@@ -51,7 +51,7 @@ class InstallCommand extends Command
 
     private function addServiceSettings(): void
     {
-        $this->components->task("[<fg=yellow;options=bold>{$this->module}</>] Populating service setting data", function () {
+        $this->components->task("<fg=black;bg=bright-yellow;options=bold> {$this->module} </> Populating service setting data", function () {
 
             $entries = [
                 [
