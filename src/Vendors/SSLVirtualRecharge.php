@@ -202,7 +202,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
 
         if ($response['status'] == 'success') {
 
-            if (! empty($response['data']['triggerAmount']['list'])) {
+            if (!empty($response['data']['triggerAmount']['list'])) {
                 foreach ($response['data']['triggerAmount']['list'] as $package) {
                     $temp = $this->mapToServicePackage($package);
                     $temp['service_id'] = $operators[$package['operator_id']] ?? null;
@@ -212,7 +212,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
                 }
             }
 
-            if (! empty($response['data']['blockedAmount']['list'])) {
+            if (!empty($response['data']['blockedAmount']['list'])) {
                 foreach ($response['data']['blockedAmount']['list'] as $package) {
                     $temp = $this->mapToServicePackage($package, true);
                     $temp['service_id'] = $operators[$package['operator_id']] ?? null;
@@ -233,10 +233,10 @@ class SSLVirtualRecharge implements AirtimeTransfer
             'description' => $package['offer_description'] ? filter_var($package['offer_description'], FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH) : null,
             'type' => $package['offer_type'] ?? 'combo',
             'amount' => intval($package['amount'] ?? '0'),
-            'enabled' => ! $blocked,
+            'enabled' => !$blocked,
             'blocked' => $blocked,
             'service_package_data' => [
-                'is_popular' => (bool) ($package['is_popular'] ?? 0),
+                'is_popular' => (bool)($package['is_popular'] ?? 0),
                 'connection_type' => $package['connection_type'] ?? 'prepaid',
                 'validity_seconds' => $package['offer_validity_seconds'] ?? 999999999,
                 'validity' => $package['offer_validity'] ?? 'N/A',

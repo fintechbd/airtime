@@ -4,11 +4,14 @@ namespace Fintech\Airtime\Commands;
 
 use Fintech\Business\Facades\Business;
 use Fintech\Core\Facades\Core;
+use Fintech\Core\Traits\HasCoreSettingTrait;
 use Illuminate\Console\Command;
 use Throwable;
 
 class SSLWirelessSetupCommand extends Command
 {
+    use HasCoreSettingTrait;
+
     const SERVICE_STAT_SETTINGS = [
         [
             'service_setting_type' => 'service_stat',
@@ -27,10 +30,9 @@ class SSLWirelessSetupCommand extends Command
             'enabled' => true,
         ],
     ];
-
     public $signature = 'airtime:sslwireless-setup';
-
     public $description = 'install/update required fields for SSL Wireless utility api';
+    private string $module = 'Airtime';
 
     public function handle(): int
     {
@@ -86,14 +88,14 @@ class SSLWirelessSetupCommand extends Command
 
     private function addServiceVendor(): void
     {
-        $dir = __DIR__.'/../../resources/img/service_vendor/';
+        $dir = __DIR__ . '/../../resources/img/service_vendor/';
 
         $vendor = [
             'service_vendor_name' => 'SSL Wireless',
             'service_vendor_slug' => 'sslwireless',
             'service_vendor_data' => [],
-            'logo_png' => 'data:image/png;base64,'.base64_encode(file_get_contents("{$dir}/logo_png/ssl-wireless.png")),
-            'logo_svg' => 'data:image/svg+xml;base64,'.base64_encode(file_get_contents("{$dir}/logo_svg/ssl-wireless.svg")),
+            'logo_png' => 'data:image/png;base64,' . base64_encode(file_get_contents("{$dir}/logo_png/ssl-wireless.png")),
+            'logo_svg' => 'data:image/svg+xml;base64,' . base64_encode(file_get_contents("{$dir}/logo_svg/ssl-wireless.svg")),
             'enabled' => false,
         ];
 
@@ -105,6 +107,9 @@ class SSLWirelessSetupCommand extends Command
         }
     }
 
+    /**
+     * @throws Throwable
+     */
     private function addSchedulerTasks(): void
     {
         $tasks = [
@@ -119,7 +124,7 @@ class SSLWirelessSetupCommand extends Command
             ],
         ];
 
-        $this->components->task('<fg=black;bg=bright-yellow;options=bold> Airtime </> Register schedule tasks', function () use (&$tasks) {
+        $this->task('Register schedule tasks', function () use (&$tasks) {
 
             foreach ($tasks as $task) {
 

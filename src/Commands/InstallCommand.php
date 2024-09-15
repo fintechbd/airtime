@@ -5,6 +5,7 @@ namespace Fintech\Airtime\Commands;
 use Fintech\Business\Facades\Business;
 use Fintech\Core\Traits\HasCoreSettingTrait;
 use Illuminate\Console\Command;
+use Throwable;
 
 class InstallCommand extends Command
 {
@@ -16,24 +17,32 @@ class InstallCommand extends Command
 
     private string $module = 'Airtime';
 
-    private string $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';
+    private string $image_svg = __DIR__ . '/../../resources/img/service_type/logo_svg/';
 
-    private string $image_png = __DIR__.'/../../resources/img/service_type/logo_png/';
+    private string $image_png = __DIR__ . '/../../resources/img/service_type/logo_png/';
 
+    /**
+     * @throws Throwable
+     */
     public function handle(): int
     {
-        $this->addDefaultServiceTypes();
+        $this->task("Module Installation", function () {
 
-        $this->addServiceSettings();
+            $this->addDefaultServiceTypes();
 
-        $this->components->twoColumnDetail("<fg=black;bg=bright-yellow;options=bold> {$this->module} </> Installation", '<fg=green;options=bold>COMPLETED</>');
+            $this->addServiceSettings();
+
+        }, "COMPETED");
 
         return self::SUCCESS;
     }
 
+    /**
+     * @throws Throwable
+     */
     private function addDefaultServiceTypes(): void
     {
-        $this->components->task("<fg=black;bg=bright-yellow;options=bold> {$this->module} </> Creating system default service types", function () {
+        $this->task("<fg=bright-white;bg=bright-blue;options=bold> {$this->module} </> Creating system default service types", function () {
 
             $entry = [
                 'service_type_name' => 'Airtime',
@@ -51,7 +60,7 @@ class InstallCommand extends Command
 
     private function addServiceSettings(): void
     {
-        $this->components->task("<fg=black;bg=bright-yellow;options=bold> {$this->module} </> Populating service setting data", function () {
+        $this->task("Populating service setting data", function () {
 
             $entries = [
                 [

@@ -20,26 +20,6 @@ class AssignVendorService
     private AirtimeTransfer $serviceVendorDriver;
 
     /**
-     * @throws AirtimeException
-     */
-    private function initiateVendor(string $slug): void
-    {
-        $availableVendors = config('fintech.airtime.providers', []);
-
-        if (! isset($availableVendors[$slug])) {
-            throw new AirtimeException(__('airtime::messages.assign_vendor.not_found', ['slug' => ucfirst($slug)]));
-        }
-
-        $this->serviceVendorModel = Business::serviceVendor()->list(['service_vendor_slug' => $slug, 'enabled'])->first();
-
-        if (! $this->serviceVendorModel) {
-            throw (new ModelNotFoundException)->setModel(config('fintech.business.service_vendor_model'), $slug);
-        }
-
-        $this->serviceVendorDriver = App::make($availableVendors[$slug]['driver']);
-    }
-
-    /**
      * @throws AirtimeException|ErrorException
      */
     public function requestQuote(BaseModel $order): mixed
@@ -50,6 +30,26 @@ class AssignVendorService
     }
 
     /**
+     * @throws AirtimeException
+     */
+    private function initiateVendor(string $slug): void
+    {
+        $availableVendors = config('fintech.airtime.providers', []);
+
+        if (!isset($availableVendors[$slug])) {
+            throw new AirtimeException(__('airtime::messages.assign_vendor.not_found', ['slug' => ucfirst($slug)]));
+        }
+
+        $this->serviceVendorModel = Business::serviceVendor()->list(['service_vendor_slug' => $slug, 'enabled'])->first();
+
+        if (!$this->serviceVendorModel) {
+            throw (new ModelNotFoundException)->setModel(config('fintech.business.service_vendor_model'), $slug);
+        }
+
+        $this->serviceVendorDriver = App::make($availableVendors[$slug]['driver']);
+    }
+
+    /**
      * @throws ErrorException
      * @throws UpdateOperationException|AirtimeException
      */
@@ -57,7 +57,7 @@ class AssignVendorService
     {
         $this->initiateVendor($vendor_slug);
 
-        if (! Transaction::order()->update($order->getKey(), [
+        if (!Transaction::order()->update($order->getKey(), [
             'vendor' => $vendor_slug,
             'service_vendor_id' => $this->serviceVendorModel->getKey(),
             'status' => OrderStatus::Processing->value])) {
