@@ -17,18 +17,18 @@ class InstallCommand extends Command
 
     private string $module = 'Airtime';
 
-    private string $image_svg = __DIR__ . '/../../resources/img/service_type/logo_svg/';
+    private string $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';
 
-    private string $image_png = __DIR__ . '/../../resources/img/service_type/logo_png/';
+    private string $image_png = __DIR__.'/../../resources/img/service_type/logo_png/';
 
     /**
      * @throws Throwable
      */
     public function handle(): int
     {
-        $this->infoMessage("Module Installation", 'RUNNING');
+        $this->infoMessage('Module Installation', 'RUNNING');
 
-        $this->task("Module Installation", function () {
+        $this->task('Module Installation', function () {
 
             $this->addDefaultServiceTypes();
 
@@ -44,7 +44,7 @@ class InstallCommand extends Command
      */
     private function addDefaultServiceTypes(): void
     {
-        $this->task("Creating system default service types", function () {
+        $this->task('Creating system default service types', function () {
 
             $entry = [
                 'service_type_name' => 'Airtime',
@@ -62,7 +62,7 @@ class InstallCommand extends Command
 
     private function addServiceSettings(): void
     {
-        $this->task("Populating service setting data", function () {
+        $this->task('Populating service setting data', function () {
 
             $entries = [
                 [

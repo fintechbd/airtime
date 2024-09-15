@@ -25,14 +25,14 @@ class BangladeshTopUpSeeder extends Seeder
 
     private function data(): array
     {
-        $image_svg = __DIR__ . '/../../resources/img/service_type/logo_svg/';
-        $image_png = __DIR__ . '/../../resources/img/service_type/logo_png/';
+        $image_svg = __DIR__.'/../../resources/img/service_type/logo_svg/';
+        $image_png = __DIR__.'/../../resources/img/service_type/logo_png/';
 
         return [
             'service_type_name' => 'BD Top Up',
             'service_type_slug' => 'bangladesh_top_up',
-            'logo_svg' => $image_svg . 'bangladesh_top_up.svg',
-            'logo_png' => $image_png . 'bangladesh_top_up.png',
+            'logo_svg' => $image_svg.'bangladesh_top_up.svg',
+            'logo_png' => $image_png.'bangladesh_top_up.png',
             'service_type_is_parent' => 'yes',
             'service_type_is_description' => 'no',
         ];
