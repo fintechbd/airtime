@@ -9,8 +9,10 @@ use Fintech\Transaction\Facades\Transaction;
 /**
  * Class BangladeshTopUpService
  */
-class BangladeshTopUpService extends \Fintech\Core\Abstracts\Service
+class BangladeshTopUpService
 {
+    use \Fintech\Core\Traits\HasFindWhereSearch;
+
     /**
      * BangladeshTopUpService constructor.
      */

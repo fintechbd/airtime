@@ -13,8 +13,10 @@ use Illuminate\Support\Collection;
  *
  * @property InternationalTopUpRepository $internationalTopUpRepository
  */
-class InternationalTopUpService extends \Fintech\Core\Abstracts\Service
+class InternationalTopUpService
 {
+    use \Fintech\Core\Traits\HasFindWhereSearch;
+
     /**
      * InternationalTopUpService constructor.
      */
