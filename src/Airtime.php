@@ -11,22 +11,22 @@ class Airtime
     /**
      * @return BangladeshTopUpService
      */
-    public function bangladeshTopUp()
-    {
-        return app(BangladeshTopUpService::class);
+    public function bangladeshTopUp($filters = null)
+{
+	return \singleton(BangladeshTopUpService::class, $filters);
     }
 
     /**
      * @return InternationalTopUpService
      */
-    public function internationalTopUp()
-    {
-        return app(InternationalTopUpService::class);
+    public function internationalTopUp($filters = null)
+{
+	return \singleton(InternationalTopUpService::class, $filters);
     }
 
-    public function assignVendor()
-    {
-        return app(AssignVendorService::class);
+    public function assignVendor($filters = null)
+{
+	return \singleton(AssignVendorService::class, $filters);
     }
 
     //** Crud Service Method Point Do not Remove **//
