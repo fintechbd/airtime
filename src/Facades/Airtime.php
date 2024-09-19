@@ -8,9 +8,9 @@ use Fintech\Airtime\Services\InternationalTopUpService;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static BangladeshTopUpService bangladeshTopUp()
- * @method static InternationalTopUpService internationalTopUp()
- * @method static AssignVendorService assignVendor()
+ * @method static \Illuminate\Contracts\Pagination\Paginator|\Illuminate\Support\Collection|BangladeshTopUpService bangladeshTopUp(array $filters = null)
+ * @method static \Illuminate\Contracts\Pagination\Paginator|\Illuminate\Support\Collection|InternationalTopUpService internationalTopUp(array $filters = null)
+ * @method static \Illuminate\Contracts\Pagination\Paginator|\Illuminate\Support\Collection|AssignVendorService assignVendor(array $filters = null)
  *                                                   // Crud Service Method Point Do not Remove //
  *
  * @see \Fintech\Airtime\Airtime
