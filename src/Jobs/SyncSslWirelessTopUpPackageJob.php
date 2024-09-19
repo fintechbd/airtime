@@ -22,7 +22,7 @@ class SyncSslWirelessTopUpPackageJob implements ShouldQueue
     {
         $existingPackages = Business::servicePackage()->list([
             'service_slug_in' => ['grameen_phone_bd', 'banglalink_bd', 'robi_bd', 'teletalk_bd', 'airtel_bd', 'gp_skitto_bd'],
-            'country_id' => MetaData::country()->list(['iso2' => 'BD'])->first()->id,
+            'country_id' => MetaData::country()->findWhere(['iso2' => 'BD'])->id,
         ]);
 
         echo 'Timestamp: '.date('c').' Disabling all service '.$existingPackages->count()." packages.\n";

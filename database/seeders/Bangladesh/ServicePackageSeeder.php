@@ -14,15 +14,15 @@ class ServicePackageSeeder extends Seeder
     public function run(): void
     {
         $operators = [];
-        $operators[1] = Business::service()->list(['service_slug' => 'grameen_phone_bd'])->first()->id;
-        $operators[2] = Business::service()->list(['service_slug' => 'banglalink_bd'])->first()->id;
-        $operators[3] = Business::service()->list(['service_slug' => 'robi_bd'])->first()->id;
-        //        $operators[4] = Business::service()->list(['service_slug' => 'grameen_phone_bd'])->first()->id;
-        $operators[5] = Business::service()->list(['service_slug' => 'teletalk_bd'])->first()->id;
-        $operators[6] = Business::service()->list(['service_slug' => 'airtel_bd'])->first()->id;
-        $operators[13] = Business::service()->list(['service_slug' => 'gp_skitto_bd'])->first()->id;
+        $operators[1] = Business::service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
+        $operators[2] = Business::service()->findWhere(['service_slug' => 'banglalink_bd'])->id;
+        $operators[3] = Business::service()->findWhere(['service_slug' => 'robi_bd'])->id;
+        //        $operators[4] = Business::service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
+        $operators[5] = Business::service()->findWhere(['service_slug' => 'teletalk_bd'])->id;
+        $operators[6] = Business::service()->findWhere(['service_slug' => 'airtel_bd'])->id;
+        $operators[13] = Business::service()->findWhere(['service_slug' => 'gp_skitto_bd'])->id;
 
-        $bangladesh = MetaData::country()->list(['iso2' => 'BD'])->first()?->id ?? null;
+        $bangladesh = MetaData::country()->findWhere(['iso2' => 'BD'])?->id ?? null;
 
         foreach ($this->triggerAmounts() as $triggerAmount) {
             $triggerAmount['service_id'] = $operators[$triggerAmount['service_id']];

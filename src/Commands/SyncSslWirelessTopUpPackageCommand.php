@@ -30,7 +30,7 @@ class SyncSslWirelessTopUpPackageCommand extends Command
      */
     public function handle()
     {
-        $serviceVendor = Business::serviceVendor()->list(['service_vendor_slug' => 'sslwireless', 'enabled' => true])->first();
+        $serviceVendor = Business::serviceVendor()->findWhere(['service_vendor_slug' => 'sslwireless', 'enabled' => true]);
         if ($serviceVendor) {
             SyncSslWirelessTopUpPackageJob::dispatch();
         }

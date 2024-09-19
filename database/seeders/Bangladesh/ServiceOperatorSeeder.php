@@ -16,11 +16,11 @@ class ServiceOperatorSeeder extends Seeder
     {
         if (Core::packageExists('Business')) {
 
-            $parent = Business::serviceType()->list(['service_type_slug' => 'bangladesh_top_up'])->first();
+            $parent = Business::serviceType()->findWhere(['service_type_slug' => 'bangladesh_top_up']);
 
-            $country = MetaData::country()->list(['iso2' => 'BD'])->first()->id;
+            $country = MetaData::country()->findWhere(['iso2' => 'BD'])->id;
 
-            $vendor = Business::serviceVendor()->list(['service_vendor_slug' => 'sslwireless'])->first();
+            $vendor = Business::serviceVendor()->findWhere(['service_vendor_slug' => 'sslwireless']);
 
             foreach ($this->data() as $entry) {
                 Business::serviceTypeManager($entry, $parent)

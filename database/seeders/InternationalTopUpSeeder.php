@@ -15,7 +15,7 @@ class InternationalTopUpSeeder extends Seeder
     {
         if (Core::packageExists('Business')) {
 
-            $parent = Business::serviceType()->list(['service_type_slug' => 'airtime'])->first();
+            $parent = Business::serviceType()->findWhere(['service_type_slug' => 'airtime']);
 
             Business::serviceTypeManager($this->data(), $parent)
                 ->enabled()
