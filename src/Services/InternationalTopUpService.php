@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
  *
  * @property InternationalTopUpRepository $internationalTopUpRepository
  */
-class InternationalTopUpService
+class InternationalTopUpService extends \Fintech\Core\Abstracts\Service
 {
     /**
      * InternationalTopUpService constructor.

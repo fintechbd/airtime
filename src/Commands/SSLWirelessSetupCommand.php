@@ -4,13 +4,13 @@ namespace Fintech\Airtime\Commands;
 
 use Fintech\Business\Facades\Business;
 use Fintech\Core\Facades\Core;
-use Fintech\Core\Traits\HasCoreSettingTrait;
+use Fintech\Core\Traits\HasCoreSetting;
 use Illuminate\Console\Command;
 use Throwable;
 
 class SSLWirelessSetupCommand extends Command
 {
-    use HasCoreSettingTrait;
+    use HasCoreSetting;
 
     const SERVICE_STAT_SETTINGS = [
         [

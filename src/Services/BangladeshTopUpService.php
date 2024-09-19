@@ -9,7 +9,7 @@ use Fintech\Transaction\Facades\Transaction;
 /**
  * Class BangladeshTopUpService
  */
-class BangladeshTopUpService
+class BangladeshTopUpService extends \Fintech\Core\Abstracts\Service
 {
     /**
      * BangladeshTopUpService constructor.

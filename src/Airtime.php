@@ -24,7 +24,7 @@ class Airtime
         return app(InternationalTopUpService::class);
     }
 
-    public function assignVendor(): AssignVendorService
+    public function assignVendor()
     {
         return app(AssignVendorService::class);
     }
