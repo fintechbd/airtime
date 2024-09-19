@@ -8,17 +8,11 @@ use Fintech\Airtime\Services\InternationalTopUpService;
 
 class Airtime
 {
-    /**
-     * @return BangladeshTopUpService
-     */
     public function bangladeshTopUp($filters = null)
     {
         return \singleton(BangladeshTopUpService::class, $filters);
     }
 
-    /**
-     * @return InternationalTopUpService
-     */
     public function internationalTopUp($filters = null)
     {
         return \singleton(InternationalTopUpService::class, $filters);
