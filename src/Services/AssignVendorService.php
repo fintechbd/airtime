@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\App;
 
 class AssignVendorService
 {
-    use \Fintech\Core\Traits\HasFindWhereSearch;
-
     private BaseModel $serviceVendorModel;
 
     private AirtimeTransfer $serviceVendorDriver;

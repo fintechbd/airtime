@@ -24,9 +24,9 @@ class Airtime
 	return \singleton(InternationalTopUpService::class, $filters);
     }
 
-    public function assignVendor($filters = null)
+    public function assignVendor()
 {
-	return \singleton(AssignVendorService::class, $filters);
+	return \app(AssignVendorService::class);
     }
 
     //** Crud Service Method Point Do not Remove **//
