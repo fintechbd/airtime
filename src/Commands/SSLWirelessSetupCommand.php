@@ -120,6 +120,7 @@ class SSLWirelessSetupCommand extends Command
                 'name' => 'Sync SSLWireless airtime packages.',
                 'description' => 'This schedule program sync all the top-up packages from ssl virtual recharge package endpoint to system `service_packages` table.',
                 'command' => 'airtime:airtime:sync-ssl-wireless-top-up-package',
+                'parameters' => [],
                 'enabled' => false,
                 'timezone' => 'Asia/Dhaka',
                 'interval' => '0 */6 * * *',
