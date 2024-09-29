@@ -19,6 +19,8 @@ class SSLWirelessSetupCommand extends Command
             'service_setting_field_name' => 'utility_auth_key',
             'service_setting_type_field' => 'text',
             'service_setting_feature' => 'SSLVR Unique Auth Key',
+            'service_setting_rule' => 'nullable|string|min:0|max:50',
+            'service_setting_value' => null,
             'enabled' => true,
         ],
         [
@@ -27,6 +29,8 @@ class SSLWirelessSetupCommand extends Command
             'service_setting_field_name' => 'utility_secret_key',
             'service_setting_type_field' => 'text',
             'service_setting_feature' => 'SSLVR Unique Secret Key',
+            'service_setting_rule' => 'nullable|string|min:0|max:50',
+            'service_setting_value' => null,
             'enabled' => true,
         ],
     ];
