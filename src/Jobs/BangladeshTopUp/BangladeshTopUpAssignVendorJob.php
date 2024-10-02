@@ -24,10 +24,10 @@ class BangladeshTopUpAssignVendorJob implements ShouldQueue
      */
     public function handle(BangladeshTopUpRequested $event)
     {
-        $event->bangladeshTopUp->refresh();
+        $bangladeshTopUp = Airtime::bangladeshTopUp()->find($event->bangladeshTopUp->getKey());
 
-        if ($event->bangladeshTopUp->order_data['assign_order'] == Enabled::Yes->value) {
-            Airtime::assignVendor()->processOrder($event->bangladeshTopUp, $event->bangladeshTopUp->vendor);
+        if ($bangladeshTopUp->order_data['assign_order'] == Enabled::Yes->value) {
+            Airtime::assignVendor()->processOrder($bangladeshTopUp, $bangladeshTopUp->vendor);
         }
     }
 
