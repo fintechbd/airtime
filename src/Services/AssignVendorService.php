@@ -138,6 +138,8 @@ class AssignVendorService
                 'slug' => $airtime->vendor,
             ]));
         }
+
+        return $airtime;
     }
 
     /**
