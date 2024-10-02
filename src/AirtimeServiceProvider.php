@@ -27,8 +27,8 @@ class AirtimeServiceProvider extends ServiceProvider
             __DIR__.'/../config/airtime.php', 'fintech.airtime'
         );
 
-        $this->app->register(EventServiceProvider::class);
         $this->app->register(RepositoryServiceProvider::class);
+        $this->app->register(EventServiceProvider::class);
     }
 
     /**
