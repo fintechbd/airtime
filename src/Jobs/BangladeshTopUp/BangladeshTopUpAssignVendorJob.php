@@ -4,6 +4,7 @@ namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
 use Fintech\Airtime\Events\BangladeshTopUpRequested;
 use Fintech\Airtime\Facades\Airtime;
+use Fintech\Core\Enums\Enabled;
 use Fintech\Core\Enums\Transaction\OrderStatus;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -24,10 +25,8 @@ class BangladeshTopUpAssignVendorJob implements ShouldQueue
      */
     public function handle(BangladeshTopUpRequested $event)
     {
-        Airtime::assignVendor()->processOrder($event->bangladeshTopUp);
-
-        if ($event->bangladeshTopUp->status->value != OrderStatus::Processing->value) {
-            return false;
+        if ($event->bangladeshTopUp->order_data['assign_order'] == Enabled::Yes->value) {
+            Airtime::assignVendor()->processOrder($event->bangladeshTopUp, $event->bangladeshTopUp->vendor);
         }
     }
 

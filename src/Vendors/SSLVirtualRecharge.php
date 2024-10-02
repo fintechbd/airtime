@@ -67,7 +67,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
     {
         $params = $order->order_data['airtime_data'];
         $params['amount'] = intval($params['amount']);
-        $params['transaction_id'] = $order->order_number . '-' . mt_rand(100, 999);
+        $params['transaction_id'] = $order->order_number;
         $params['recipient_msisdn'] = Str::substr($order->order_data['receiver_mobile_number'], -11);
         $params['connection_type'] = $order->order_data['connection_type'];
         $params['utility_auth_key'] = '';
@@ -123,13 +123,43 @@ class SSLVirtualRecharge implements AirtimeTransfer
      */
     public function executeOrder(BaseModel $order): mixed
     {
-        $params = [
-            'transaction_id' => $order->order_data[''],
-            'utility_auth_key' => $this->options[$order->order_data['']]['utility_auth_key'],
-            'utility_secret_key' => $this->options[$order->order_data['']]['utility_secret_key'],
-        ];
+        $params['transaction_id'] = $order->order_number;
+        $params['utility_auth_key'] = '';
+        $params['utility_secret_key'] = '';
 
-        return $this->post('/bill-payment', $params);
+        $serviceStat = Business::serviceStat()->findWhere([
+            'role_id' => $order->order_data['role_id'],
+            'service_id' => $order->service_id,
+            'source_country_id' => $order->source_country_id,
+            'destination_country_id' => $order->destination_country_id,
+            'service_vendor_id' => $order->service_vendor_id,
+            'enabled' => true,
+            'paginate' => false,
+        ]);
+
+        if ($serviceStat) {
+            $serviceStatData = $serviceStat->service_stat_data ?? [];
+            $params['utility_auth_key'] = $serviceStatData['utility_auth_key'] ?? null;
+            $params['utility_secret_key'] = $serviceStatData['utility_secret_key'] ?? null;
+        }
+
+        $response = $this->post('/bill-payment', $params);
+
+        $verdict = AssignVendorVerdict::make();
+
+        if ($response['status'] == "payment_success") {
+            return $verdict->status(true)
+                ->message($response['data']['message'] ?? $response['status_title'] ?? '')
+                ->ref_number($response['data']['vr_guid'])
+                ->original($response)
+                ->orderTimeline('(SSL Wireless) bill payment responded with ' . strtolower(($response['status_title'] ?? '')) . '.');
+        }
+
+        return $verdict->status(false)
+            ->original($response)
+            ->ref_number($params['transaction_id'])
+            ->message($response['message'] ?? null)
+            ->orderTimeline('(SSL Wireless) bill payment reported error: ' . strtolower(($response['message'] ?? '')), 'error');
     }
 
     /**

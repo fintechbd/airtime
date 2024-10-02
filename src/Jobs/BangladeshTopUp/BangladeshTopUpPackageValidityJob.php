@@ -28,8 +28,6 @@ class BangladeshTopUpPackageValidityJob implements ShouldQueue
 
         $event->bangladeshTopUp->refresh();
 
-        logger($event->bangladeshTopUp->status->value .' ' . OrderStatus::Processing->value);
-
         if ($event->bangladeshTopUp->status->value != OrderStatus::Processing->value) {
             return false;
         }
