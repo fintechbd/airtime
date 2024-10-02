@@ -43,7 +43,7 @@ class AssignVendorService
     /**
      * @throws AirtimeException|ErrorException|VendorNotFoundException
      */
-    public function requestQuote(BaseModel $airtime): void
+    public function requestQuote(BaseModel $airtime): mixed
     {
         $data['timeline'] = $airtime->timeline ?? [];
 
@@ -87,6 +87,10 @@ class AssignVendorService
                 'slug' => $airtime->vendor,
             ]));
         }
+
+        $airtime->refresh();
+
+        return $airtime;
     }
 
     /**
@@ -137,6 +141,8 @@ class AssignVendorService
                 'slug' => $airtime->vendor,
             ]));
         }
+
+        $airtime->refresh();
 
         return $airtime;
     }
