@@ -3,7 +3,7 @@
 namespace Fintech\Airtime\Commands;
 
 use Fintech\Airtime\Exceptions\AirtimeException;
-use Fintech\Airtime\Jobs\SyncSslWirelessTopUpPackageJob;
+use Fintech\Airtime\Jobs\BangladeshTopUp\SslWirelessPackageSyncJob;
 use Fintech\Business\Facades\Business;
 use Illuminate\Console\Command;
 
@@ -30,9 +30,8 @@ class SyncSslWirelessTopUpPackageCommand extends Command
      */
     public function handle()
     {
-        $serviceVendor = Business::serviceVendor()->findWhere(['service_vendor_slug' => 'sslwireless', 'enabled' => true]);
-        if ($serviceVendor) {
-            SyncSslWirelessTopUpPackageJob::dispatch();
+        if ($serviceVendor = Business::serviceVendor()->findWhere(['service_vendor_slug' => 'sslwireless', 'enabled' => true])) {
+            SslWirelessPackageSyncJob::dispatch();
         }
 
         return self::SUCCESS;
