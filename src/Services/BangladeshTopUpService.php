@@ -3,10 +3,8 @@
 namespace Fintech\Airtime\Services;
 
 use Fintech\Airtime\Events\BangladeshTopUpRequested;
-use Fintech\Airtime\Facades\Airtime;
 use Fintech\Airtime\Interfaces\BangladeshTopUpRepository;
 use Fintech\Auth\Facades\Auth;
-use Fintech\Banco\Facades\Banco;
 use Fintech\Business\Exceptions\BusinessException;
 use Fintech\Business\Facades\Business;
 use Fintech\Core\Abstracts\BaseModel;
@@ -14,7 +12,6 @@ use Fintech\Core\Enums\Auth\RiskProfile;
 use Fintech\Core\Enums\Auth\SystemRole;
 use Fintech\Core\Enums\Transaction\OrderStatus;
 use Fintech\Core\Enums\Transaction\OrderType;
-use Fintech\Core\Exceptions\StoreOperationException;
 use Fintech\Core\Exceptions\Transaction\CurrencyUnavailableException;
 use Fintech\Core\Exceptions\Transaction\InsufficientBalanceException;
 use Fintech\Core\Exceptions\Transaction\MasterCurrencyUnavailableException;
@@ -22,7 +19,6 @@ use Fintech\Core\Exceptions\Transaction\OrderRequestFailedException;
 use Fintech\Core\Exceptions\Transaction\RequestAmountExistsException;
 use Fintech\Core\Exceptions\Transaction\RequestOrderExistsException;
 use Fintech\MetaData\Facades\MetaData;
-use Fintech\Remit\Events\WalletTransferRequested;
 use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -37,9 +33,7 @@ class BangladeshTopUpService
     /**
      * BangladeshTopUpService constructor.
      */
-    public function __construct(public BangladeshTopUpRepository $bangladeshTopUpRepository)
-    {
-    }
+    public function __construct(public BangladeshTopUpRepository $bangladeshTopUpRepository) {}
 
     public function find($id, $onlyTrashed = false): ?BaseModel
     {
@@ -93,7 +87,7 @@ class BangladeshTopUpService
     {
         $sender = Auth::user()->find($inputs['user_id']);
 
-        if (!$sender) {
+        if (! $sender) {
             throw (new ModelNotFoundException)->setModel(config('fintech.auth.auth_model'), $inputs['user_id']);
         }
 
@@ -107,13 +101,13 @@ class BangladeshTopUpService
 
         $senderAccount = Transaction::userAccount()->findWhere(['user_id' => $sender->getKey(), 'country_id' => $inputs['source_country_id']]);
 
-        if (!$senderAccount) {
+        if (! $senderAccount) {
             throw new CurrencyUnavailableException($inputs['source_country_id']);
         }
 
         $masterUser = Auth::user()->findWhere(['role_name' => SystemRole::MasterUser->value, 'country_id' => $inputs['source_country_id']]);
 
-        if (!$masterUser) {
+        if (! $masterUser) {
             throw new MasterCurrencyUnavailableException($inputs['source_country_id']);
         }
 
@@ -181,10 +175,10 @@ class BangladeshTopUpService
                 'type' => 'custom',
                 'slug' => 'custom',
                 'service_package_data' => [
-                    "validity" => "Assigned By Operator",
-                    "is_popular" => 0,
-                    "connection_type" => $inputs['order_data']['connection_type'],
-                    "validity_seconds" => 999999999
+                    'validity' => 'Assigned By Operator',
+                    'is_popular' => 0,
+                    'connection_type' => $inputs['order_data']['connection_type'],
+                    'validity_seconds' => 999999999,
 
                 ],
             ];
@@ -203,7 +197,7 @@ class BangladeshTopUpService
             'service_id' => $inputs['service_id'],
         ]);
 
-        if ((float)$inputs['order_data']['service_stat_data']['total_amount'] > (float)$senderAccount->user_account_data['available_amount']) {
+        if ((float) $inputs['order_data']['service_stat_data']['total_amount'] > (float) $senderAccount->user_account_data['available_amount']) {
             throw new InsufficientBalanceException($senderAccount->user_account_data['currency']);
         }
 
@@ -213,20 +207,20 @@ class BangladeshTopUpService
             DB::commit();
             $userUpdatedBalance = $this->debitTransaction($bangladeshTopUp);
             $senderUpdatedAccount = $senderAccount->toArray();
-            $senderUpdatedAccount['user_account_data']['spent_amount'] = (float)$senderUpdatedAccount['user_account_data']['spent_amount'] + (float)$userUpdatedBalance['spent_amount'];
-            $senderUpdatedAccount['user_account_data']['available_amount'] = (float)$userUpdatedBalance['current_amount'];
+            $senderUpdatedAccount['user_account_data']['spent_amount'] = (float) $senderUpdatedAccount['user_account_data']['spent_amount'] + (float) $userUpdatedBalance['spent_amount'];
+            $senderUpdatedAccount['user_account_data']['available_amount'] = (float) $userUpdatedBalance['current_amount'];
 
-            $inputs['order_data']['previous_amount'] = (float)$senderAccount->user_account_data['available_amount'];
-            $inputs['order_data']['current_amount'] = ((float)$inputs['order_data']['previous_amount'] + (float)$inputs['converted_currency']);
+            $inputs['order_data']['previous_amount'] = (float) $senderAccount->user_account_data['available_amount'];
+            $inputs['order_data']['current_amount'] = ((float) $inputs['order_data']['previous_amount'] + (float) $inputs['converted_currency']);
             $inputs['timeline'][] = [
-                'message' => 'Deducted ' . currency($userUpdatedBalance['spent_amount'], $inputs['currency']) . ' from user account successfully',
+                'message' => 'Deducted '.currency($userUpdatedBalance['spent_amount'], $inputs['currency']).' from user account successfully',
                 'flag' => 'info',
                 'timestamp' => now(),
             ];
 
             $bangladeshTopUp = $this->bangladeshTopUpRepository->update($bangladeshTopUp->getKey(), ['order_data' => $inputs['order_data'], 'timeline' => $inputs['timeline']]);
 
-            if (!Transaction::userAccount()->update($senderAccount->getKey(), $senderUpdatedAccount)) {
+            if (! Transaction::userAccount()->update($senderAccount->getKey(), $senderUpdatedAccount)) {
                 throw new \Exception('Failed to update user account balance.');
             }
 
@@ -272,7 +266,7 @@ class BangladeshTopUpService
         $data->order_detail_cause_name = 'cash_withdraw';
         $data->order_detail_number = $data->order_data['purchase_number'];
         $data->order_detail_response_id = $data->order_data['purchase_number'];
-        $data->notes = 'Bangladesh Topup Payment Send to ' . $master_user_name;
+        $data->notes = 'Bangladesh Topup Payment Send to '.$master_user_name;
         $orderDetailStore = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStore->order_detail_parent_id = $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStore->save();
@@ -283,7 +277,7 @@ class BangladeshTopUpService
         $orderDetailStoreForMaster->order_detail_amount = $amount;
         $orderDetailStoreForMaster->converted_amount = $converted_amount;
         $orderDetailStoreForMaster->step = 2;
-        $orderDetailStoreForMaster->notes = 'Bangladesh Topup Payment Receive From' . $user_name;
+        $orderDetailStoreForMaster->notes = 'Bangladesh Topup Payment Receive From'.$user_name;
         $orderDetailStoreForMaster->save();
 
         //For Charge
@@ -291,7 +285,7 @@ class BangladeshTopUpService
         $data->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $data->order_detail_cause_name = 'charge';
         $data->order_detail_parent_id = $orderDetailStore->getKey();
-        $data->notes = 'Bangladesh Topup Charge Send to ' . $master_user_name;
+        $data->notes = 'Bangladesh Topup Charge Send to '.$master_user_name;
         $data->step = 3;
         $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStoreForCharge = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
@@ -301,7 +295,7 @@ class BangladeshTopUpService
         $orderDetailStoreForChargeForMaster->order_detail_amount = -calculate_flat_percent($amount, $serviceStatData['charge']);
         $orderDetailStoreForChargeForMaster->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $orderDetailStoreForChargeForMaster->order_detail_cause_name = 'charge';
-        $orderDetailStoreForChargeForMaster->notes = 'Bangladesh Topup Charge Receive from ' . $user_name;
+        $orderDetailStoreForChargeForMaster->notes = 'Bangladesh Topup Charge Receive from '.$user_name;
         $orderDetailStoreForChargeForMaster->step = 4;
         $orderDetailStoreForChargeForMaster->save();
 
@@ -309,7 +303,7 @@ class BangladeshTopUpService
         $data->amount = -calculate_flat_percent($amount, $serviceStatData['discount']);
         $data->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $data->order_detail_cause_name = 'discount';
-        $data->notes = 'Bangladesh Topup Discount form ' . $master_user_name;
+        $data->notes = 'Bangladesh Topup Discount form '.$master_user_name;
         $data->step = 5;
         //$data->order_detail_parent_id = $orderDetailStore->getKey();
         //$updateData['order_data']['previous_amount'] = 0;
@@ -320,7 +314,7 @@ class BangladeshTopUpService
         $orderDetailStoreForDiscountForMaster->order_detail_amount = calculate_flat_percent($amount, $serviceStatData['discount']);
         $orderDetailStoreForDiscountForMaster->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $orderDetailStoreForDiscountForMaster->order_detail_cause_name = 'discount';
-        $orderDetailStoreForDiscountForMaster->notes = 'Bangladesh Topup Discount to ' . $user_name;
+        $orderDetailStoreForDiscountForMaster->notes = 'Bangladesh Topup Discount to '.$user_name;
         $orderDetailStoreForDiscountForMaster->step = 6;
         $orderDetailStoreForDiscountForMaster->save();
 
@@ -369,7 +363,7 @@ class BangladeshTopUpService
         $data->order_detail_cause_name = 'cash_withdraw';
         $data->order_detail_number = $data->order_data['accepted_number'];
         $data->order_detail_response_id = $data->order_data['purchase_number'];
-        $data->notes = 'Bangladesh Topup Refund From ' . $master_user_name;
+        $data->notes = 'Bangladesh Topup Refund From '.$master_user_name;
         $orderDetailStore = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStore->order_detail_parent_id = $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStore->save();
@@ -382,7 +376,7 @@ class BangladeshTopUpService
         $orderDetailStoreForMaster->order_detail_amount = -$amount;
         $orderDetailStoreForMaster->converted_amount = -$converted_amount;
         $orderDetailStoreForMaster->step = 2;
-        $orderDetailStoreForMaster->notes = 'Bangladesh Topup Send to ' . $user_name;
+        $orderDetailStoreForMaster->notes = 'Bangladesh Topup Send to '.$user_name;
         $orderDetailStoreForMaster->save();
 
         //For Charge
@@ -390,7 +384,7 @@ class BangladeshTopUpService
         $data->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $data->order_detail_cause_name = 'charge';
         $data->order_detail_parent_id = $orderDetailStore->getKey();
-        $data->notes = 'Bangladesh Topup Charge Receive from ' . $master_user_name;
+        $data->notes = 'Bangladesh Topup Charge Receive from '.$master_user_name;
         $data->step = 3;
         $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStoreForCharge = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
@@ -400,7 +394,7 @@ class BangladeshTopUpService
         $orderDetailStoreForChargeForMaster->order_detail_amount = calculate_flat_percent($amount, $serviceStatData['charge']);
         $orderDetailStoreForChargeForMaster->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $orderDetailStoreForChargeForMaster->order_detail_cause_name = 'charge';
-        $orderDetailStoreForChargeForMaster->notes = 'Bangladesh Topup Charge Send to ' . $user_name;
+        $orderDetailStoreForChargeForMaster->notes = 'Bangladesh Topup Charge Send to '.$user_name;
         $orderDetailStoreForChargeForMaster->step = 4;
         $orderDetailStoreForChargeForMaster->save();
 
@@ -408,7 +402,7 @@ class BangladeshTopUpService
         $data->amount = calculate_flat_percent($amount, $serviceStatData['discount']);
         $data->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $data->order_detail_cause_name = 'discount';
-        $data->notes = 'Bangladesh Topup Discount form ' . $master_user_name;
+        $data->notes = 'Bangladesh Topup Discount form '.$master_user_name;
         $data->step = 5;
         //$data->order_detail_parent_id = $orderDetailStore->getKey();
         $updateData['order_data']['previous_amount'] = 0;
@@ -419,7 +413,7 @@ class BangladeshTopUpService
         $orderDetailStoreForDiscountForMaster->order_detail_amount = -calculate_flat_percent($amount, $serviceStatData['discount']);
         $orderDetailStoreForDiscountForMaster->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $orderDetailStoreForDiscountForMaster->order_detail_cause_name = 'discount';
-        $orderDetailStoreForDiscountForMaster->notes = 'Bangladesh Topup Discount to ' . $user_name;
+        $orderDetailStoreForDiscountForMaster->notes = 'Bangladesh Topup Discount to '.$user_name;
         $orderDetailStoreForDiscountForMaster->step = 6;
         $orderDetailStoreForDiscountForMaster->save();
 
