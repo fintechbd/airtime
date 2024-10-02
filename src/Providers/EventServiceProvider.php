@@ -37,10 +37,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         BangladeshTopUpRequested::class => [
             TriggerListener::class,
-            \Fintech\Airtime\Jobs\BangladeshTopUp\ValidateBangladeshTopUpPackage::class
-
+            \Fintech\Airtime\Listeners\ValidateBangladeshTopUpPackage::class
         ],
-
         InternationalTopUpCancelled::class => [
             TriggerListener::class,
         ],
@@ -55,6 +53,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         InternationalTopUpRequested::class => [
             TriggerListener::class,
+            \Fintech\Airtime\Listeners\ValidateInternationalTopUpPackage::class
         ],
     ];
 }
