@@ -4,7 +4,7 @@ namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
 use Fintech\Airtime\Events\BangladeshTopUpRequested;
 use Fintech\Airtime\Facades\Airtime;
-use Fintech\Airtime\Jobs\BangladeshTopUp\AssignVendorToBangladeshTopUpJob;
+use Fintech\Airtime\Jobs\BangladeshTopUp\AssignVendorJob;
 use Fintech\Core\Enums\Enabled;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,7 +27,7 @@ class ValidateBangladeshTopUpPackage implements ShouldQueue
     {
         $bangladeshTopUp = Airtime::assignVendor()->requestQuote($event->bangladeshTopUp);
 
-        AssignVendorToBangladeshTopUpJob::dispatchIf($bangladeshTopUp->order_data['assign_order'] == Enabled::Yes->value, $bangladeshTopUp->getKey());
+        AssignVendorJob::dispatchIf($bangladeshTopUp->order_data['assign_order'] == Enabled::Yes->value, $bangladeshTopUp->getKey());
     }
 
     /**
