@@ -20,20 +20,11 @@ class AssignVendorService
 
     private AirtimeTransfer $serviceVendorDriver;
 
-    /**
-     * @throws AirtimeException|ErrorException
-     */
-    public function requestQuote(BaseModel $order): mixed
-    {
-        $this->initiateVendor($order->vendor);
-
-        return $this->serviceVendorDriver->requestQuote($order);
-    }
 
     /**
      * @throws VendorNotFoundException
      */
-    private function initiateVendor(string $slug): void
+    private function initVendor(string $slug): void
     {
         $availableVendors = config('fintech.airtime.providers', []);
 
@@ -51,12 +42,59 @@ class AssignVendorService
     }
 
     /**
+     * @throws AirtimeException|ErrorException|VendorNotFoundException
+     */
+    public function requestQuote(BaseModel $airtime): void
+    {
+        $data['timeline'] = $airtime->timeline ?? [];
+
+        $this->initVendor($airtime->vendor);
+
+        $service = Business::service()->find($airtime->service_id);
+
+        $data['timeline'][] = [
+            'message' => "Requesting ({$this->serviceVendorModel->service_vendor_name}) for ".ucwords(strtolower($service->service_name)).' airtime topup request',
+            'flag' => 'info',
+            'timestamp' => now(),
+        ];
+
+        $verdict = $this->serviceVendorDriver->initPayment($airtime);
+
+        $data['timeline'][] = $verdict->timeline;
+        $data['notes'] = $verdict->message;
+        $data['order_data'] = $airtime->order_data;
+        $data['order_data']['vendor_data'] = $verdict->toArray();
+
+        if (! $verdict->status) {
+            $data['status'] = OrderStatus::AdminVerification->value;
+            $data['timeline'][] = [
+                'message' => "Updating {$service->service_name} airtime topup request status. Requires ".OrderStatus::AdminVerification->label().' confirmation',
+                'flag' => 'error',
+                'timestamp' => now(),
+            ];
+        } else {
+            $data['status'] = OrderStatus::Processing->value;
+            $data['timeline'][] = [
+                'message' => "Waiting for ({$this->serviceVendorModel->service_vendor_name}) to update ".ucwords(strtolower($service->service_name)).' airtime topup request status.',
+                'flag' => 'info',
+                'timestamp' => now(),
+            ];
+        }
+
+        if (! Transaction::order()->update($airtime->getKey(), $data)) {
+            throw new \ErrorException(__('remit::messages.assign_vendor.failed', [
+                'slug' => $airtime->vendor,
+            ]));
+        }
+    }
+
+    /**
      * @throws ErrorException
-     * @throws UpdateOperationException|AirtimeException
+     * @throws UpdateOperationException|VendorNotFoundException
      */
     public function processOrder(BaseModel $order, string $vendor_slug): mixed
     {
-        $this->initiateVendor($vendor_slug);
+        $this->initVendor($vendor_slug);
 
         if (! Transaction::order()->update($order->getKey(), [
             'vendor' => $vendor_slug,
@@ -71,7 +109,7 @@ class AssignVendorService
     }
 
     /**
-     * @throws ErrorException|AirtimeException
+     * @throws ErrorException|AirtimeException|VendorNotFoundException
      */
     public function trackOrder(BaseModel $order): mixed
     {
@@ -80,7 +118,7 @@ class AssignVendorService
             throw new AirtimeException(__('airtime::messages.assign_vendor.not_assigned'));
         }
 
-        $this->initiateVendor($order->vendor);
+        $this->initVendor($order->vendor);
 
         return $this->serviceVendorDriver->trackOrder($order);
     }
@@ -91,7 +129,7 @@ class AssignVendorService
      */
     public function cancelOrder(BaseModel $order): mixed
     {
-        $this->initiateVendor($order->vendor);
+        $this->initVendor($order->vendor);
 
         return $this->serviceVendorDriver->orderStatus($order);
     }
@@ -107,18 +145,18 @@ class AssignVendorService
             throw new AirtimeException(__('airtime::messages.assign_vendor.not_assigned'));
         }
 
-        $this->initiateVendor($order->vendor);
+        $this->initVendor($order->vendor);
 
         return $this->serviceVendorDriver->orderStatus($order);
     }
 
     /**
      * @throws ErrorException
-     * @throws AirtimeException
+     * @throws AirtimeException|VendorNotFoundException
      */
     public function amendmentOrder(BaseModel $order): mixed
     {
-        $this->initiateVendor($order->vendor);
+        $this->initVendor($order->vendor);
 
         return $this->serviceVendorDriver->orderStatus($order);
     }
@@ -126,11 +164,11 @@ class AssignVendorService
     /**
      * Recharge Service Packages
      *
-     * @throws AirtimeException
+     * @throws AirtimeException|VendorNotFoundException
      */
     public function rechargePackages(string $slug): array
     {
-        $this->initiateVendor($slug);
+        $this->initVendor($slug);
 
         return $this->serviceVendorDriver->servicePackages();
     }

@@ -4,6 +4,7 @@ namespace Fintech\Airtime\Contracts;
 
 use ErrorException;
 use Fintech\Core\Abstracts\BaseModel;
+use Fintech\Core\Supports\AssignVendorVerdict;
 
 interface AirtimeTransfer
 {
@@ -14,7 +15,7 @@ interface AirtimeTransfer
      *
      * @throws ErrorException
      */
-    public function requestQuote(BaseModel $order): mixed;
+    public function requestQuote(BaseModel $order): AssignVendorVerdict;
 
     /**
      * Method to make a request to the topup service provider
