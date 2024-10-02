@@ -25,12 +25,6 @@ class BangladeshTopUpPackageValidityJob implements ShouldQueue
     public function handle(BangladeshTopUpRequested $event)
     {
         Airtime::assignVendor()->requestQuote($event->bangladeshTopUp);
-
-        $event->bangladeshTopUp->refresh();
-
-        if ($event->bangladeshTopUp->status->value != OrderStatus::Processing->value) {
-            return false;
-        }
     }
 
     /**
