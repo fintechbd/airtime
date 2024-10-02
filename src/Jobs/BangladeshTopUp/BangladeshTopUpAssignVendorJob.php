@@ -24,7 +24,7 @@ class BangladeshTopUpAssignVendorJob implements ShouldQueue
      */
     public function handle(BangladeshTopUpRequested $event)
     {
-        logger("BangladeshTopUpAssignVendorJob", $event->bangladeshTopUp->toArray());
+        logger('BangladeshTopUpAssignVendorJob', $event->bangladeshTopUp->toArray());
 
         $bangladeshTopUp = Airtime::bangladeshTopUp()->find($event->bangladeshTopUp->getKey());
 
