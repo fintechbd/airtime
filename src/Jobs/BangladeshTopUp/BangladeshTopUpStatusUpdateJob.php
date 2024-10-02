@@ -1,6 +1,6 @@
 <?php
 
-namespace Fintech\Airtime\Jobs;
+namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

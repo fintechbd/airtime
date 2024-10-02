@@ -1,6 +1,6 @@
 <?php
 
-namespace Fintech\Airtime\Jobs;
+namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
 use Fintech\Airtime\Facades\Airtime;
 use Fintech\Business\Facades\Business;
