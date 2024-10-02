@@ -4,7 +4,6 @@ namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
 use Fintech\Airtime\Events\BangladeshTopUpRequested;
 use Fintech\Airtime\Facades\Airtime;
-use Fintech\Core\Enums\Transaction\OrderStatus;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
