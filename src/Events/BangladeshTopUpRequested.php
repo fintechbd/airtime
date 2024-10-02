@@ -33,5 +33,4 @@ class BangladeshTopUpRequested
 
         $this->bangladeshTopUp = Airtime::bangladeshTopUp()->update($bangladeshTopUp->getKey(), ['timeline' => $timeline]);
     }
-
 }

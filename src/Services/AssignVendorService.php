@@ -58,7 +58,7 @@ class AssignVendorService
             'timestamp' => now(),
         ];
 
-        $verdict = $this->serviceVendorDriver->initPayment($airtime);
+        $verdict = $this->serviceVendorDriver->requestQuote($airtime);
 
         $data['timeline'][] = $verdict->timeline;
         $data['notes'] = $verdict->message;
@@ -69,7 +69,7 @@ class AssignVendorService
             $data['status'] = OrderStatus::AdminVerification->value;
             $data['timeline'][] = [
                 'message' => "Updating {$service->service_name} airtime topup request status. Requires ".OrderStatus::AdminVerification->label().' confirmation',
-                'flag' => 'error',
+                'flag' => 'warn',
                 'timestamp' => now(),
             ];
         } else {

@@ -5,7 +5,6 @@ namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 use Fintech\Airtime\Events\BangladeshTopUpRequested;
 use Fintech\Airtime\Facades\Airtime;
 use Fintech\Core\Enums\Transaction\OrderStatus;
-use Fintech\Reload\Facades\Reload;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -29,7 +28,9 @@ class BangladeshTopUpPackageValidityJob implements ShouldQueue
 
         $event->bangladeshTopUp->refresh();
 
-        if ($event->bangladeshTopUp->status !== OrderStatus::Processing) {
+        logger($event->bangladeshTopUp->status->value .' ' . OrderStatus::Processing->value);
+
+        if ($event->bangladeshTopUp->status->value != OrderStatus::Processing->value) {
             return false;
         }
     }

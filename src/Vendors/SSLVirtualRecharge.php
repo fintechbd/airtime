@@ -94,25 +94,25 @@ class SSLVirtualRecharge implements AirtimeTransfer
         $verdict = AssignVendorVerdict::make();
 
         if ($response['status'] == 'api_success') {
-            $verdict->status(true)
+            return $verdict->status(true)
                 ->amount($response['data']['total_amount'])
                 ->message($response['status_title'] ?? null)
-                ->ref_number($params['transaction_id'])
+                ->ref_number($response['transaction_id'])
                 ->original($response)
-                ->orderTimeline('(SSL Wireless) responded with ' . strtolower($verdict->message) . '.');
+                ->orderTimeline('(SSL Wireless) responded with ' . strtolower(($response['status_title'] ?? '')) . '.');
         }
 
         return $verdict->status(false)
             ->original($response)
             ->amount(0)
             ->ref_number($params['transaction_id'])
-            ->message($response['status_title'] ?? null)
-            ->orderTimeline('(SSL Wireless) reported error: ' . strtolower($verdict->message), 'error');
+            ->message($response['message'] ?? null)
+            ->orderTimeline('(SSL Wireless) reported error: ' . strtolower(($response['message'] ?? '')), 'error');
     }
 
     private function post($url = '', $payload = []): mixed
     {
-        return $this->client->post($url, $payload)->body();
+        return $this->client->post($url, $payload)->json();
     }
 
     /**
