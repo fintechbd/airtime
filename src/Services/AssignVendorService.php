@@ -88,9 +88,7 @@ class AssignVendorService
             ]));
         }
 
-        $airtime->refresh();
-
-        return $airtime;
+        return $airtime->refresh();
     }
 
     /**
