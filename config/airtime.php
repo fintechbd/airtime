@@ -16,6 +16,8 @@ return [
     */
     'enabled' => env('PACKAGE_AIRTIME_ENABLED', true),
 
+    'attempt_threshold' => 5,
+
     /*
     |--------------------------------------------------------------------------
     | Airtime Group Root Prefix
@@ -62,7 +64,7 @@ return [
             'test' => (bool) env('PACKAGE_AIRTIME_SSLVR_TEST', false),
             'driver' => Fintech\Airtime\Vendors\SSLVirtualRecharge::class,
             'live' => [
-                'endpoint' => 'https://api.sslwireless.com/api',
+                'endpoint' => 'https://common-api.sslwireless.com/api',
                 'auth_key' => env('PACKAGE_AIRTIME_SSLVR_AUTH_KEY'),
                 'stk_code' => env('PACKAGE_AIRTIME_SSLVR_STK_CODE'),
             ],

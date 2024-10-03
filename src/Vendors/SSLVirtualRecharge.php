@@ -14,6 +14,8 @@ use Illuminate\Support\Str;
 
 class SSLVirtualRecharge implements AirtimeTransfer
 {
+    const RECHARGE_SUCCESSFUL = 900;
+
     /**
      * SSLVirtualRecharge configuration.
      *
@@ -75,6 +77,11 @@ class SSLVirtualRecharge implements AirtimeTransfer
         $params['utility_secret_key'] = $serviceStatData['utility_secret_key'] ?? '';
     }
 
+    private function post($url = '', $payload = []): mixed
+    {
+        return $this->client->post($url, $payload)->json();
+    }
+
     /**
      * Method to make a request to the topup service provider
      * for a quotation of the order. that include charge, fee,
@@ -95,25 +102,22 @@ class SSLVirtualRecharge implements AirtimeTransfer
         $verdict = AssignVendorVerdict::make();
 
         if ($response['status'] == 'api_success') {
-            return $verdict->status(true)
+            $verdict->status(true)
                 ->amount($response['data']['total_amount'])
                 ->message($response['status_title'] ?? null)
                 ->ref_number($response['transaction_id'])
-                ->original($response)
-                ->orderTimeline('(SSL Wireless) responded with ' . strtolower(($response['status_title'] ?? '')) . '.');
+                ->original($response);
+
+            return $verdict->orderTimeline('(SSL Wireless)  virtual recharge responded with ' . strtolower($verdict->message));
         }
 
-        return $verdict->status(false)
+        $verdict->status(false)
             ->original($response)
             ->amount(0)
             ->ref_number($params['transaction_id'])
-            ->message($response['message'] ?? null)
-            ->orderTimeline('(SSL Wireless) reported error: ' . strtolower(($response['message'] ?? '')), 'error');
-    }
+            ->message($response['message'] ?? null);
 
-    private function post($url = '', $payload = []): mixed
-    {
-        return $this->client->post($url, $payload)->json();
+        return $verdict->orderTimeline('(SSL Wireless)  virtual recharge reported error: ' . strtolower($verdict->message), 'error');
     }
 
     /**
@@ -133,17 +137,19 @@ class SSLVirtualRecharge implements AirtimeTransfer
         $verdict = AssignVendorVerdict::make();
 
         if ($response['status'] == 'payment_success') {
-            return $verdict->status(true)
+            $verdict->status(true)
                 ->message($response['data']['message'] ?? $response['status_title'] ?? '')
                 ->ref_number($response['data']['vr_guid'])
-                ->original($response)
-                ->orderTimeline('(SSL Wireless) bill payment responded with ' . strtolower(($response['status_title'] ?? '')) . '.');
+                ->original($response);
+
+            return $verdict->orderTimeline('(SSL Wireless) virtual recharge responded with ' . strtolower($verdict->message) . '.');
         }
 
-        return $verdict->original($response)
+        $verdict->original($response)
             ->ref_number($params['transaction_id'])
-            ->message($response['message'] ?? null)
-            ->orderTimeline('(SSL Wireless) bill payment reported error: ' . strtolower(($response['message'] ?? '')), 'error');
+            ->message($response['message'] ?? null);
+
+        return $verdict->orderTimeline('(SSL Wireless) virtual recharge reported error: ' . strtolower($verdict->message), 'error');
     }
 
     /**
@@ -162,19 +168,21 @@ class SSLVirtualRecharge implements AirtimeTransfer
 
         $verdict = AssignVendorVerdict::make();
 
-        if ($response['status'] == 'payment_success') {
-            return $verdict->status(true)
+        if ($response['status'] == 'success') {
+            $verdict->status($response['data']['recharge_status'] == self::RECHARGE_SUCCESSFUL)
                 ->message($response['data']['message'] ?? $response['status_title'] ?? '')
                 ->ref_number($response['data']['vr_guid'])
-                ->original($response)
-                ->orderTimeline('(SSL Wireless) bill payment responded with ' . strtolower(($response['status_title'] ?? '')) . '.');
+                ->original($response);
+
+            return $verdict->orderTimeline('(SSL Wireless) virtual recharge responded with ' . strtolower($verdict->message));
         }
 
-        return $verdict->status(false)
+        $verdict->status(false)
             ->original($response)
             ->ref_number($params['transaction_id'])
-            ->message($response['message'] ?? null)
-            ->orderTimeline('(SSL Wireless) bill payment reported error: ' . strtolower(($response['message'] ?? '')), 'error');
+            ->message($response['message'] ?? null);
+
+        return $verdict->orderTimeline('(SSL Wireless) virtual recharge reported error: ' . strtolower($verdict->message), 'error');
     }
 
     /**
