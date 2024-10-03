@@ -58,6 +58,23 @@ class SSLVirtualRecharge implements AirtimeTransfer
             ]);
     }
 
+    private function injectAuthKeys($order, &$params): void
+    {
+        $serviceStat = Business::serviceStat()->findWhere([
+            'role_id' => $order->order_data['role_id'],
+            'service_id' => $order->service_id,
+            'source_country_id' => $order->source_country_id,
+            'destination_country_id' => $order->destination_country_id,
+            'service_vendor_id' => $order->service_vendor_id,
+            'enabled' => true,
+            'paginate' => false,
+        ]);
+
+        $serviceStatData = $serviceStat?->service_stat_data ?? [];
+        $params['utility_auth_key'] = $serviceStatData['utility_auth_key'] ?? '';
+        $params['utility_secret_key'] = $serviceStatData['utility_secret_key'] ?? '';
+    }
+
     /**
      * Method to make a request to the topup service provider
      * for a quotation of the order. that include charge, fee,
@@ -70,24 +87,8 @@ class SSLVirtualRecharge implements AirtimeTransfer
         $params['transaction_id'] = $order->order_number;
         $params['recipient_msisdn'] = Str::substr($order->order_data['receiver_mobile_number'], -11);
         $params['connection_type'] = $order->order_data['connection_type'];
-        $params['utility_auth_key'] = '';
-        $params['utility_secret_key'] = '';
 
-        $serviceStat = Business::serviceStat()->findWhere([
-            'role_id' => $order->order_data['role_id'],
-            'service_id' => $order->service_id,
-            'source_country_id' => $order->source_country_id,
-            'destination_country_id' => $order->destination_country_id,
-            'service_vendor_id' => $order->service_vendor_id,
-            'enabled' => true,
-            'paginate' => false,
-        ]);
-
-        if ($serviceStat) {
-            $serviceStatData = $serviceStat->service_stat_data ?? [];
-            $params['utility_auth_key'] = $serviceStatData['utility_auth_key'] ?? null;
-            $params['utility_secret_key'] = $serviceStatData['utility_secret_key'] ?? null;
-        }
+        $this->injectAuthKeys($order, $params);
 
         $response = $this->post('/bill-info', $params);
 
@@ -99,7 +100,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
                 ->message($response['status_title'] ?? null)
                 ->ref_number($response['transaction_id'])
                 ->original($response)
-                ->orderTimeline('(SSL Wireless) responded with '.strtolower(($response['status_title'] ?? '')).'.');
+                ->orderTimeline('(SSL Wireless) responded with ' . strtolower(($response['status_title'] ?? '')) . '.');
         }
 
         return $verdict->status(false)
@@ -107,7 +108,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
             ->amount(0)
             ->ref_number($params['transaction_id'])
             ->message($response['message'] ?? null)
-            ->orderTimeline('(SSL Wireless) reported error: '.strtolower(($response['message'] ?? '')), 'error');
+            ->orderTimeline('(SSL Wireless) reported error: ' . strtolower(($response['message'] ?? '')), 'error');
     }
 
     private function post($url = '', $payload = []): mixed
@@ -124,24 +125,8 @@ class SSLVirtualRecharge implements AirtimeTransfer
     public function executeOrder(BaseModel $order): mixed
     {
         $params['transaction_id'] = $order->order_number;
-        $params['utility_auth_key'] = '';
-        $params['utility_secret_key'] = '';
 
-        $serviceStat = Business::serviceStat()->findWhere([
-            'role_id' => $order->order_data['role_id'],
-            'service_id' => $order->service_id,
-            'source_country_id' => $order->source_country_id,
-            'destination_country_id' => $order->destination_country_id,
-            'service_vendor_id' => $order->service_vendor_id,
-            'enabled' => true,
-            'paginate' => false,
-        ]);
-
-        if ($serviceStat) {
-            $serviceStatData = $serviceStat->service_stat_data ?? [];
-            $params['utility_auth_key'] = $serviceStatData['utility_auth_key'] ?? null;
-            $params['utility_secret_key'] = $serviceStatData['utility_secret_key'] ?? null;
-        }
+        $this->injectAuthKeys($order, $params);
 
         $response = $this->post('/bill-payment', $params);
 
@@ -152,14 +137,13 @@ class SSLVirtualRecharge implements AirtimeTransfer
                 ->message($response['data']['message'] ?? $response['status_title'] ?? '')
                 ->ref_number($response['data']['vr_guid'])
                 ->original($response)
-                ->orderTimeline('(SSL Wireless) bill payment responded with '.strtolower(($response['status_title'] ?? '')).'.');
+                ->orderTimeline('(SSL Wireless) bill payment responded with ' . strtolower(($response['status_title'] ?? '')) . '.');
         }
 
-        return $verdict->status(false)
-            ->original($response)
+        return $verdict->original($response)
             ->ref_number($params['transaction_id'])
             ->message($response['message'] ?? null)
-            ->orderTimeline('(SSL Wireless) bill payment reported error: '.strtolower(($response['message'] ?? '')), 'error');
+            ->orderTimeline('(SSL Wireless) bill payment reported error: ' . strtolower(($response['message'] ?? '')), 'error');
     }
 
     /**
@@ -170,13 +154,27 @@ class SSLVirtualRecharge implements AirtimeTransfer
      */
     public function orderStatus(BaseModel $order): mixed
     {
-        $params = [
-            'transaction_id' => $order->order_data[''],
-            'utility_auth_key' => $this->options[$order->order_data['']]['utility_auth_key'],
-            'utility_secret_key' => $this->options[$order->order_data['']]['utility_secret_key'],
-        ];
+        $params['transaction_id'] = $order->order_number;
 
-        return $this->post('/bill-status', $params);
+        $this->injectAuthKeys($order, $params);
+
+        $response = $this->post('/bill-status', $params);
+
+        $verdict = AssignVendorVerdict::make();
+
+        if ($response['status'] == 'payment_success') {
+            return $verdict->status(true)
+                ->message($response['data']['message'] ?? $response['status_title'] ?? '')
+                ->ref_number($response['data']['vr_guid'])
+                ->original($response)
+                ->orderTimeline('(SSL Wireless) bill payment responded with ' . strtolower(($response['status_title'] ?? '')) . '.');
+        }
+
+        return $verdict->status(false)
+            ->original($response)
+            ->ref_number($params['transaction_id'])
+            ->message($response['message'] ?? null)
+            ->orderTimeline('(SSL Wireless) bill payment reported error: ' . strtolower(($response['message'] ?? '')), 'error');
     }
 
     /**
@@ -236,7 +234,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
 
         if ($response['status'] == 'success') {
 
-            if (! empty($response['data']['triggerAmount']['list'])) {
+            if (!empty($response['data']['triggerAmount']['list'])) {
                 foreach ($response['data']['triggerAmount']['list'] as $package) {
                     $temp = $this->mapToServicePackage($package);
                     $temp['service_id'] = $operators[$package['operator_id']] ?? null;
@@ -246,7 +244,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
                 }
             }
 
-            if (! empty($response['data']['blockedAmount']['list'])) {
+            if (!empty($response['data']['blockedAmount']['list'])) {
                 foreach ($response['data']['blockedAmount']['list'] as $package) {
                     $temp = $this->mapToServicePackage($package, true);
                     $temp['service_id'] = $operators[$package['operator_id']] ?? null;
@@ -267,10 +265,10 @@ class SSLVirtualRecharge implements AirtimeTransfer
             'description' => $package['offer_description'] ? filter_var($package['offer_description'], FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH) : null,
             'type' => $package['offer_type'] ?? 'combo',
             'amount' => intval($package['amount'] ?? '0'),
-            'enabled' => ! $blocked,
+            'enabled' => !$blocked,
             'blocked' => $blocked,
             'service_package_data' => [
-                'is_popular' => (bool) ($package['is_popular'] ?? 0),
+                'is_popular' => (bool)($package['is_popular'] ?? 0),
                 'connection_type' => $package['connection_type'] ?? 'prepaid',
                 'validity_seconds' => $package['offer_validity_seconds'] ?? 999999999,
                 'validity' => $package['offer_validity'] ?? 'N/A',
