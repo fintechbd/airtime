@@ -60,7 +60,7 @@ return [
     */
     'providers' => [
         'sslwireless' => [
-            'mode' => 'sandbox',
+            'mode' => env('PACKAGE_AIRTIME_SSLVR_MODE', 'sandbox'),
             'test' => (bool) env('PACKAGE_AIRTIME_SSLVR_TEST', false),
             'driver' => Fintech\Airtime\Vendors\SSLVirtualRecharge::class,
             'live' => [

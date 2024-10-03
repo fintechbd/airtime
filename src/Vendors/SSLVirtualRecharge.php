@@ -40,15 +40,8 @@ class SSLVirtualRecharge implements AirtimeTransfer
     public function __construct()
     {
         $this->config = config('fintech.airtime.providers.sslwireless');
-
-        if ($this->config['mode'] === 'sandbox') {
-            $this->apiUrl = $this->config[$this->status]['endpoint'];
-            $this->status = 'sandbox';
-
-        } else {
-            $this->apiUrl = $this->config[$this->status]['endpoint'];
-            $this->status = 'live';
-        }
+        $this->status = config('fintech.airtime.providers.sslwireless.mode');
+        $this->apiUrl = $this->config[$this->status]['endpoint'];
 
         $this->client = Http::withoutVerifying()
             ->baseUrl($this->apiUrl)
