@@ -212,7 +212,6 @@ class AssignVendorService
         $data['timeline'][] = $verdict->timeline;
         $data['notes'] = $verdict->message;
         $data['order_data']['vendor_data']['status_info'][] = $verdict->toArray();
-        $data['order_data']['ref_number'] = $verdict->ref_number;
 
         if ($verdict->status) {
             $data['status'] = OrderStatus::Success->value;

@@ -101,7 +101,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
                 ->ref_number($response['transaction_id'])
                 ->original($response);
 
-            return $verdict->orderTimeline('(SSL Wireless)  virtual recharge responded with '.strtolower($verdict->message));
+            return $verdict->orderTimeline('(SSL Wireless)  virtual recharge responded with ' . strtolower($verdict->message));
         }
 
         $verdict->status(false)
@@ -110,7 +110,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
             ->ref_number($params['transaction_id'])
             ->message($response['message'] ?? null);
 
-        return $verdict->orderTimeline('(SSL Wireless)  virtual recharge reported error: '.strtolower($verdict->message), 'error');
+        return $verdict->orderTimeline('(SSL Wireless)  virtual recharge reported error: ' . strtolower($verdict->message), 'error');
     }
 
     /**
@@ -135,14 +135,14 @@ class SSLVirtualRecharge implements AirtimeTransfer
                 ->ref_number($response['data']['vr_guid'])
                 ->original($response);
 
-            return $verdict->orderTimeline('(SSL Wireless) virtual recharge responded with '.strtolower($verdict->message).'.');
+            return $verdict->orderTimeline('(SSL Wireless) virtual recharge responded with ' . strtolower($verdict->message) . '.');
         }
 
         $verdict->original($response)
             ->ref_number($params['transaction_id'])
             ->message($response['message'] ?? null);
 
-        return $verdict->orderTimeline('(SSL Wireless) virtual recharge reported error: '.strtolower($verdict->message), 'error');
+        return $verdict->orderTimeline('(SSL Wireless) virtual recharge reported error: ' . strtolower($verdict->message), 'error');
     }
 
     /**
@@ -153,7 +153,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
      */
     public function orderStatus(BaseModel $order): AssignVendorVerdict
     {
-        $params['transaction_id'] = $order->order_number;
+        $params['transaction_id'] = $order->order_data['ref_number'];
 
         $this->injectAuthKeys($order, $params);
 
@@ -167,7 +167,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
                 ->ref_number($response['data']['vr_guid'])
                 ->original($response);
 
-            return $verdict->orderTimeline('(SSL Wireless) virtual recharge responded with '.strtolower($verdict->message));
+            return $verdict->orderTimeline('(SSL Wireless) virtual recharge responded with ' . strtolower($verdict->message));
         }
 
         $verdict->status(false)
@@ -175,7 +175,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
             ->ref_number($params['transaction_id'])
             ->message($response['message'] ?? null);
 
-        return $verdict->orderTimeline('(SSL Wireless) virtual recharge reported error: '.strtolower($verdict->message), 'error');
+        return $verdict->orderTimeline('(SSL Wireless) virtual recharge reported error: ' . strtolower($verdict->message), 'error');
     }
 
     /**
@@ -206,7 +206,6 @@ class SSLVirtualRecharge implements AirtimeTransfer
             : $this->post('/vr/package-list');
 
         $packages = [];
-        $operators = [];
         $operators[1] = Business::service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
         $operators[2] = Business::service()->findWhere(['service_slug' => 'banglalink_bd'])->id;
         $operators[3] = Business::service()->findWhere(['service_slug' => 'robi_bd'])->id;
@@ -218,7 +217,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
 
         if ($response['status'] == 'success') {
 
-            if (! empty($response['data']['triggerAmount']['list'])) {
+            if (!empty($response['data']['triggerAmount']['list'])) {
                 foreach ($response['data']['triggerAmount']['list'] as $package) {
                     $temp = $this->mapToServicePackage($package);
                     $temp['service_id'] = $operators[$package['operator_id']] ?? null;
@@ -228,7 +227,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
                 }
             }
 
-            if (! empty($response['data']['blockedAmount']['list'])) {
+            if (!empty($response['data']['blockedAmount']['list'])) {
                 foreach ($response['data']['blockedAmount']['list'] as $package) {
                     $temp = $this->mapToServicePackage($package, true);
                     $temp['service_id'] = $operators[$package['operator_id']] ?? null;
@@ -249,10 +248,10 @@ class SSLVirtualRecharge implements AirtimeTransfer
             'description' => $package['offer_description'] ? filter_var($package['offer_description'], FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH) : null,
             'type' => $package['offer_type'] ?? 'combo',
             'amount' => intval($package['amount'] ?? '0'),
-            'enabled' => ! $blocked,
+            'enabled' => !$blocked,
             'blocked' => $blocked,
             'service_package_data' => [
-                'is_popular' => (bool) ($package['is_popular'] ?? 0),
+                'is_popular' => (bool)($package['is_popular'] ?? 0),
                 'connection_type' => $package['connection_type'] ?? 'prepaid',
                 'validity_seconds' => $package['offer_validity_seconds'] ?? 999999999,
                 'validity' => $package['offer_validity'] ?? 'N/A',
