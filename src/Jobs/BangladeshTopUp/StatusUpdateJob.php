@@ -2,6 +2,7 @@
 
 namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
+use DateTime;
 use Fintech\Airtime\Events\BangladeshTopUpRequested;
 use Fintech\Airtime\Facades\Airtime;
 use Illuminate\Bus\Queueable;
@@ -9,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\Middleware\ThrottlesExceptions;
 
 class StatusUpdateJob implements ShouldQueue
 {
@@ -44,5 +46,23 @@ class StatusUpdateJob implements ShouldQueue
             'status' => \Fintech\Core\Enums\Transaction\OrderStatus::AdminVerification->value,
             'notes' => $exception->getMessage(),
         ]);
+    }
+
+    /**
+     * Get the middleware the job should pass through.
+     *
+     * @return array<int, object>
+     */
+    public function middleware(): array
+    {
+        return [(new ThrottlesExceptions(2, 1))->by('bangladesh-top-up')];
+    }
+
+    /**
+     * Determine the time at which this job should time out.
+     */
+    public function retryUntil(): DateTime
+    {
+        return now()->addMinutes(5);
     }
 }

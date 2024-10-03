@@ -35,7 +35,10 @@ class AssignVendorJob implements ShouldQueue
     {
         $this->bangladeshTopUp = Airtime::assignVendor()->processOrder($this->bangladeshTopUp, $this->bangladeshTopUp->vendor);
 
-        StatusUpdateJob::dispatchIf($this->bangladeshTopUp->status->value == OrderStatus::Accepted->value, $this->bangladeshTopUp->getKey());
+        StatusUpdateJob::dispatchIf(
+            $this->bangladeshTopUp->status->value == OrderStatus::Accepted->value,
+            $this->bangladeshTopUp->getKey())
+            ->delay(now()->addSeconds(5));
     }
 
     /**
