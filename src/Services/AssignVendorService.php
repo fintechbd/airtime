@@ -28,13 +28,13 @@ class AssignVendorService
     {
         $availableVendors = config('fintech.airtime.providers', []);
 
-        if (!isset($availableVendors[$slug])) {
+        if (! isset($availableVendors[$slug])) {
             throw new VendorNotFoundException(ucfirst($slug));
         }
 
         $this->serviceVendorModel = Business::serviceVendor()->findWhere(['service_vendor_slug' => $slug, 'enabled' => true]);
 
-        if (!$this->serviceVendorModel) {
+        if (! $this->serviceVendorModel) {
             throw (new ModelNotFoundException)->setModel(config('fintech.business.service_vendor_model'), $slug);
         }
 
@@ -53,7 +53,7 @@ class AssignVendorService
         $service = Business::service()->find($airtime->service_id);
 
         $data['timeline'][] = [
-            'message' => "Requesting ({$this->serviceVendorModel->service_vendor_name}) for " . ucwords(strtolower($service->service_name)) . ' airtime topup validity confirmation.',
+            'message' => "Requesting ({$this->serviceVendorModel->service_vendor_name}) for ".ucwords(strtolower($service->service_name)).' airtime topup validity confirmation.',
             'flag' => 'info',
             'timestamp' => now(),
         ];
@@ -66,10 +66,10 @@ class AssignVendorService
         $data['order_data']['vendor_data']['bill_info'] = $verdict->toArray();
         $data['order_data']['ref_number'] = $verdict->ref_number;
 
-        if (!$verdict->status) {
+        if (! $verdict->status) {
             $data['status'] = OrderStatus::AdminVerification->value;
             $data['timeline'][] = [
-                'message' => "Updating {$service->service_name} airtime topup request status. Requires " . OrderStatus::AdminVerification->label() . ' confirmation',
+                'message' => "Updating {$service->service_name} airtime topup request status. Requires ".OrderStatus::AdminVerification->label().' confirmation',
                 'flag' => 'warn',
                 'timestamp' => now(),
             ];
@@ -77,13 +77,13 @@ class AssignVendorService
             $data['order_data']['assign_order'] = 'yes';
             $data['status'] = OrderStatus::Processing->value;
             $data['timeline'][] = [
-                'message' => 'Assigning ' . ucwords(strtolower($service->service_name)) . " airtime topup order to ({$this->serviceVendorModel->service_vendor_name}).",
+                'message' => 'Assigning '.ucwords(strtolower($service->service_name))." airtime topup order to ({$this->serviceVendorModel->service_vendor_name}).",
                 'flag' => 'info',
                 'timestamp' => now(),
             ];
         }
 
-        if (!Transaction::order()->update($airtime->getKey(), $data)) {
+        if (! Transaction::order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('remit::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
@@ -105,7 +105,7 @@ class AssignVendorService
         $service = Business::service()->find($airtime->service_id);
 
         $data['timeline'][] = [
-            'message' => "Requesting ({$this->serviceVendorModel->service_vendor_name}) to execute " . ucwords(strtolower($service->service_name)) . ' airtime topup request.',
+            'message' => "Requesting ({$this->serviceVendorModel->service_vendor_name}) to execute ".ucwords(strtolower($service->service_name)).' airtime topup request.',
             'flag' => 'info',
             'timestamp' => now(),
         ];
@@ -118,10 +118,10 @@ class AssignVendorService
         $data['order_data']['vendor_data']['payment_info'] = $verdict->toArray();
         $data['order_data']['ref_number'] = $verdict->ref_number;
 
-        if (!$verdict->status) {
+        if (! $verdict->status) {
             $data['status'] = OrderStatus::AdminVerification->value;
             $data['timeline'][] = [
-                'message' => "Updating {$service->service_name} airtime topup request status. Requires " . OrderStatus::AdminVerification->label() . ' confirmation',
+                'message' => "Updating {$service->service_name} airtime topup request status. Requires ".OrderStatus::AdminVerification->label().' confirmation',
                 'flag' => 'warn',
                 'timestamp' => now(),
             ];
@@ -132,13 +132,13 @@ class AssignVendorService
             $data['order_data']['accepted_number'] = entry_number($airtime->order_number, $airtime->sourceCountry->iso3, OrderStatusConfig::Accepted->value);
             $data['order_number'] = $data['order_data']['accepted_number'];
             $data['timeline'][] = [
-                'message' => "Waiting for ({$this->serviceVendorModel->service_vendor_name}) to update " . ucwords(strtolower($service->service_name)) . ' airtime topup request status.',
+                'message' => "Waiting for ({$this->serviceVendorModel->service_vendor_name}) to update ".ucwords(strtolower($service->service_name)).' airtime topup request status.',
                 'flag' => 'info',
                 'timestamp' => now(),
             ];
         }
 
-        if (!Transaction::order()->update($airtime->getKey(), $data)) {
+        if (! Transaction::order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('remit::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
@@ -207,7 +207,7 @@ class AssignVendorService
         $service = Business::service()->find($airtime->service_id);
 
         $data['timeline'][] = [
-            'message' => "Attempt #{$data['order_data']['attempts']}. Requesting ({$this->serviceVendorModel->service_vendor_name}) for " . ucwords(strtolower($service->service_name)) . ' airtime topup progress update.',
+            'message' => "Attempt #{$data['order_data']['attempts']}. Requesting ({$this->serviceVendorModel->service_vendor_name}) for ".ucwords(strtolower($service->service_name)).' airtime topup progress update.',
             'flag' => 'info',
             'timestamp' => now(),
         ];
@@ -220,25 +220,24 @@ class AssignVendorService
         $data['order_data']['vendor_data']['status_info'][] = $verdict->toArray();
         $data['order_data']['ref_number'] = $verdict->ref_number;
 
-
         if ($verdict->status) {
             $data['status'] = OrderStatus::Success->value;
             $data['order_data']['completed_at'] = now();
             $data['timeline'][] = [
-                'message' => ucwords(strtolower($service->service_name)) . " airtime topup order completed by ({$this->serviceVendorModel->service_vendor_name}).",
+                'message' => ucwords(strtolower($service->service_name))." airtime topup order completed by ({$this->serviceVendorModel->service_vendor_name}).",
                 'flag' => 'success',
                 'timestamp' => now(),
             ];
-        } else if (!$verdict->status && $airtime['order_data']['attempts'] > config('fintech.airtime.attempt_threshold', 5)) {
+        } elseif (! $verdict->status && $airtime['order_data']['attempts'] > config('fintech.airtime.attempt_threshold', 5)) {
             $data['status'] = OrderStatus::AdminVerification->value;
             $data['timeline'][] = [
-                'message' => "Updating {$service->service_name} airtime topup request status. Requires " . OrderStatus::AdminVerification->label() . ' confirmation',
+                'message' => "Updating {$service->service_name} airtime topup request status. Requires ".OrderStatus::AdminVerification->label().' confirmation',
                 'flag' => 'warn',
                 'timestamp' => now(),
             ];
         }
 
-        if (!Transaction::order()->update($airtime->getKey(), $data)) {
+        if (! Transaction::order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('remit::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
