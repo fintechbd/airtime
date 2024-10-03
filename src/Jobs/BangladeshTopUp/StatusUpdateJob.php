@@ -40,9 +40,9 @@ class StatusUpdateJob implements ShouldQueue
     /**
      * Handle a failure.
      */
-    public function failed(BangladeshTopUpRequested $event, \Throwable $exception): void
+    public function failed(\Throwable $exception): void
     {
-        Airtime::bangladeshTopUp()->update($event->bangladeshTopUp->getKey(), [
+        Airtime::bangladeshTopUp()->update($this->bangladeshTopUp->getKey(), [
             'status' => \Fintech\Core\Enums\Transaction\OrderStatus::AdminVerification->value,
             'notes' => $exception->getMessage(),
         ]);

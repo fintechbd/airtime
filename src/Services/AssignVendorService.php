@@ -11,6 +11,7 @@ use Fintech\Core\Enums\Transaction\OrderStatus;
 use Fintech\Core\Enums\Transaction\OrderStatusConfig;
 use Fintech\Core\Exceptions\UpdateOperationException;
 use Fintech\Core\Exceptions\VendorNotFoundException;
+use Fintech\Core\Supports\AssignVendorVerdict;
 use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\App;
@@ -44,9 +45,10 @@ class AssignVendorService
     /**
      * @throws AirtimeException|ErrorException|VendorNotFoundException
      */
-    public function requestQuote(BaseModel $airtime): mixed
+    public function requestQuote(BaseModel $airtime): BaseModel
     {
         $data['timeline'] = $airtime->timeline ?? [];
+        $data['order_data'] = $airtime->order_data;
 
         $this->initVendor($airtime->vendor);
 
@@ -62,7 +64,6 @@ class AssignVendorService
 
         $data['timeline'][] = $verdict->timeline;
         $data['notes'] = $verdict->message;
-        $data['order_data'] = $airtime->order_data;
         $data['order_data']['vendor_data']['bill_info'] = $verdict->toArray();
         $data['order_data']['ref_number'] = $verdict->ref_number;
 
@@ -96,9 +97,10 @@ class AssignVendorService
      * @throws ErrorException
      * @throws UpdateOperationException|VendorNotFoundException
      */
-    public function processOrder(BaseModel $airtime, string $vendor_slug): mixed
+    public function processOrder(BaseModel $airtime, string $vendor_slug): BaseModel
     {
         $data['timeline'] = $airtime->timeline ?? [];
+        $data['order_data'] = $airtime->order_data;
 
         $this->initVendor($vendor_slug);
 
@@ -114,7 +116,6 @@ class AssignVendorService
 
         $data['timeline'][] = $verdict->timeline;
         $data['notes'] = $verdict->message;
-        $data['order_data'] = $airtime->order_data;
         $data['order_data']['vendor_data']['payment_info'] = $verdict->toArray();
         $data['order_data']['ref_number'] = $verdict->ref_number;
 
@@ -154,19 +155,14 @@ class AssignVendorService
      */
     public function trackOrder(BaseModel $order): mixed
     {
+        $response = $this->orderStatus($order);
 
-        if ($order->service_vendor_id == config('fintech.business.default_vendor')) {
-            throw new AirtimeException(__('airtime::messages.assign_vendor.not_assigned'));
-        }
-
-        $this->initVendor($order->vendor);
-
-        return $this->serviceVendorDriver->trackOrder($order);
+        return $response->original;
     }
 
     /**
      * @throws ErrorException
-     * @throws AirtimeException
+     * @throws VendorNotFoundException
      */
     public function cancelOrder(BaseModel $order): mixed
     {
@@ -177,23 +173,22 @@ class AssignVendorService
 
     /**
      * @throws AirtimeException
-     * @throws ErrorException
+     * @throws ErrorException|VendorNotFoundException
      */
-    public function orderStatus(BaseModel $order): mixed
+    public function orderStatus(BaseModel $airtime): AssignVendorVerdict
     {
 
-        if ($order->service_vendor_id == config('fintech.business.default_vendor')) {
+        if ($airtime->service_vendor_id == config('fintech.business.default_vendor')) {
             throw new AirtimeException(__('airtime::messages.assign_vendor.not_assigned'));
         }
 
-        $this->initVendor($order->vendor);
+        $this->initVendor($airtime->vendor);
 
-        return $this->serviceVendorDriver->orderStatus($order);
+        return $this->serviceVendorDriver->orderStatus($airtime);
     }
 
     /**
-     * @throws AirtimeException
-     * @throws ErrorException
+     * @throws ErrorException|VendorNotFoundException
      */
     public function statusUpdate(BaseModel $airtime): mixed
     {
@@ -201,6 +196,7 @@ class AssignVendorService
         $this->initVendor($airtime->vendor);
 
         $data['timeline'] = $airtime->timeline ?? [];
+        $data['order_data'] = $airtime->order_data;
         $data['order_data']['attempts'] = $data['order_data']['attempts'] ?? 0;
         $data['order_data']['attempts']++;
 
@@ -248,7 +244,7 @@ class AssignVendorService
 
     /**
      * @throws ErrorException
-     * @throws AirtimeException|VendorNotFoundException
+     * @throws VendorNotFoundException
      */
     public function amendmentOrder(BaseModel $order): mixed
     {
@@ -260,7 +256,7 @@ class AssignVendorService
     /**
      * Recharge Service Packages
      *
-     * @throws AirtimeException|VendorNotFoundException
+     * @throws VendorNotFoundException
      */
     public function rechargePackages(string $slug): array
     {

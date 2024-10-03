@@ -31,15 +31,7 @@ interface AirtimeTransfer
      *
      * @throws ErrorException
      */
-    public function orderStatus(BaseModel $order): mixed;
-
-    /**
-     * Method to make a request to the topup service provider
-     * for the track real-time progress of the order.
-     *
-     * @throws ErrorException
-     */
-    public function trackOrder(BaseModel $order): mixed;
+    public function orderStatus(BaseModel $order): AssignVendorVerdict;
 
     /**
      * Method to make a request to the topup service provider

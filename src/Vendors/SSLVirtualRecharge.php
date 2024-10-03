@@ -151,7 +151,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
      *
      * @throws ErrorException
      */
-    public function orderStatus(BaseModel $order): mixed
+    public function orderStatus(BaseModel $order): AssignVendorVerdict
     {
         $params['transaction_id'] = $order->order_number;
 
@@ -176,23 +176,6 @@ class SSLVirtualRecharge implements AirtimeTransfer
             ->message($response['message'] ?? null);
 
         return $verdict->orderTimeline('(SSL Wireless) virtual recharge reported error: '.strtolower($verdict->message), 'error');
-    }
-
-    /**
-     * Method to make a request to the topup service provider
-     * for the track real-time progress of the order.
-     *
-     * @throws ErrorException
-     */
-    public function trackOrder(BaseModel $order): mixed
-    {
-        $params = [
-            'transaction_id' => $order->order_data[''],
-            'utility_auth_key' => $this->options[$order->order_data['']]['utility_auth_key'],
-            'utility_secret_key' => $this->options[$order->order_data['']]['utility_secret_key'],
-        ];
-
-        return $this->post('/bill-status', $params);
     }
 
     /**
