@@ -4,6 +4,7 @@ namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
 use Fintech\Airtime\Events\BangladeshTopUpRequested;
 use Fintech\Airtime\Facades\Airtime;
+use Fintech\Core\Enums\Transaction\OrderStatus;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,7 +35,7 @@ class AssignVendorJob implements ShouldQueue
     {
         $this->bangladeshTopUp = Airtime::assignVendor()->processOrder($this->bangladeshTopUp, $this->bangladeshTopUp->vendor);
 
-        StatusUpdateJob::dispatchIf(false, $this->bangladeshTopUp->getKey());
+        StatusUpdateJob::dispatchIf($this->bangladeshTopUp->status->value == OrderStatus::Accepted->value, $this->bangladeshTopUp->getKey());
     }
 
     /**

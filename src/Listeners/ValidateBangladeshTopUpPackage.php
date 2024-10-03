@@ -27,8 +27,6 @@ class ValidateBangladeshTopUpPackage implements ShouldQueue
     {
         $bangladeshTopUp = Airtime::assignVendor()->requestQuote($event->bangladeshTopUp);
 
-        logger('Order', ['statue' => $bangladeshTopUp->order_data['assign_order'] == Enabled::Yes->value, 'entry' => $bangladeshTopUp]);
-
         AssignVendorJob::dispatchIf($bangladeshTopUp->order_data['assign_order'] == Enabled::Yes->value, $bangladeshTopUp->getKey());
     }
 

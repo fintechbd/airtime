@@ -130,7 +130,7 @@ class AssignVendorService
             $data['status'] = OrderStatus::Accepted->value;
             $data['order_data']['accepted_at'] = now();
             $data['order_data']['accepted_number'] = entry_number($airtime->order_number, $airtime->sourceCountry->iso3, OrderStatusConfig::Accepted->value);
-            $data['order_number']['accepted_number'] = $data['order_data']['accepted_number'];
+            $data['order_number'] = $data['order_data']['accepted_number'];
             $data['timeline'][] = [
                 'message' => "Waiting for ({$this->serviceVendorModel->service_vendor_name}) to update " . ucwords(strtolower($service->service_name)) . ' airtime topup request status.',
                 'flag' => 'info',

@@ -32,7 +32,7 @@ class StatusUpdateJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->bangladeshTopUp = Airtime::assignVendor()->statusUpdate($this->bangladeshTopUp, $this->bangladeshTopUp->vendor);
+        $this->bangladeshTopUp = Airtime::assignVendor()->statusUpdate($this->bangladeshTopUp);
     }
 
     /**
