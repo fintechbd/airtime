@@ -192,7 +192,6 @@ class AssignVendorService
      */
     public function statusUpdate(BaseModel $airtime): mixed
     {
-
         $this->initVendor($airtime->vendor);
 
         $data['timeline'] = $airtime->timeline ?? [];
@@ -212,7 +211,6 @@ class AssignVendorService
 
         $data['timeline'][] = $verdict->timeline;
         $data['notes'] = $verdict->message;
-        $data['order_data'] = $airtime->order_data;
         $data['order_data']['vendor_data']['status_info'][] = $verdict->toArray();
         $data['order_data']['ref_number'] = $verdict->ref_number;
 
@@ -224,7 +222,7 @@ class AssignVendorService
                 'flag' => 'success',
                 'timestamp' => now(),
             ];
-        } elseif (! $verdict->status && $airtime['order_data']['attempts'] > config('fintech.airtime.attempt_threshold', 5)) {
+        } elseif (! $verdict->status && $data['order_data']['attempts'] >= config('fintech.airtime.attempt_threshold', 5)) {
             $data['status'] = OrderStatus::AdminVerification->value;
             $data['timeline'][] = [
                 'message' => "Updating {$service->service_name} airtime topup request status. Requires ".OrderStatus::AdminVerification->label().' confirmation',
@@ -232,6 +230,8 @@ class AssignVendorService
                 'timestamp' => now(),
             ];
         }
+
+        logger("Status Order Data", $data);
 
         if (! Transaction::order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('remit::messages.assign_vendor.failed', [
