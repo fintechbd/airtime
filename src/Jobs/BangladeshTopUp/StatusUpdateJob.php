@@ -3,7 +3,6 @@
 namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
 use DateTime;
-use Fintech\Airtime\Events\BangladeshTopUpRequested;
 use Fintech\Airtime\Facades\Airtime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
