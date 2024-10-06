@@ -25,6 +25,7 @@ class ServicePackageSeeder extends Seeder
         $bangladesh = MetaData::country()->findWhere(['iso2' => 'BD'])?->id ?? null;
 
         foreach ($this->triggerAmounts() as $triggerAmount) {
+
             if (isset($operators[$triggerAmount['service_id']])) {
                 $triggerAmount['service_id'] = $operators[$triggerAmount['service_id']];
                 $triggerAmount['country_id'] = $bangladesh ?? $triggerAmount['country_id'];
@@ -33,6 +34,7 @@ class ServicePackageSeeder extends Seeder
         }
 
         foreach ($this->blockedAmounts() as $blockedAmount) {
+
             if (isset($operators[$blockedAmount['service_id']])) {
                 $blockedAmount['service_id'] = $operators[$blockedAmount['service_id']];
                 $blockedAmount['enabled'] = false;
