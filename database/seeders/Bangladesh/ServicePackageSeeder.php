@@ -20,7 +20,7 @@ class ServicePackageSeeder extends Seeder
         //        $operators[4] = Business::service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
         $operators[5] = Business::service()->findWhere(['service_slug' => 'teletalk_bd'])->id;
         $operators[6] = Business::service()->findWhere(['service_slug' => 'airtel_bd'])->id;
-//        $operators[13] = Business::service()->findWhere(['service_slug' => 'gp_skitto_bd'])->id;
+        //        $operators[13] = Business::service()->findWhere(['service_slug' => 'gp_skitto_bd'])->id;
 
         $bangladesh = MetaData::country()->findWhere(['iso2' => 'BD'])?->id ?? null;
 
