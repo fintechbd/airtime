@@ -186,13 +186,29 @@ class SSLVirtualRecharge implements AirtimeTransfer
      */
     public function cancelOrder(BaseModel $order): mixed
     {
-        $params = [
-            'transaction_id' => $order->order_data[''],
-            'utility_auth_key' => $this->options[$order->order_data['']]['utility_auth_key'],
-            'utility_secret_key' => $this->options[$order->order_data['']]['utility_secret_key'],
-        ];
+        $params['transaction_id'] = $order->order_data['ref_number'];
 
-        return $this->post('/bill-cancel', $params);
+        $this->injectAuthKeys($order, $params);
+
+        $response = $this->post('/bill-cancel', $params);
+
+        $verdict = AssignVendorVerdict::make();
+
+        if ($response['status'] == 'success') {
+            $verdict->status($response['data']['recharge_status'] == self::RECHARGE_SUCCESSFUL)
+                ->message($response['data']['message'] ?? $response['status_title'] ?? '')
+                ->ref_number($response['data']['vr_guid'])
+                ->original($response);
+
+            return $verdict->orderTimeline('(SSL Wireless) virtual recharge responded with '.strtolower($verdict->message));
+        }
+
+        $verdict->status(false)
+            ->original($response)
+            ->ref_number($params['transaction_id'])
+            ->message($response['message'] ?? null);
+
+        return $verdict->orderTimeline('(SSL Wireless) virtual recharge reported error: '.strtolower($verdict->message), 'error');
     }
 
     /**
