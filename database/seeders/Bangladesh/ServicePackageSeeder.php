@@ -20,22 +20,28 @@ class ServicePackageSeeder extends Seeder
         //        $operators[4] = Business::service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
         $operators[5] = Business::service()->findWhere(['service_slug' => 'teletalk_bd'])->id;
         $operators[6] = Business::service()->findWhere(['service_slug' => 'airtel_bd'])->id;
-        $operators[13] = Business::service()->findWhere(['service_slug' => 'gp_skitto_bd'])->id;
+        //        $operators[13] = Business::service()->findWhere(['service_slug' => 'gp_skitto_bd'])->id;
 
         $bangladesh = MetaData::country()->findWhere(['iso2' => 'BD'])?->id ?? null;
 
         foreach ($this->triggerAmounts() as $triggerAmount) {
-            $triggerAmount['service_id'] = $operators[$triggerAmount['service_id']];
-            $triggerAmount['country_id'] = $bangladesh ?? $triggerAmount['country_id'];
-            Business::servicePackage()->create($triggerAmount);
+
+            if (isset($operators[$triggerAmount['service_id']])) {
+                $triggerAmount['service_id'] = $operators[$triggerAmount['service_id']];
+                $triggerAmount['country_id'] = $bangladesh ?? $triggerAmount['country_id'];
+                Business::servicePackage()->create($triggerAmount);
+            }
         }
 
         foreach ($this->blockedAmounts() as $blockedAmount) {
-            $blockedAmount['service_id'] = $operators[$blockedAmount['service_id']];
-            $blockedAmount['enabled'] = false;
-            $blockedAmount['service_package_data']['is_blocked'] = true;
-            $blockedAmount['country_id'] = $bangladesh ?? $blockedAmount['country_id'];
-            Business::servicePackage()->create($blockedAmount);
+
+            if (isset($operators[$blockedAmount['service_id']])) {
+                $blockedAmount['service_id'] = $operators[$blockedAmount['service_id']];
+                $blockedAmount['enabled'] = false;
+                $blockedAmount['service_package_data']['is_blocked'] = true;
+                $blockedAmount['country_id'] = $bangladesh ?? $blockedAmount['country_id'];
+                Business::servicePackage()->create($blockedAmount);
+            }
         }
     }
 
