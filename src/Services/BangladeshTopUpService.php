@@ -137,7 +137,6 @@ class BangladeshTopUpService
         $inputs['converted_amount'] = $currencyConversion['amount'];
         $inputs['order_data']['currency_convert_rate'] = $currencyConversion;
         unset($inputs['reverse']);
-
         $inputs['order_data']['created_by'] = $sender->name ?? 'N/A';
         $inputs['order_data']['user_name'] = $sender->name ?? 'N/A';
         $inputs['order_data']['created_by_mobile_number'] = $sender->mobile ?? 'N/A';
