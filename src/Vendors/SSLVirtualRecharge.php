@@ -153,7 +153,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
      */
     public function orderStatus(BaseModel $order): AssignVendorVerdict
     {
-        $params['transaction_id'] = $order->order_data['ref_number'];
+        $params['transaction_id'] = $order->order_data['purchase_number'];
 
         $this->injectAuthKeys($order, $params);
 
