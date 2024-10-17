@@ -2,10 +2,15 @@
 
 namespace Fintech\Airtime\Models;
 
+use Fintech\Core\Traits\BlameableTrait;
 use Fintech\Transaction\Models\Order;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class BangladeshTopUp extends Order
+class BangladeshTopUp extends Order implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+    use BlameableTrait;
+
     /*
     |--------------------------------------------------------------------------
     | GLOBAL VARIABLES
