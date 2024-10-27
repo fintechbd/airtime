@@ -230,8 +230,6 @@ class AssignVendorService
             ];
         }
 
-        logger('Status Order Data', $data);
-
         if (! Transaction::order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('remit::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
