@@ -3,9 +3,9 @@
 namespace Fintech\Airtime\Http\Controllers;
 
 use Exception;
+use Fintech\Airtime\Http\Requests\AirtimeCostRequest;
 use Fintech\Auth\Facades\Auth;
 use Fintech\Business\Facades\Business;
-use Fintech\Airtime\Http\Requests\AirtimeCostRequest;
 use Fintech\Business\Http\Resources\ServiceCostResource;
 use Fintech\Business\Http\Resources\ServicePackageCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
