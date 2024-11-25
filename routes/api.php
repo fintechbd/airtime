@@ -1,9 +1,9 @@
 <?php
 
-use Fintech\RestApi\Http\Controllers\Airtime\BangladeshTopUpController;
-use Fintech\RestApi\Http\Controllers\Airtime\CalculateCostController;
-use Fintech\RestApi\Http\Controllers\Airtime\InternationalTopUpController;
-use Fintech\RestApi\Http\Controllers\Airtime\PhoneNumberDetectController;
+use Fintech\Airtime\Http\Controllers\BangladeshTopUpController;
+use Fintech\Airtime\Http\Controllers\CalculateCostController;
+use Fintech\Airtime\Http\Controllers\InternationalTopUpController;
+use Fintech\Airtime\Http\Controllers\PhoneNumberDetectController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
