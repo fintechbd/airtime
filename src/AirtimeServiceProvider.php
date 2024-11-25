@@ -7,7 +7,7 @@ use Fintech\Airtime\Commands\SSLWirelessSetupCommand;
 use Fintech\Airtime\Commands\SyncSslWirelessTopUpPackageCommand;
 use Fintech\Airtime\Providers\EventServiceProvider;
 use Fintech\Airtime\Providers\RepositoryServiceProvider;
-use Fintech\Core\Traits\RegisterPackageTrait;
+use Fintech\Core\Traits\Packages\RegisterPackageTrait;
 use Illuminate\Support\ServiceProvider;
 
 class AirtimeServiceProvider extends ServiceProvider
