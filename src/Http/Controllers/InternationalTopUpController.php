@@ -163,7 +163,7 @@ class InternationalTopUpController extends Controller
                 DB::commit();
 
                 return response()->created([
-                    'message' => __('restapi::messages.resource.created', ['model' => 'International Top Up']),
+                    'message' => __('core::messages.resource.created', ['model' => 'International Top Up']),
                     'id' => $internationalTopUp->getKey(),
                     'spent' => $userUpdatedBalance['spent_amount'],
                 ]);
@@ -202,7 +202,7 @@ class InternationalTopUpController extends Controller
                 throw (new UpdateOperationException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
 
-            return response()->updated(__('restapi::messages.resource.updated', ['model' => 'International Top Up']));
+            return response()->updated(__('core::messages.resource.updated', ['model' => 'International Top Up']));
 
         } catch (ModelNotFoundException $exception) {
 
@@ -265,7 +265,7 @@ class InternationalTopUpController extends Controller
                 throw (new DeleteOperationException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
 
-            return response()->deleted(__('restapi::messages.resource.deleted', ['model' => 'International Top Up']));
+            return response()->deleted(__('core::messages.resource.deleted', ['model' => 'International Top Up']));
 
         } catch (ModelNotFoundException $exception) {
 
@@ -299,7 +299,7 @@ class InternationalTopUpController extends Controller
                 throw (new RestoreOperationException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
             }
 
-            return response()->restored(__('restapi::messages.resource.restored', ['model' => 'International Top Up']));
+            return response()->restored(__('core::messages.resource.restored', ['model' => 'International Top Up']));
 
         } catch (ModelNotFoundException $exception) {
 
@@ -326,7 +326,7 @@ class InternationalTopUpController extends Controller
             //$internationalTopUpPaginate = Airtime::internationalTopUp()->export($inputs);
             Airtime::internationalTopUp()->export($inputs);
 
-            return response()->exported(__('restapi::messages.resource.exported', ['model' => 'International Top Up']));
+            return response()->exported(__('core::messages.resource.exported', ['model' => 'International Top Up']));
 
         } catch (Exception $exception) {
 
