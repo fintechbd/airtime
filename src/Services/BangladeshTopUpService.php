@@ -203,24 +203,29 @@ class BangladeshTopUpService
         try {
             $bangladeshTopUp = $this->bangladeshTopUpRepository->create($inputs);
             DB::commit();
-            $userUpdatedBalance = $this->debitTransaction($bangladeshTopUp);
-            $senderUpdatedAccount = $senderAccount->toArray();
-            $senderUpdatedAccount['user_account_data']['spent_amount'] = (float) $senderUpdatedAccount['user_account_data']['spent_amount'] + (float) $userUpdatedBalance['spent_amount'];
-            $senderUpdatedAccount['user_account_data']['available_amount'] = (float) $userUpdatedBalance['current_amount'];
+            $accounting = Transaction::accounting($bangladeshTopUp);
 
-            $inputs['order_data']['previous_amount'] = (float) $senderAccount->user_account_data['available_amount'];
-            $inputs['order_data']['current_amount'] = ((float) $inputs['order_data']['previous_amount'] + (float) $inputs['converted_currency']);
-            $inputs['timeline'][] = [
-                'message' => 'Deducted '.currency($userUpdatedBalance['spent_amount'], $inputs['currency']).' from user account successfully',
-                'flag' => 'info',
-                'timestamp' => now(),
-            ];
+            $accounting->debitTransaction();
 
-            $bangladeshTopUp = $this->bangladeshTopUpRepository->update($bangladeshTopUp->getKey(), ['order_data' => $inputs['order_data'], 'timeline' => $inputs['timeline']]);
-
-            if (! Transaction::userAccount()->update($senderAccount->getKey(), $senderUpdatedAccount)) {
-                throw new \Exception('Failed to update user account balance.');
-            }
+            $accounting->debitBalanceFromUserAccount();
+//            $userUpdatedBalance = $this->debitTransaction($bangladeshTopUp);
+//            $senderUpdatedAccount = $senderAccount->toArray();
+//            $senderUpdatedAccount['user_account_data']['spent_amount'] = (float) $senderUpdatedAccount['user_account_data']['spent_amount'] + (float) $userUpdatedBalance['spent_amount'];
+//            $senderUpdatedAccount['user_account_data']['available_amount'] = (float) $userUpdatedBalance['current_amount'];
+//
+//            $inputs['order_data']['previous_amount'] = (float) $senderAccount->user_account_data['available_amount'];
+//            $inputs['order_data']['current_amount'] = ((float) $inputs['order_data']['previous_amount'] + (float) $inputs['converted_currency']);
+//            $inputs['timeline'][] = [
+//                'message' => 'Deducted '.currency($userUpdatedBalance['spent_amount'], $inputs['currency']).' from user account successfully',
+//                'flag' => 'info',
+//                'timestamp' => now(),
+//            ];
+//
+//            $bangladeshTopUp = $this->bangladeshTopUpRepository->update($bangladeshTopUp->getKey(), ['order_data' => $inputs['order_data'], 'timeline' => $inputs['timeline']]);
+//
+//            if (! Transaction::userAccount()->update($senderAccount->getKey(), $senderUpdatedAccount)) {
+//                throw new \Exception('Failed to update user account balance.');
+//            }
 
             Transaction::orderQueue()->removeFromQueueUserWise($inputs['user_id']);
 
