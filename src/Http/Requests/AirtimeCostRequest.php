@@ -26,8 +26,8 @@ class AirtimeCostRequest extends FormRequest
         return [
             'user_id' => ['nullable', 'integer', 'min:1'],
             'service_id' => ['required', 'integer', 'min:1'],
-            'source_country_id' => ['required', 'integer', 'min:1', 'master_currency', 'master_currency'],
-            'destination_country_id' => ['required', 'integer', 'min:1', 'master_currency', 'master_currency'],
+            'source_country_id' => ['required', 'integer', 'min:1', 'master_currency'],
+            'destination_country_id' => ['required', 'integer', 'min:1', 'master_currency'],
             'reverse' => ['required', 'boolean'],
             'reload' => ['nullable', 'boolean'],
             'airtime_data' => ['nullable', 'array'],
