@@ -166,6 +166,7 @@ class InternationalTopUpController extends Controller
                     'message' => __('core::messages.resource.created', ['model' => 'International Top Up']),
                     'id' => $internationalTopUp->getKey(),
                     'spent' => $userUpdatedBalance['spent_amount'],
+                    'order_number' => $internationalTopUp->order_number ?? $internationalTopUp->order_data['purchase_number']
                 ]);
             } else {
                 throw new Exception('Your another order is in process...!');

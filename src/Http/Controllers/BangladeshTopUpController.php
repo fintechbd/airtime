@@ -88,6 +88,7 @@ class BangladeshTopUpController extends Controller
             return response()->created([
                 'message' => __('core::messages.transaction.request_created', ['service' => 'Bangladesh TopUp']),
                 'id' => $bangladeshTopUp->getKey(),
+                'order_number' => $bangladeshTopUp->order_number ?? $bangladeshTopUp->order_data['purchase_number']
             ]);
 
         } catch (Exception $exception) {
