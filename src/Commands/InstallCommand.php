@@ -52,7 +52,7 @@ class InstallCommand extends Command
                 'logo_svg' => "{$this->image_svg}air_time.svg",
                 'logo_png' => "{$this->image_png}air_time.png",
                 'service_type_is_parent' => 'yes',
-                'service_type_is_description' => 'no'
+                'service_type_is_description' => 'no',
             ];
 
             Business::serviceTypeManager($entry)
