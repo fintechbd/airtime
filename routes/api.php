@@ -38,7 +38,7 @@ if (Config::get('fintech.airtime.enabled')) {
 
                 Route::post('phone-number-detect', PhoneNumberDetectController::class);
 
-                //DO NOT REMOVE THIS LINE//
+                // DO NOT REMOVE THIS LINE//
             });
     });
 }

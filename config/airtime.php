@@ -49,7 +49,7 @@ return [
     */
     'international_top_up_model' => InternationalTopUp::class,
 
-    //** Model Config Point Do not Remove **//
+    // ** Model Config Point Do not Remove **//
 
     /*
     |--------------------------------------------------------------------------
@@ -89,7 +89,7 @@ return [
 
         \Fintech\Airtime\Interfaces\InternationalTopUpRepository::class => InternationalTopUpRepository::class,
 
-        //** Repository Binding Config Point Do not Remove **//
+        // ** Repository Binding Config Point Do not Remove **//
     ],
 
 ];

@@ -102,7 +102,7 @@ class InternationalTopUpController extends Controller
                     throw new Exception('Master User Account not found for '.$request->input('source_country_id', $depositor->profile?->country_id).' country');
                 }
 
-                //set pre defined conditions of deposit
+                // set pre defined conditions of deposit
                 $inputs['transaction_form_id'] = Transaction::transactionForm()->findWhere(['code' => 'International_top_up'])->getKey();
                 $inputs['user_id'] = $user_id ?? $depositor->getKey();
                 $delayCheck = Transaction::order()->transactionDelayCheck($inputs);
@@ -122,7 +122,7 @@ class InternationalTopUpController extends Controller
                 $inputs['order_data']['created_by_mobile_number'] = $depositor->mobile;
                 $inputs['order_data']['created_at'] = now();
                 $inputs['order_data']['master_user_name'] = $masterUser['name'];
-                //$inputs['order_data']['operator_short_code'] = $request->input('operator_short_code', null);
+                // $inputs['order_data']['operator_short_code'] = $request->input('operator_short_code', null);
                 $inputs['order_data']['system_notification_variable_success'] = 'international_top_up_success';
                 $inputs['order_data']['system_notification_variable_failed'] = 'international_top_up_failed';
                 $inputs['order_data']['order_type'] = OrderType::Airtime;
@@ -135,12 +135,12 @@ class InternationalTopUpController extends Controller
                 $order_data = $internationalTopUp->order_data ?? [];
                 $order_data['purchase_number'] = entry_number($internationalTopUp->getKey(), $internationalTopUp->sourceCountry->iso3 ?? null, OrderStatus::Successful->value);
                 $order_data['service_stat_data'] = Business::serviceStat()->serviceStateData($internationalTopUp);
-                //TODO Need to work negative amount
+                // TODO Need to work negative amount
                 $order_data['user_name'] = $internationalTopUp->user->name ?? null;
                 $internationalTopUp->order_data = $order_data;
                 $userUpdatedBalance = Airtime::internationalTopUp()->debitTransaction($internationalTopUp);
                 $depositedAccount = Transaction::userAccount()->findWhere(['user_id' => $depositor->getKey(), 'country_id' => $internationalTopUp->source_country_id ?? null]);
-                //update User Account
+                // update User Account
                 $depositedUpdatedAccount = $depositedAccount->toArray();
                 $depositedUpdatedAccount['user_account_data']['spent_amount'] = (float) $depositedUpdatedAccount['user_account_data']['spent_amount'] + (float) $userUpdatedBalance['spent_amount'];
                 $depositedUpdatedAccount['user_account_data']['available_amount'] = (float) $userUpdatedBalance['current_amount'];
@@ -324,7 +324,7 @@ class InternationalTopUpController extends Controller
         try {
             $inputs = $request->validated();
 
-            //$internationalTopUpPaginate = Airtime::internationalTopUp()->export($inputs);
+            // $internationalTopUpPaginate = Airtime::internationalTopUp()->export($inputs);
             Airtime::internationalTopUp()->export($inputs);
 
             return response()->exported(__('core::messages.resource.exported', ['model' => 'International Top Up']));

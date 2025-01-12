@@ -251,7 +251,7 @@ class BangladeshTopUpService
             'spent_amount' => null,
         ];
 
-        //Collect Current Balance as Previous Balance
+        // Collect Current Balance as Previous Balance
         $userAccountData['previous_amount'] = Transaction::orderDetail()->list([
             'get_order_detail_amount_sum' => true,
             'user_id' => $data->user_id,
@@ -283,7 +283,7 @@ class BangladeshTopUpService
         $orderDetailStoreForMaster->notes = 'Bangladesh Topup Payment Receive From'.$user_name;
         $orderDetailStoreForMaster->save();
 
-        //For Charge
+        // For Charge
         $data->amount = calculate_flat_percent($amount, $serviceStatData['charge']);
         $data->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $data->order_detail_cause_name = 'charge';
@@ -302,14 +302,14 @@ class BangladeshTopUpService
         $orderDetailStoreForChargeForMaster->step = 4;
         $orderDetailStoreForChargeForMaster->save();
 
-        //For Discount
+        // For Discount
         $data->amount = -calculate_flat_percent($amount, $serviceStatData['discount']);
         $data->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $data->order_detail_cause_name = 'discount';
         $data->notes = 'Bangladesh Topup Discount form '.$master_user_name;
         $data->step = 5;
-        //$data->order_detail_parent_id = $orderDetailStore->getKey();
-        //$updateData['order_data']['previous_amount'] = 0;
+        // $data->order_detail_parent_id = $orderDetailStore->getKey();
+        // $updateData['order_data']['previous_amount'] = 0;
         $orderDetailStoreForDiscount = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStoreForDiscountForMaster = $orderDetailStoreForCharge->replicate();
         $orderDetailStoreForDiscountForMaster->user_id = $data->sender_receiver_id;
@@ -321,8 +321,8 @@ class BangladeshTopUpService
         $orderDetailStoreForDiscountForMaster->step = 6;
         $orderDetailStoreForDiscountForMaster->save();
 
-        //'Point Transfer Commission Send to ' . $masterUser->name;
-        //'Point Transfer Commission Receive from ' . $receiver->name;
+        // 'Point Transfer Commission Send to ' . $masterUser->name;
+        // 'Point Transfer Commission Receive from ' . $receiver->name;
 
         $userAccountData['current_amount'] = Transaction::orderDetail()->list([
             'get_order_detail_amount_sum' => true,
@@ -352,7 +352,7 @@ class BangladeshTopUpService
             'spent_amount' => null,
         ];
 
-        //Collect Current Balance as Previous Balance
+        // Collect Current Balance as Previous Balance
         $userAccountData['previous_amount'] = Transaction::orderDetail()->list([
             'get_order_detail_amount_sum' => true,
             'user_id' => $data->user_id,
@@ -382,7 +382,7 @@ class BangladeshTopUpService
         $orderDetailStoreForMaster->notes = 'Bangladesh Topup Send to '.$user_name;
         $orderDetailStoreForMaster->save();
 
-        //For Charge
+        // For Charge
         $data->amount = -calculate_flat_percent($amount, $serviceStatData['charge']);
         $data->converted_amount = -calculate_flat_percent($converted_amount, $serviceStatData['charge']);
         $data->order_detail_cause_name = 'charge';
@@ -401,13 +401,13 @@ class BangladeshTopUpService
         $orderDetailStoreForChargeForMaster->step = 4;
         $orderDetailStoreForChargeForMaster->save();
 
-        //For Discount
+        // For Discount
         $data->amount = calculate_flat_percent($amount, $serviceStatData['discount']);
         $data->converted_amount = calculate_flat_percent($converted_amount, $serviceStatData['discount']);
         $data->order_detail_cause_name = 'discount';
         $data->notes = 'Bangladesh Topup Discount form '.$master_user_name;
         $data->step = 5;
-        //$data->order_detail_parent_id = $orderDetailStore->getKey();
+        // $data->order_detail_parent_id = $orderDetailStore->getKey();
         $updateData['order_data']['previous_amount'] = 0;
         $orderDetailStoreForDiscount = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStoreForDiscountForMaster = $orderDetailStoreForCharge->replicate();
@@ -420,8 +420,8 @@ class BangladeshTopUpService
         $orderDetailStoreForDiscountForMaster->step = 6;
         $orderDetailStoreForDiscountForMaster->save();
 
-        //'Point Transfer Commission Send to ' . $masterUser->name;
-        //'Point Transfer Commission Receive from ' . $receiver->name;
+        // 'Point Transfer Commission Send to ' . $masterUser->name;
+        // 'Point Transfer Commission Receive from ' . $receiver->name;
 
         $userAccountData['current_amount'] = Transaction::orderDetail()->list([
             'get_order_detail_amount_sum' => true,
