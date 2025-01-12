@@ -85,7 +85,7 @@ class AssignVendorService
         }
 
         if (! Transaction::order()->update($airtime->getKey(), $data)) {
-            throw new \ErrorException(__('remit::messages.assign_vendor.failed', [
+            throw new \ErrorException(__('core::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
         }
@@ -140,7 +140,7 @@ class AssignVendorService
         }
 
         if (! Transaction::order()->update($airtime->getKey(), $data)) {
-            throw new \ErrorException(__('remit::messages.assign_vendor.failed', [
+            throw new \ErrorException(__('core::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
         }
@@ -179,7 +179,7 @@ class AssignVendorService
     {
 
         if ($airtime->service_vendor_id == config('fintech.business.default_vendor')) {
-            throw new AirtimeException(__('airtime::messages.assign_vendor.not_assigned'));
+            throw new AirtimeException(__('core::messages.assign_vendor.not_assigned'));
         }
 
         $this->initVendor($airtime->vendor);
@@ -231,7 +231,7 @@ class AssignVendorService
         }
 
         if (! Transaction::order()->update($airtime->getKey(), $data)) {
-            throw new \ErrorException(__('remit::messages.assign_vendor.failed', [
+            throw new \ErrorException(__('core::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
         }
