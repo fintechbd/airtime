@@ -45,7 +45,7 @@ class InternationalTopUpCollection extends ResourceCollection
                 'is_refunded' => $intltopup->is_refunded ?? null,
                 'order_data' => $intltopup->order_data ?? null,
                 'status' => $intltopup->status ?? null,
-            ];
+            ] + $intltopup->commonAttributes();
 
             if (Core::packageExists('MetaData')) {
                 $data['source_country_name'] = $intltopup->sourceCountry?->name ?? null;
