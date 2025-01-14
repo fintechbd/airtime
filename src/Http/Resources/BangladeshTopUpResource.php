@@ -47,21 +47,21 @@ class BangladeshTopUpResource extends JsonResource
             'status' => $this->status ?? null,
         ] + $this->commonAttributes();
 
-            if (Core::packageExists('MetaData')) {
-                $data['source_country_name'] = $this->sourceCountry?->name ?? null;
-                $data['destination_country_name'] = $this->destinationCountry?->name ?? null;
-            }
+        if (Core::packageExists('MetaData')) {
+            $data['source_country_name'] = $this->sourceCountry?->name ?? null;
+            $data['destination_country_name'] = $this->destinationCountry?->name ?? null;
+        }
 
-            if (Core::packageExists('Auth')) {
-                $data['sender_receiver_name'] = $this->senderReceiver?->name ?? null;
-                $data['user_name'] = $this->user?->name ?? null;
-            }
+        if (Core::packageExists('Auth')) {
+            $data['sender_receiver_name'] = $this->senderReceiver?->name ?? null;
+            $data['user_name'] = $this->user?->name ?? null;
+        }
 
-            if (Core::packageExists('Business')) {
-                $data['service_name'] = $this->service?->service_name ?? null;
-                $data['service_type'] = $this->service->serviceType?->all_parent_list ?? null;
-            }
+        if (Core::packageExists('Business')) {
+            $data['service_name'] = $this->service?->service_name ?? null;
+            $data['service_type'] = $this->service->serviceType?->all_parent_list ?? null;
+        }
 
-            return $data;
+        return $data;
     }
 }
