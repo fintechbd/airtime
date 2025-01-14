@@ -47,7 +47,7 @@ class BangladeshTopUpCollection extends ResourceCollection
                 'is_refunded' => $bdtopup->is_refunded ?? null,
                 'order_data' => $bdtopup->order_data ?? null,
                 'status' => $bdtopup->status ?? null,
-            ];
+            ] + $bdtopup->commonAttributes();
 
             if (Core::packageExists('MetaData')) {
                 $data['source_country_name'] = $bdtopup->sourceCountry?->name ?? null;
