@@ -12,6 +12,8 @@ use Fintech\Airtime\Events\InternationalTopUpCompleted;
 use Fintech\Airtime\Events\InternationalTopUpRefunded;
 use Fintech\Airtime\Events\InternationalTopUpRejected;
 use Fintech\Airtime\Events\InternationalTopUpRequested;
+use Fintech\Airtime\Listeners\ValidateBangladeshTopUpPackage;
+use Fintech\Airtime\Listeners\ValidateInternationalTopUpPackage;
 use Fintech\Core\Listeners\TriggerListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -36,8 +38,8 @@ class EventServiceProvider extends ServiceProvider
             TriggerListener::class,
         ],
         BangladeshTopUpRequested::class => [
+            ValidateBangladeshTopUpPackage::class,
             TriggerListener::class,
-            \Fintech\Airtime\Listeners\ValidateBangladeshTopUpPackage::class,
         ],
         InternationalTopUpCancelled::class => [
             TriggerListener::class,
@@ -52,8 +54,8 @@ class EventServiceProvider extends ServiceProvider
             TriggerListener::class,
         ],
         InternationalTopUpRequested::class => [
+            ValidateInternationalTopUpPackage::class,
             TriggerListener::class,
-            \Fintech\Airtime\Listeners\ValidateInternationalTopUpPackage::class,
         ],
     ];
 }
