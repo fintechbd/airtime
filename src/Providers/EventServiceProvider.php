@@ -14,7 +14,7 @@ use Fintech\Airtime\Events\InternationalTopUpRejected;
 use Fintech\Airtime\Events\InternationalTopUpRequested;
 use Fintech\Airtime\Listeners\ValidateBangladeshTopUpPackage;
 use Fintech\Airtime\Listeners\ValidateInternationalTopUpPackage;
-use Fintech\Core\Listeners\TriggerListener;
+use Fintech\Core\Listeners\TriggerNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -26,36 +26,36 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         BangladeshTopUpCancelled::class => [
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
         BangladeshTopUpCompleted::class => [
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
         BangladeshTopUpRefunded::class => [
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
         BangladeshTopUpRejected::class => [
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
         BangladeshTopUpRequested::class => [
             ValidateBangladeshTopUpPackage::class,
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
         InternationalTopUpCancelled::class => [
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
         InternationalTopUpCompleted::class => [
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
         InternationalTopUpRefunded::class => [
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
         InternationalTopUpRejected::class => [
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
         InternationalTopUpRequested::class => [
             ValidateInternationalTopUpPackage::class,
-            TriggerListener::class,
+            TriggerNotification::class,
         ],
     ];
 }
