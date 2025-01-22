@@ -14,7 +14,7 @@ use Fintech\Airtime\Events\InternationalTopUpRejected;
 use Fintech\Airtime\Events\InternationalTopUpRequested;
 use Fintech\Airtime\Listeners\ValidateBangladeshTopUpPackage;
 use Fintech\Airtime\Listeners\ValidateInternationalTopUpPackage;
-use Fintech\Core\Listeners\TriggerNotification;
+use Fintech\Core\Listeners\TriggerListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -26,36 +26,36 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         BangladeshTopUpCancelled::class => [
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
         BangladeshTopUpCompleted::class => [
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
         BangladeshTopUpRefunded::class => [
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
         BangladeshTopUpRejected::class => [
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
         BangladeshTopUpRequested::class => [
             ValidateBangladeshTopUpPackage::class,
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
         InternationalTopUpCancelled::class => [
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
         InternationalTopUpCompleted::class => [
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
         InternationalTopUpRefunded::class => [
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
         InternationalTopUpRejected::class => [
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
         InternationalTopUpRequested::class => [
             ValidateInternationalTopUpPackage::class,
-            TriggerNotification::class,
+            TriggerListener::class,
         ],
     ];
 }
