@@ -14,7 +14,7 @@ return [
     |--------------------------------------------------------------------------
     | This setting enable the API will be available or not
     */
-    'enabled' => env('PACKAGE_AIRTIME_ENABLED', true),
+    'enabled' => env('AIRTIME_ENABLED', true),
 
     'attempt_threshold' => 5,
 
@@ -60,18 +60,18 @@ return [
     */
     'providers' => [
         'sslwireless' => [
-            'mode' => env('PACKAGE_AIRTIME_SSLVR_MODE', 'sandbox'),
-            'test' => (bool) env('PACKAGE_AIRTIME_SSLVR_TEST', false),
+            'mode' => env('AIRTIME_SSLVR_MODE', 'sandbox'),
+            'test' => (bool) env('AIRTIME_SSLVR_TEST', false),
             'driver' => Fintech\Airtime\Vendors\SSLVirtualRecharge::class,
             'live' => [
                 'endpoint' => 'https://common-api.sslwireless.com/api',
-                'auth_key' => env('PACKAGE_AIRTIME_SSLVR_AUTH_KEY'),
-                'stk_code' => env('PACKAGE_AIRTIME_SSLVR_STK_CODE'),
+                'auth_key' => env('AIRTIME_SSLVR_AUTH_KEY'),
+                'stk_code' => env('AIRTIME_SSLVR_STK_CODE'),
             ],
             'sandbox' => [
                 'endpoint' => 'https://api.sslwireless.com/api',
-                'auth_key' => env('PACKAGE_AIRTIME_SSLVR_AUTH_KEY'),
-                'stk_code' => env('PACKAGE_AIRTIME_SSLVR_STK_CODE'),
+                'auth_key' => env('AIRTIME_SSLVR_AUTH_KEY'),
+                'stk_code' => env('AIRTIME_SSLVR_STK_CODE'),
             ],
         ],
     ],
