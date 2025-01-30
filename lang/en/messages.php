@@ -12,5 +12,5 @@
 */
 
 return [
-    'synchronize-queued' => 'Bangladesh top up service package catalog synchronization queued.',
+    'synchronize-queued' => 'Bangladesh top-up service sync in progress.',
 ];
