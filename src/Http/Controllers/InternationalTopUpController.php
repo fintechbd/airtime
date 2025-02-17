@@ -4,10 +4,8 @@ namespace Fintech\Airtime\Http\Controllers;
 
 use Exception;
 use Fintech\Airtime\Facades\Airtime;
-use Fintech\Airtime\Http\Requests\ImportInternationalTopUpRequest;
 use Fintech\Airtime\Http\Requests\IndexInternationalTopUpRequest;
 use Fintech\Airtime\Http\Requests\StoreInternationalTopUpRequest;
-use Fintech\Airtime\Http\Requests\UpdateInternationalTopUpRequest;
 use Fintech\Airtime\Http\Resources\InternationalTopUpCollection;
 use Fintech\Airtime\Http\Resources\InternationalTopUpResource;
 use Fintech\Auth\Facades\Auth;
@@ -17,10 +15,7 @@ use Fintech\Core\Enums\Auth\RiskProfile;
 use Fintech\Core\Enums\Auth\SystemRole;
 use Fintech\Core\Enums\Transaction\OrderStatus;
 use Fintech\Core\Enums\Transaction\OrderType;
-use Fintech\Core\Exceptions\DeleteOperationException;
-use Fintech\Core\Exceptions\RestoreOperationException;
 use Fintech\Core\Exceptions\StoreOperationException;
-use Fintech\Core\Exceptions\UpdateOperationException;
 use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -182,41 +177,6 @@ class InternationalTopUpController extends Controller
 
     /**
      * @lrd:start
-     * Update a specified *InternationalTopUp* resource using id.
-     *
-     * @lrd:end
-     */
-    public function update(UpdateInternationalTopUpRequest $request, string|int $id): JsonResponse
-    {
-        try {
-
-            $internationalTopUp = Airtime::internationalTopUp()->find($id);
-
-            if (! $internationalTopUp) {
-                throw (new ModelNotFoundException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
-            }
-
-            $inputs = $request->validated();
-
-            if (! Airtime::internationalTopUp()->update($id, $inputs)) {
-
-                throw (new UpdateOperationException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
-            }
-
-            return response()->updated(__('core::messages.resource.updated', ['model' => 'International Top Up']));
-
-        } catch (ModelNotFoundException $exception) {
-
-            return response()->notfound($exception->getMessage());
-
-        } catch (Exception $exception) {
-
-            return response()->failed($exception);
-        }
-    }
-
-    /**
-     * @lrd:start
      * Return a specified *InternationalTopUp* resource found by id.
      *
      * @lrd:end
@@ -245,115 +205,4 @@ class InternationalTopUpController extends Controller
         }
     }
 
-    /**
-     * @lrd:start
-     * Soft delete a specified *InternationalTopUp* resource using id.
-     *
-     * @lrd:end
-     */
-    public function destroy(string|int $id): JsonResponse
-    {
-        try {
-
-            $internationalTopUp = Airtime::internationalTopUp()->find($id);
-
-            if (! $internationalTopUp) {
-                throw (new ModelNotFoundException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
-            }
-
-            if (! Airtime::internationalTopUp()->destroy($id)) {
-
-                throw (new DeleteOperationException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
-            }
-
-            return response()->deleted(__('core::messages.resource.deleted', ['model' => 'International Top Up']));
-
-        } catch (ModelNotFoundException $exception) {
-
-            return response()->notfound($exception->getMessage());
-
-        } catch (Exception $exception) {
-
-            return response()->failed($exception);
-        }
-    }
-
-    /**
-     * @lrd:start
-     * Restore the specified *InternationalTopUp* resource from trash.
-     * ** ```Soft Delete``` needs to enabled to use this feature**
-     *
-     * @lrd:end
-     */
-    public function restore(string|int $id): JsonResponse
-    {
-        try {
-
-            $internationalTopUp = Airtime::internationalTopUp()->find($id, true);
-
-            if (! $internationalTopUp) {
-                throw (new ModelNotFoundException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
-            }
-
-            if (! Airtime::internationalTopUp()->restore($id)) {
-
-                throw (new RestoreOperationException)->setModel(config('fintech.airtime.international_top_up_model'), $id);
-            }
-
-            return response()->restored(__('core::messages.resource.restored', ['model' => 'International Top Up']));
-
-        } catch (ModelNotFoundException $exception) {
-
-            return response()->notfound($exception->getMessage());
-
-        } catch (Exception $exception) {
-
-            return response()->failed($exception);
-        }
-    }
-
-    /**
-     * @lrd:start
-     * Create an exportable list of the *InternationalTopUp* resource as document.
-     * After export job is done system will fire  export completed event
-     *
-     * @lrd:end
-     */
-    public function export(IndexInternationalTopUpRequest $request): JsonResponse
-    {
-        try {
-            $inputs = $request->validated();
-
-            // $internationalTopUpPaginate = Airtime::internationalTopUp()->export($inputs);
-            Airtime::internationalTopUp()->export($inputs);
-
-            return response()->exported(__('core::messages.resource.exported', ['model' => 'International Top Up']));
-
-        } catch (Exception $exception) {
-
-            return response()->failed($exception);
-        }
-    }
-
-    /**
-     * @lrd:start
-     * Create an exportable list of the *InternationalTopUp* resource as document.
-     * After export job is done system will fire  export completed event
-     *
-     * @lrd:end
-     */
-    public function import(ImportInternationalTopUpRequest $request): InternationalTopUpCollection|JsonResponse
-    {
-        try {
-            $inputs = $request->validated();
-
-            $internationalTopUpPaginate = Airtime::internationalTopUp()->list($inputs);
-
-            return new InternationalTopUpCollection($internationalTopUpPaginate);
-
-        } catch (Exception $exception) {
-
-            return response()->failed($exception);
-        }
-    }
 }

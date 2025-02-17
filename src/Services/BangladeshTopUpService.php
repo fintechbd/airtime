@@ -35,31 +35,6 @@ class BangladeshTopUpService
      */
     public function __construct(public BangladeshTopUpRepository $bangladeshTopUpRepository) {}
 
-    public function find($id, $onlyTrashed = false): ?BaseModel
-    {
-        return $this->bangladeshTopUpRepository->find($id, $onlyTrashed);
-    }
-
-    public function update($id, array $inputs = []): BaseModel
-    {
-        return $this->bangladeshTopUpRepository->update($id, $inputs);
-    }
-
-    public function destroy($id)
-    {
-        return $this->bangladeshTopUpRepository->delete($id);
-    }
-
-    public function restore($id)
-    {
-        return $this->bangladeshTopUpRepository->restore($id);
-    }
-
-    public function export(array $filters)
-    {
-        return $this->bangladeshTopUpRepository->list($filters);
-    }
-
     /**
      * @return mixed
      */
@@ -69,9 +44,14 @@ class BangladeshTopUpService
 
     }
 
-    public function import(array $filters)
+    public function find($id, $onlyTrashed = false): ?BaseModel
     {
-        return $this->bangladeshTopUpRepository->create($filters);
+        return $this->bangladeshTopUpRepository->find($id, $onlyTrashed);
+    }
+
+    public function update($id, array $inputs = []): BaseModel
+    {
+        return $this->bangladeshTopUpRepository->update($id, $inputs);
     }
 
     /**
