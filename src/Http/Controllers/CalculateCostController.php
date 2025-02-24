@@ -8,7 +8,6 @@ use Fintech\Auth\Facades\Auth;
 use Fintech\Business\Facades\Business;
 use Fintech\Business\Http\Resources\ServiceCostResource;
 use Fintech\Business\Http\Resources\ServicePackageCollection;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
@@ -57,7 +56,7 @@ class CalculateCostController extends Controller
 
             return new ServiceCostResource($exchangeRate);
 
-        }  catch (Exception $exception) {
+        } catch (Exception $exception) {
 
             return response()->failed($exception);
         }

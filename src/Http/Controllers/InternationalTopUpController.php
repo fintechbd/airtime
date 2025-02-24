@@ -195,7 +195,7 @@ class InternationalTopUpController extends Controller
 
             return new InternationalTopUpResource($internationalTopUp);
 
-        }  catch (Exception $exception) {
+        } catch (Exception $exception) {
 
             return response()->failed($exception);
         }

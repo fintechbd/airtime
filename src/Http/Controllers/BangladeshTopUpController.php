@@ -113,7 +113,7 @@ class BangladeshTopUpController extends Controller
 
             return new BangladeshTopUpResource($bangladeshTopUp);
 
-        }  catch (Exception $exception) {
+        } catch (Exception $exception) {
 
             return response()->failed($exception);
         }
