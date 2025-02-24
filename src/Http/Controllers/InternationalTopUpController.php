@@ -195,11 +195,7 @@ class InternationalTopUpController extends Controller
 
             return new InternationalTopUpResource($internationalTopUp);
 
-        } catch (ModelNotFoundException $exception) {
-
-            return response()->notfound($exception->getMessage());
-
-        } catch (Exception $exception) {
+        }  catch (Exception $exception) {
 
             return response()->failed($exception);
         }

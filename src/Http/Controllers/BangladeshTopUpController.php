@@ -113,11 +113,7 @@ class BangladeshTopUpController extends Controller
 
             return new BangladeshTopUpResource($bangladeshTopUp);
 
-        } catch (ModelNotFoundException $exception) {
-
-            return response()->notfound($exception->getMessage());
-
-        } catch (Exception $exception) {
+        }  catch (Exception $exception) {
 
             return response()->failed($exception);
         }
