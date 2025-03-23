@@ -31,10 +31,18 @@ if (Config::get('fintech.airtime.enabled')) {
                     ->middleware('imposter');
 
                 Route::apiResource('bangladesh-top-ups', BangladeshTopUpController::class)
-                    ->only('index', 'store', 'show');
+                    ->only('index', 'show');
+
+                Route::post('bangladesh-top-ups', [BangladeshTopUpController::class, 'store'])
+                    ->middleware('imposter')
+                    ->name('bangladesh-top-ups.store');
 
                 Route::apiResource('international-top-ups', InternationalTopUpController::class)
-                    ->only('index', 'store', 'show');
+                    ->only('index', 'show');
+
+                Route::post('international-top-ups', [InternationalTopUpController::class, 'store'])
+                    ->middleware('imposter')
+                    ->name('international-top-ups.store');
 
                 Route::post('phone-number-detect', PhoneNumberDetectController::class);
 
