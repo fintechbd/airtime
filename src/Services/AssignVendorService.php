@@ -82,7 +82,7 @@ class AssignVendorService
             ];
         }
 
-        if (!transaction()->order()->update($airtime->getKey(), $data)) {
+        if (! transaction()->order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('core::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
@@ -137,7 +137,7 @@ class AssignVendorService
             ];
         }
 
-        if (!transaction()->order()->update($airtime->getKey(), $data)) {
+        if (! transaction()->order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('core::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
@@ -228,7 +228,7 @@ class AssignVendorService
             ];
         }
 
-        if (!transaction()->order()->update($airtime->getKey(), $data)) {
+        if (! transaction()->order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('core::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));

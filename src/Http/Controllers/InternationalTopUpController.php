@@ -140,7 +140,7 @@ class InternationalTopUpController extends Controller
                 }
                 $order_data['order_data']['previous_amount'] = (float) $depositedAccount->user_account_data['available_amount'];
                 $order_data['order_data']['current_amount'] = (float) $userUpdatedBalance['current_amount'];
-                if (!transaction()->userAccount()->update($depositedAccount->getKey(), $depositedUpdatedAccount)) {
+                if (! transaction()->userAccount()->update($depositedAccount->getKey(), $depositedUpdatedAccount)) {
                     throw new Exception(__('User Account Balance does not update', [
                         'previous_amount' => ((float) $depositedUpdatedAccount['user_account_data']['available_amount']),
                         'current_amount' => ((float) $userUpdatedBalance['spent_amount']),
