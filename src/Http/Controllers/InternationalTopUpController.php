@@ -3,14 +3,12 @@
 namespace Fintech\Airtime\Http\Controllers;
 
 use Exception;
-use Fintech\Airtime\Facades\Airtime;
 use Fintech\Airtime\Http\Requests\IndexInternationalTopUpRequest;
 use Fintech\Airtime\Http\Requests\StoreInternationalTopUpRequest;
 use Fintech\Airtime\Http\Resources\InternationalTopUpCollection;
 use Fintech\Airtime\Http\Resources\InternationalTopUpResource;
 use Fintech\Auth\Facades\Auth;
 use Fintech\Auth\Models\User;
-use Fintech\Business\Facades\Business;
 use Fintech\Core\Enums\Auth\RiskProfile;
 use Fintech\Core\Enums\Auth\SystemRole;
 use Fintech\Core\Enums\Transaction\OrderStatus;
@@ -45,13 +43,13 @@ class InternationalTopUpController extends Controller
     {
         try {
             $inputs = $request->validated();
-            $inputs['transaction_form_id'] = Transaction::transactionForm()->findWhere(['code' => 'international_top_up'])->getKey();
+            $inputs['transaction_form_id'] = transaction()->transactionForm()->findWhere(['code' => 'international_top_up'])->getKey();
 
             if ($request->isAgent()) {
                 $inputs['creator_id'] = $request->user('sanctum')->getKey();
             }
 
-            $internationalTopUpPaginate = Airtime::internationalTopUp()->list($inputs);
+            $internationalTopUpPaginate = airtime()->internationalTopUp()->list($inputs);
 
             return new InternationalTopUpCollection($internationalTopUpPaginate);
 
@@ -80,7 +78,7 @@ class InternationalTopUpController extends Controller
             $depositor = $request->user('sanctum');
             if (Transaction::orderQueue()->addToQueueUserWise(($user_id ?? $depositor->getKey())) > 0) {
 
-                $depositAccount = Transaction::userAccount()->findWhere(['user_id' => $user_id ?? $depositor->getKey(), 'country_id' => $request->input('source_country_id', $depositor->profile?->country_id)]);
+                $depositAccount = transaction()->userAccount()->findWhere(['user_id' => $user_id ?? $depositor->getKey(), 'country_id' => $request->input('source_country_id', $depositor->profile?->country_id)]);
 
                 if (! $depositAccount) {
                     throw new Exception("User don't have account deposit balance");
@@ -93,9 +91,9 @@ class InternationalTopUpController extends Controller
                 }
 
                 // set pre defined conditions of deposit
-                $inputs['transaction_form_id'] = Transaction::transactionForm()->findWhere(['code' => 'International_top_up'])->getKey();
+                $inputs['transaction_form_id'] = transaction()->transactionForm()->findWhere(['code' => 'International_top_up'])->getKey();
                 $inputs['user_id'] = $user_id ?? $depositor->getKey();
-                $delayCheck = Transaction::order()->transactionDelayCheck($inputs);
+                $delayCheck = transaction()->order()->transactionDelayCheck($inputs);
                 if ($delayCheck['countValue'] > 0) {
                     throw new Exception('Your Request For This Amount Is Already Submitted. Please Wait For Update');
                 }
@@ -104,7 +102,7 @@ class InternationalTopUpController extends Controller
                 $inputs['status'] = OrderStatus::Pending->value;
                 $inputs['risk'] = RiskProfile::Low->value;
                 $inputs['reverse'] = true;
-                $inputs['order_data']['currency_convert_rate'] = Business::currencyRate()->convert($inputs);
+                $inputs['order_data']['currency_convert_rate'] = business()->currencyRate()->convert($inputs);
                 unset($inputs['reverse']);
                 $inputs['converted_amount'] = $inputs['order_data']['currency_convert_rate']['converted'];
                 $inputs['converted_currency'] = $inputs['order_data']['currency_convert_rate']['output'];
@@ -116,7 +114,7 @@ class InternationalTopUpController extends Controller
                 $inputs['order_data']['system_notification_variable_success'] = 'international_top_up_success';
                 $inputs['order_data']['system_notification_variable_failed'] = 'international_top_up_failed';
                 $inputs['order_data']['order_type'] = OrderType::Airtime;
-                $internationalTopUp = Airtime::internationalTopUp()->create($inputs);
+                $internationalTopUp = airtime()->internationalTopUp()->create($inputs);
 
                 if (! $internationalTopUp) {
                     throw (new StoreOperationException)->setModel(config('fintech.airtime.international_top_up_model'));
@@ -124,12 +122,12 @@ class InternationalTopUpController extends Controller
 
                 $order_data = $internationalTopUp->order_data ?? [];
                 $order_data['purchase_number'] = entry_number($internationalTopUp->getKey(), $internationalTopUp->sourceCountry->iso3 ?? null, OrderStatus::Successful->value);
-                $order_data['service_stat_data'] = Business::serviceStat()->serviceStateData($internationalTopUp);
+                $order_data['service_stat_data'] = business()->serviceStat()->serviceStateData($internationalTopUp);
                 // TODO Need to work negative amount
                 $order_data['user_name'] = $internationalTopUp->user->name ?? null;
                 $internationalTopUp->order_data = $order_data;
-                $userUpdatedBalance = Airtime::internationalTopUp()->debitTransaction($internationalTopUp);
-                $depositedAccount = Transaction::userAccount()->findWhere(['user_id' => $depositor->getKey(), 'country_id' => $internationalTopUp->source_country_id ?? null]);
+                $userUpdatedBalance = airtime()->internationalTopUp()->debitTransaction($internationalTopUp);
+                $depositedAccount = transaction()->userAccount()->findWhere(['user_id' => $depositor->getKey(), 'country_id' => $internationalTopUp->source_country_id ?? null]);
                 // update User Account
                 $depositedUpdatedAccount = $depositedAccount->toArray();
                 $depositedUpdatedAccount['user_account_data']['spent_amount'] = (float) $depositedUpdatedAccount['user_account_data']['spent_amount'] + (float) $userUpdatedBalance['spent_amount'];
@@ -142,14 +140,14 @@ class InternationalTopUpController extends Controller
                 }
                 $order_data['order_data']['previous_amount'] = (float) $depositedAccount->user_account_data['available_amount'];
                 $order_data['order_data']['current_amount'] = (float) $userUpdatedBalance['current_amount'];
-                if (! Transaction::userAccount()->update($depositedAccount->getKey(), $depositedUpdatedAccount)) {
+                if (!transaction()->userAccount()->update($depositedAccount->getKey(), $depositedUpdatedAccount)) {
                     throw new Exception(__('User Account Balance does not update', [
                         'previous_amount' => ((float) $depositedUpdatedAccount['user_account_data']['available_amount']),
                         'current_amount' => ((float) $userUpdatedBalance['spent_amount']),
                     ]));
                 }
-                Airtime::internationalTopUp()->update($internationalTopUp->getKey(), ['order_data' => $order_data, 'order_number' => $order_data['purchase_number']]);
-                Transaction::orderQueue()->removeFromQueueUserWise($user_id ?? $depositor->getKey());
+                airtime()->internationalTopUp()->update($internationalTopUp->getKey(), ['order_data' => $order_data, 'order_number' => $order_data['purchase_number']]);
+                transaction()->orderQueue()->removeFromQueueUserWise($user_id ?? $depositor->getKey());
                 DB::commit();
 
                 return response()->created([
@@ -163,7 +161,7 @@ class InternationalTopUpController extends Controller
             }
         } catch (Exception $exception) {
             /** @var User $depositor */
-            Transaction::orderQueue()->removeFromQueueUserWise($user_id ?? $depositor->getKey());
+            transaction()->orderQueue()->removeFromQueueUserWise($user_id ?? $depositor->getKey());
             DB::rollBack();
 
             return response()->failed($exception);
@@ -182,7 +180,7 @@ class InternationalTopUpController extends Controller
     {
         try {
 
-            $internationalTopUp = Airtime::internationalTopUp()->find($id);
+            $internationalTopUp = airtime()->internationalTopUp()->find($id);
 
             if (! $internationalTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.international_top_up_model'), $id);

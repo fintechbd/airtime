@@ -2,8 +2,6 @@
 
 namespace Fintech\Airtime\Events;
 
-use Fintech\Airtime\Facades\Airtime;
-use Fintech\Business\Facades\Business;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -21,7 +19,7 @@ class BangladeshTopUpRequested
     {
         $timeline = $bangladeshTopUp->timeline;
 
-        $service = Business::service()->find($bangladeshTopUp->service_id);
+        $service = business()->service()->find($bangladeshTopUp->service_id);
 
         $timeline[] = [
             'message' => ucwords(strtolower($service->service_name)).' bangladesh top up requested',
@@ -29,6 +27,6 @@ class BangladeshTopUpRequested
             'timestamp' => now(),
         ];
 
-        $this->bangladeshTopUp = Airtime::bangladeshTopUp()->update($bangladeshTopUp->getKey(), ['timeline' => $timeline]);
+        $this->bangladeshTopUp = airtime()->bangladeshTopUp()->update($bangladeshTopUp->getKey(), ['timeline' => $timeline]);
     }
 }

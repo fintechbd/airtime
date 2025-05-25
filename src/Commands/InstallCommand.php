@@ -2,7 +2,6 @@
 
 namespace Fintech\Airtime\Commands;
 
-use Fintech\Business\Facades\Business;
 use Fintech\Core\Traits\HasCoreSetting;
 use Illuminate\Console\Command;
 use Throwable;
@@ -55,7 +54,7 @@ class InstallCommand extends Command
                 'service_type_is_description' => 'no',
             ];
 
-            Business::serviceTypeManager($entry)
+            business()->serviceTypeManager($entry)
                 ->disabled()
                 ->execute();
         });
@@ -89,8 +88,8 @@ class InstallCommand extends Command
             ];
 
             foreach ($entries as $entry) {
-                if (Business::serviceSetting()->list(['service_setting_field_name' => $entry['service_setting_field_name']])->isEmpty()) {
-                    Business::serviceSetting()->create($entry);
+                if (business()->serviceSetting()->list(['service_setting_field_name' => $entry['service_setting_field_name']])->isEmpty()) {
+                    business()->serviceSetting()->create($entry);
                 }
             }
         });

@@ -2,7 +2,6 @@
 
 namespace Fintech\Airtime\Seeders;
 
-use Fintech\Business\Facades\Business;
 use Fintech\Core\Facades\Core;
 use Illuminate\Database\Seeder;
 
@@ -15,9 +14,9 @@ class BangladeshTopUpSeeder extends Seeder
     {
         if (Core::packageExists('Business')) {
 
-            $parent = Business::serviceType()->findWhere(['service_type_slug' => 'airtime']);
+            $parent = business()->serviceType()->findWhere(['service_type_slug' => 'airtime']);
 
-            Business::serviceTypeManager($this->data(), $parent)
+            business()->serviceTypeManager($this->data(), $parent)
                 ->enabled()
                 ->execute();
         }

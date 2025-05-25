@@ -2,7 +2,6 @@
 
 namespace Fintech\Airtime\Seeders\Bangladesh;
 
-use Fintech\Business\Facades\Business;
 use Fintech\MetaData\Facades\MetaData;
 use Illuminate\Database\Seeder;
 
@@ -14,13 +13,13 @@ class ServicePackageSeeder extends Seeder
     public function run(): void
     {
         $operators = [];
-        $operators[1] = Business::service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
-        $operators[2] = Business::service()->findWhere(['service_slug' => 'banglalink_bd'])->id;
-        $operators[3] = Business::service()->findWhere(['service_slug' => 'robi_bd'])->id;
-        //        $operators[4] = Business::service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
-        $operators[5] = Business::service()->findWhere(['service_slug' => 'teletalk_bd'])->id;
-        $operators[6] = Business::service()->findWhere(['service_slug' => 'airtel_bd'])->id;
-        //        $operators[13] = Business::service()->findWhere(['service_slug' => 'gp_skitto_bd'])->id;
+        $operators[1] = business()->service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
+        $operators[2] = business()->service()->findWhere(['service_slug' => 'banglalink_bd'])->id;
+        $operators[3] = business()->service()->findWhere(['service_slug' => 'robi_bd'])->id;
+        //        $operators[4] = business()->service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
+        $operators[5] = business()->service()->findWhere(['service_slug' => 'teletalk_bd'])->id;
+        $operators[6] = business()->service()->findWhere(['service_slug' => 'airtel_bd'])->id;
+        //        $operators[13] = business()->service()->findWhere(['service_slug' => 'gp_skitto_bd'])->id;
 
         $bangladesh = MetaData::country()->findWhere(['iso2' => 'BD'])?->id ?? null;
 
@@ -29,7 +28,7 @@ class ServicePackageSeeder extends Seeder
             if (isset($operators[$triggerAmount['service_id']])) {
                 $triggerAmount['service_id'] = $operators[$triggerAmount['service_id']];
                 $triggerAmount['country_id'] = $bangladesh ?? $triggerAmount['country_id'];
-                Business::servicePackage()->create($triggerAmount);
+                business()->servicePackage()->create($triggerAmount);
             }
         }
 
@@ -40,7 +39,7 @@ class ServicePackageSeeder extends Seeder
                 $blockedAmount['enabled'] = false;
                 $blockedAmount['service_package_data']['is_blocked'] = true;
                 $blockedAmount['country_id'] = $bangladesh ?? $blockedAmount['country_id'];
-                Business::servicePackage()->create($blockedAmount);
+                business()->servicePackage()->create($blockedAmount);
             }
         }
     }

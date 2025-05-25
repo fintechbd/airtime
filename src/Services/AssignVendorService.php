@@ -5,14 +5,12 @@ namespace Fintech\Airtime\Services;
 use ErrorException;
 use Fintech\Airtime\Contracts\AirtimeTransfer;
 use Fintech\Airtime\Exceptions\AirtimeException;
-use Fintech\Business\Facades\Business;
 use Fintech\Core\Abstracts\BaseModel;
 use Fintech\Core\Enums\Transaction\OrderStatus;
 use Fintech\Core\Enums\Transaction\OrderStatusConfig;
 use Fintech\Core\Exceptions\UpdateOperationException;
 use Fintech\Core\Exceptions\VendorNotFoundException;
 use Fintech\Core\Supports\AssignVendorVerdict;
-use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\App;
 
@@ -33,7 +31,7 @@ class AssignVendorService
             throw new VendorNotFoundException(ucfirst($slug));
         }
 
-        $this->serviceVendorModel = Business::serviceVendor()->findWhere(['service_vendor_slug' => $slug, 'enabled' => true]);
+        $this->serviceVendorModel = business()->serviceVendor()->findWhere(['service_vendor_slug' => $slug, 'enabled' => true]);
 
         if (! $this->serviceVendorModel) {
             throw (new ModelNotFoundException)->setModel(config('fintech.business.service_vendor_model'), $slug);
@@ -52,7 +50,7 @@ class AssignVendorService
 
         $this->initVendor($airtime->vendor);
 
-        $service = Business::service()->find($airtime->service_id);
+        $service = business()->service()->find($airtime->service_id);
 
         $data['timeline'][] = [
             'message' => "Requesting ({$this->serviceVendorModel->service_vendor_name}) for ".ucwords(strtolower($service->service_name)).' airtime topup validity confirmation.',
@@ -84,7 +82,7 @@ class AssignVendorService
             ];
         }
 
-        if (! Transaction::order()->update($airtime->getKey(), $data)) {
+        if (!transaction()->order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('core::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
@@ -104,7 +102,7 @@ class AssignVendorService
 
         $this->initVendor($vendor_slug);
 
-        $service = Business::service()->find($airtime->service_id);
+        $service = business()->service()->find($airtime->service_id);
 
         $data['timeline'][] = [
             'message' => "Requesting ({$this->serviceVendorModel->service_vendor_name}) to execute ".ucwords(strtolower($service->service_name)).' airtime topup request.',
@@ -139,7 +137,7 @@ class AssignVendorService
             ];
         }
 
-        if (! Transaction::order()->update($airtime->getKey(), $data)) {
+        if (!transaction()->order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('core::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));
@@ -199,7 +197,7 @@ class AssignVendorService
         $data['order_data']['attempts'] = $data['order_data']['attempts'] ?? 0;
         $data['order_data']['attempts']++;
 
-        $service = Business::service()->find($airtime->service_id);
+        $service = business()->service()->find($airtime->service_id);
 
         $data['timeline'][] = [
             'message' => "Attempt #{$data['order_data']['attempts']}. Requesting ({$this->serviceVendorModel->service_vendor_name}) for ".ucwords(strtolower($service->service_name)).' airtime topup progress update.',
@@ -230,7 +228,7 @@ class AssignVendorService
             ];
         }
 
-        if (! Transaction::order()->update($airtime->getKey(), $data)) {
+        if (!transaction()->order()->update($airtime->getKey(), $data)) {
             throw new \ErrorException(__('core::messages.assign_vendor.failed', [
                 'slug' => $airtime->vendor,
             ]));

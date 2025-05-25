@@ -5,7 +5,6 @@ namespace Fintech\Airtime\Http\Controllers;
 use Exception;
 use Fintech\Airtime\Http\Requests\AirtimeCostRequest;
 use Fintech\Auth\Facades\Auth;
-use Fintech\Business\Facades\Business;
 use Fintech\Business\Http\Resources\ServiceCostResource;
 use Fintech\Business\Http\Resources\ServicePackageCollection;
 use Illuminate\Http\JsonResponse;
@@ -30,17 +29,17 @@ class CalculateCostController extends Controller
                 $inputs['role_id'] = $user->roles->first()?->getKey() ?? null;
             }
 
-            $service = Business::service()->find($inputs['service_id']);
+            $service = business()->service()->find($inputs['service_id']);
 
-            $vendor = Business::serviceVendor()->find($service->service_vendor_id);
+            $vendor = business()->serviceVendor()->find($service->service_vendor_id);
 
             $inputs['service_vendor_id'] = $vendor?->getKey() ?? null;
 
             $inputs['amount'] = $inputs['airtime_data']['amount'] ?? 0;
 
-            $exchangeRate = Business::serviceStat()->cost($inputs);
+            $exchangeRate = business()->serviceStat()->cost($inputs);
 
-            $servicePackages = Business::servicePackage()->list([
+            $servicePackages = business()->servicePackage()->list([
                 'service_id' => $inputs['service_id'],
                 'country_id' => $inputs['destination_country_id'],
                 'enabled' => true,

@@ -3,15 +3,12 @@
 namespace Fintech\Airtime\Http\Controllers;
 
 use Exception;
-use Fintech\Airtime\Facades\Airtime;
 use Fintech\Airtime\Http\Requests\IndexBangladeshTopUpRequest;
 use Fintech\Airtime\Http\Requests\StoreBangladeshTopUpRequest;
 use Fintech\Airtime\Http\Resources\BangladeshTopUpCollection;
 use Fintech\Airtime\Http\Resources\BangladeshTopUpResource;
 use Fintech\Airtime\Jobs\BangladeshTopUp\SslWirelessPackageSyncJob;
-use Fintech\Business\Facades\Business;
 use Fintech\Core\Exceptions\StoreOperationException;
-use Fintech\Transaction\Facades\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,13 +38,13 @@ class BangladeshTopUpController extends Controller
         try {
             $inputs = $request->validated();
 
-            $inputs['transaction_form_id'] = Transaction::transactionForm()->findWhere(['code' => 'bangladesh_top_up'])->getKey();
+            $inputs['transaction_form_id'] = transaction()->transactionForm()->findWhere(['code' => 'bangladesh_top_up'])->getKey();
 
             if ($request->isAgent()) {
                 $inputs['creator_id'] = $request->user('sanctum')->getKey();
             }
 
-            $bangladeshTopUpPaginate = Airtime::bangladeshTopUp()->list($inputs);
+            $bangladeshTopUpPaginate = airtime()->bangladeshTopUp()->list($inputs);
 
             return new BangladeshTopUpCollection($bangladeshTopUpPaginate);
 
@@ -73,7 +70,7 @@ class BangladeshTopUpController extends Controller
 
         try {
 
-            $bangladeshTopUp = Airtime::bangladeshTopUp()->create($inputs);
+            $bangladeshTopUp = airtime()->bangladeshTopUp()->create($inputs);
 
             return response()->created([
                 'message' => __('core::messages.transaction.request_created', ['service' => 'Bangladesh TopUp']),
@@ -82,7 +79,7 @@ class BangladeshTopUpController extends Controller
             ]);
 
         } catch (Exception $exception) {
-            Transaction::orderQueue()->removeFromQueueUserWise($inputs['user_id']);
+            transaction()->orderQueue()->removeFromQueueUserWise($inputs['user_id']);
 
             return response()->failed($exception);
         }
@@ -100,7 +97,7 @@ class BangladeshTopUpController extends Controller
     {
         try {
 
-            $bangladeshTopUp = Airtime::bangladeshTopUp()->find($id);
+            $bangladeshTopUp = airtime()->bangladeshTopUp()->find($id);
 
             if (! $bangladeshTopUp) {
                 throw (new ModelNotFoundException)->setModel(config('fintech.airtime.bangladesh_top_up_model'), $id);
@@ -127,7 +124,7 @@ class BangladeshTopUpController extends Controller
     {
         try {
 
-            if ($serviceVendor = Business::serviceVendor()->findWhere(['service_vendor_slug' => 'sslwireless', 'enabled' => true])) {
+            if ($serviceVendor = business()->serviceVendor()->findWhere(['service_vendor_slug' => 'sslwireless', 'enabled' => true])) {
                 SslWirelessPackageSyncJob::dispatch();
             }
 

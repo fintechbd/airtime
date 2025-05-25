@@ -3,7 +3,6 @@
 namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
 use Fintech\Airtime\Facades\Airtime;
-use Fintech\Business\Facades\Business;
 use Fintech\MetaData\Facades\MetaData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +19,7 @@ class SslWirelessPackageSyncJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $existingPackages = Business::servicePackage()->list([
+        $existingPackages = business()->servicePackage()->list([
             'service_slug_in' => ['grameen_phone_bd', 'banglalink_bd', 'robi_bd', 'teletalk_bd', 'airtel_bd', 'gp_skitto_bd'],
             'country_id' => MetaData::country()->findWhere(['iso2' => 'BD'])->id,
         ]);
@@ -39,12 +38,12 @@ class SslWirelessPackageSyncJob implements ShouldQueue
 
             if ($existingPackage = $existingPackages->firstWhere('slug', $package['slug'])) {
 
-                $existingPackage = Business::servicePackage()->update($existingPackage->getKey(), $package);
+                $existingPackage = business()->servicePackage()->update($existingPackage->getKey(), $package);
 
                 echo 'Timestamp: '.date('c')." Updated Package ID: {$existingPackage->getKey()} package.\n";
             } else {
 
-                $existingPackage = Business::servicePackage()->create($package);
+                $existingPackage = business()->servicePackage()->create($package);
 
                 echo 'Timestamp: '.date('c')." Created Package ID: {$existingPackage->getKey()} package.\n";
             }

@@ -2,7 +2,6 @@
 
 namespace Fintech\Airtime\Seeders\Bangladesh;
 
-use Fintech\Business\Facades\Business;
 use Fintech\Core\Facades\Core;
 use Fintech\MetaData\Facades\MetaData;
 use Illuminate\Database\Seeder;
@@ -16,14 +15,14 @@ class ServiceOperatorSeeder extends Seeder
     {
         if (Core::packageExists('Business')) {
 
-            $parent = Business::serviceType()->findWhere(['service_type_slug' => 'bangladesh_top_up']);
+            $parent = business()->serviceType()->findWhere(['service_type_slug' => 'bangladesh_top_up']);
 
             $country = MetaData::country()->findWhere(['iso2' => 'BD'])->id;
 
-            $vendor = Business::serviceVendor()->findWhere(['service_vendor_slug' => 'sslwireless']);
+            $vendor = business()->serviceVendor()->findWhere(['service_vendor_slug' => 'sslwireless']);
 
             foreach ($this->data() as $entry) {
-                Business::serviceTypeManager($entry, $parent)
+                business()->serviceTypeManager($entry, $parent)
                     ->hasService()
                     ->vendor($vendor)
                     ->distCountries([$country])

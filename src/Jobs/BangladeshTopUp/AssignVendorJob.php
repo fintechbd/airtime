@@ -3,7 +3,6 @@
 namespace Fintech\Airtime\Jobs\BangladeshTopUp;
 
 use Fintech\Airtime\Events\BangladeshTopUpRequested;
-use Fintech\Airtime\Facades\Airtime;
 use Fintech\Core\Enums\Transaction\OrderStatus;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,7 +24,7 @@ class AssignVendorJob implements ShouldQueue
      */
     public function __construct($order_id)
     {
-        $this->bangladeshTopUp = Airtime::bangladeshTopUp()->find($order_id);
+        $this->bangladeshTopUp = airtime()->bangladeshTopUp()->find($order_id);
     }
 
     /**
@@ -33,7 +32,7 @@ class AssignVendorJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->bangladeshTopUp = Airtime::assignVendor()->processOrder($this->bangladeshTopUp, $this->bangladeshTopUp->vendor);
+        $this->bangladeshTopUp = airtime()->assignVendor()->processOrder($this->bangladeshTopUp, $this->bangladeshTopUp->vendor);
 
         StatusUpdateJob::dispatchIf(
             $this->bangladeshTopUp->status->value == OrderStatus::Accepted->value,
@@ -46,7 +45,7 @@ class AssignVendorJob implements ShouldQueue
      */
     public function failed(BangladeshTopUpRequested $event, \Throwable $exception): void
     {
-        Airtime::bangladeshTopUp()->update($event->bangladeshTopUp->getKey(), [
+        airtime()->bangladeshTopUp()->update($event->bangladeshTopUp->getKey(), [
             'status' => \Fintech\Core\Enums\Transaction\OrderStatus::AdminVerification->value,
             'notes' => $exception->getMessage(),
         ]);

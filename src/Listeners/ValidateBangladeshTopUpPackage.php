@@ -3,7 +3,6 @@
 namespace Fintech\Airtime\Listeners;
 
 use Fintech\Airtime\Events\BangladeshTopUpRequested;
-use Fintech\Airtime\Facades\Airtime;
 use Fintech\Airtime\Jobs\BangladeshTopUp\AssignVendorJob;
 use Fintech\Core\Enums\Enabled;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,7 +24,7 @@ class ValidateBangladeshTopUpPackage implements ShouldQueue
      */
     public function handle(BangladeshTopUpRequested $event)
     {
-        $bangladeshTopUp = Airtime::assignVendor()->requestQuote($event->bangladeshTopUp);
+        $bangladeshTopUp = airtime()->assignVendor()->requestQuote($event->bangladeshTopUp);
 
         AssignVendorJob::dispatchIf($bangladeshTopUp->order_data['assign_order'] == Enabled::Yes->value, $bangladeshTopUp->getKey());
     }
@@ -35,7 +34,7 @@ class ValidateBangladeshTopUpPackage implements ShouldQueue
      */
     public function failed(BangladeshTopUpRequested $event, \Throwable $exception): void
     {
-        Airtime::bangladeshTopUp()->update($event->bangladeshTopUp->getKey(), [
+        airtime()->bangladeshTopUp()->update($event->bangladeshTopUp->getKey(), [
             'status' => \Fintech\Core\Enums\Transaction\OrderStatus::AdminVerification->value,
             'notes' => $exception->getMessage(),
         ]);

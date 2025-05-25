@@ -6,7 +6,6 @@ use Fintech\Airtime\Events\BangladeshTopUpRequested;
 use Fintech\Airtime\Interfaces\BangladeshTopUpRepository;
 use Fintech\Auth\Facades\Auth;
 use Fintech\Business\Exceptions\BusinessException;
-use Fintech\Business\Facades\Business;
 use Fintech\Core\Abstracts\BaseModel;
 use Fintech\Core\Enums\Auth\RiskProfile;
 use Fintech\Core\Enums\Auth\SystemRole;
@@ -79,7 +78,7 @@ class BangladeshTopUpService
         $inputs['description'] = 'Bangladesh Top Up';
         $inputs['source_country_id'] = $inputs['source_country_id'] ?? $sender->profile?->present_country_id;
 
-        $senderAccount = Transaction::userAccount()->findWhere(['user_id' => $sender->getKey(), 'country_id' => $inputs['source_country_id']]);
+        $senderAccount = transaction()->userAccount()->findWhere(['user_id' => $sender->getKey(), 'country_id' => $inputs['source_country_id']]);
 
         if (! $senderAccount) {
             throw new CurrencyUnavailableException($inputs['source_country_id']);
@@ -91,7 +90,7 @@ class BangladeshTopUpService
             throw new MasterCurrencyUnavailableException($inputs['source_country_id']);
         }
 
-        $inputs['transaction_form_id'] = Transaction::transactionForm()->findWhere(['code' => 'bangladesh_top_up'])->getKey();
+        $inputs['transaction_form_id'] = transaction()->transactionForm()->findWhere(['code' => 'bangladesh_top_up'])->getKey();
 
         if (Transaction::order()->transactionDelayCheck($inputs)['countValue'] > 0) {
             throw new RequestAmountExistsException;
@@ -105,7 +104,7 @@ class BangladeshTopUpService
         $inputs['is_refunded'] = false;
         $inputs['status'] = OrderStatus::Pending->value;
         $inputs['risk'] = RiskProfile::Low;
-        $currencyConversion = Business::currencyRate()->convert([
+        $currencyConversion = business()->currencyRate()->convert([
             'role_id' => $inputs['order_data']['role_id'],
             'reverse' => $inputs['order_data']['is_reverse'],
             'source_country_id' => $inputs['source_country_id'],
@@ -133,7 +132,7 @@ class BangladeshTopUpService
 
         $inputs['order_data']['purchase_number'] = next_purchase_number(MetaData::country()->find($inputs['source_country_id'])->iso3);
         $inputs['order_number'] = $inputs['order_data']['purchase_number'];
-        $service = Business::service()->find($inputs['service_id']);
+        $service = business()->service()->find($inputs['service_id']);
         $inputs['order_data']['service_slug'] = $service->service_slug ?? null;
         $inputs['order_data']['service_name'] = $service->service_name ?? null;
         $vendor = $service->serviceVendor;
@@ -141,7 +140,7 @@ class BangladeshTopUpService
         $inputs['vendor'] = $vendor?->service_vendor_slug ?? null;
 
         if (isset($inputs['order_data']['service_package_id']) && is_numeric($inputs['order_data']['service_package_id'])) {
-            $package = Business::servicePackage()->find($inputs['order_data']['service_package_id']);
+            $package = business()->servicePackage()->find($inputs['order_data']['service_package_id']);
             $inputs['order_data']['service_package'] = $package;
         } else {
             $inputs['order_data']['service_package'] = [
@@ -166,7 +165,7 @@ class BangladeshTopUpService
             'flag' => 'create',
             'timestamp' => now(),
         ];
-        $inputs['order_data']['service_stat_data'] = Business::serviceStat()->serviceStateData([
+        $inputs['order_data']['service_stat_data'] = business()->serviceStat()->serviceStateData([
             'role_id' => $inputs['order_data']['role_id'],
             'reverse' => false,
             'source_country_id' => $inputs['source_country_id'],
@@ -183,7 +182,7 @@ class BangladeshTopUpService
         try {
             $bangladeshTopUp = $this->bangladeshTopUpRepository->create($inputs);
             DB::commit();
-            $accounting = Transaction::accounting($bangladeshTopUp);
+            $accounting = transaction()->accounting($bangladeshTopUp);
 
             $accounting->debitTransaction();
 
@@ -203,11 +202,11 @@ class BangladeshTopUpService
             //
             //            $bangladeshTopUp = $this->bangladeshTopUpRepository->update($bangladeshTopUp->getKey(), ['order_data' => $inputs['order_data'], 'timeline' => $inputs['timeline']]);
             //
-            //            if (! Transaction::userAccount()->update($senderAccount->getKey(), $senderUpdatedAccount)) {
+            //            if (!transaction()->userAccount()->update($senderAccount->getKey(), $senderUpdatedAccount)) {
             //                throw new \Exception('Failed to update user account balance.');
             //            }
 
-            Transaction::orderQueue()->removeFromQueueUserWise($inputs['user_id']);
+            transaction()->orderQueue()->removeFromQueueUserWise($inputs['user_id']);
 
             BangladeshTopUpRequested::dispatch($bangladeshTopUp);
 
@@ -215,7 +214,7 @@ class BangladeshTopUpService
 
         } catch (\Exception $exception) {
             DB::rollBack();
-            Transaction::orderQueue()->removeFromQueueUserWise($inputs['user_id']);
+            transaction()->orderQueue()->removeFromQueueUserWise($inputs['user_id']);
             throw new OrderRequestFailedException(OrderType::Airtime->value, 0, $exception);
         }
     }
@@ -232,7 +231,7 @@ class BangladeshTopUpService
         ];
 
         // Collect Current Balance as Previous Balance
-        $userAccountData['previous_amount'] = Transaction::orderDetail()->list([
+        $userAccountData['previous_amount'] = transaction()->orderDetail()->list([
             'get_order_detail_amount_sum' => true,
             'user_id' => $data->user_id,
             'order_detail_currency' => $data->currency,
@@ -250,7 +249,7 @@ class BangladeshTopUpService
         $data->order_detail_number = $data->order_data['purchase_number'];
         $data->order_detail_response_id = $data->order_data['purchase_number'];
         $data->notes = 'Bangladesh Topup Payment Send to '.$master_user_name;
-        $orderDetailStore = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
+        $orderDetailStore = transaction()->orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStore->order_detail_parent_id = $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStore->save();
         $orderDetailStore->fresh();
@@ -271,7 +270,7 @@ class BangladeshTopUpService
         $data->notes = 'Bangladesh Topup Charge Send to '.$master_user_name;
         $data->step = 3;
         $data->order_detail_parent_id = $orderDetailStore->getKey();
-        $orderDetailStoreForCharge = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
+        $orderDetailStoreForCharge = transaction()->orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStoreForChargeForMaster = $orderDetailStoreForCharge->replicate();
         $orderDetailStoreForChargeForMaster->user_id = $data->sender_receiver_id;
         $orderDetailStoreForChargeForMaster->sender_receiver_id = $data->user_id;
@@ -290,7 +289,7 @@ class BangladeshTopUpService
         $data->step = 5;
         // $data->order_detail_parent_id = $orderDetailStore->getKey();
         // $updateData['order_data']['previous_amount'] = 0;
-        $orderDetailStoreForDiscount = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
+        $orderDetailStoreForDiscount = transaction()->orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStoreForDiscountForMaster = $orderDetailStoreForCharge->replicate();
         $orderDetailStoreForDiscountForMaster->user_id = $data->sender_receiver_id;
         $orderDetailStoreForDiscountForMaster->sender_receiver_id = $data->user_id;
@@ -304,13 +303,13 @@ class BangladeshTopUpService
         // 'Point Transfer Commission Send to ' . $masterUser->name;
         // 'Point Transfer Commission Receive from ' . $receiver->name;
 
-        $userAccountData['current_amount'] = Transaction::orderDetail()->list([
+        $userAccountData['current_amount'] = transaction()->orderDetail()->list([
             'get_order_detail_amount_sum' => true,
             'user_id' => $data->user_id,
             'order_detail_currency' => $data->currency,
         ]);
 
-        $userAccountData['spent_amount'] = Transaction::orderDetail()->list([
+        $userAccountData['spent_amount'] = transaction()->orderDetail()->list([
             'get_order_detail_amount_sum' => true,
             'user_id' => $data->user_id,
             'order_id' => $data->getKey(),
@@ -333,7 +332,7 @@ class BangladeshTopUpService
         ];
 
         // Collect Current Balance as Previous Balance
-        $userAccountData['previous_amount'] = Transaction::orderDetail()->list([
+        $userAccountData['previous_amount'] = transaction()->orderDetail()->list([
             'get_order_detail_amount_sum' => true,
             'user_id' => $data->user_id,
             'order_detail_currency' => $data->currency,
@@ -347,7 +346,7 @@ class BangladeshTopUpService
         $data->order_detail_number = $data->order_data['accepted_number'];
         $data->order_detail_response_id = $data->order_data['purchase_number'];
         $data->notes = 'Bangladesh Topup Refund From '.$master_user_name;
-        $orderDetailStore = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
+        $orderDetailStore = transaction()->orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStore->order_detail_parent_id = $data->order_detail_parent_id = $orderDetailStore->getKey();
         $orderDetailStore->save();
         $orderDetailStore->fresh();
@@ -370,7 +369,7 @@ class BangladeshTopUpService
         $data->notes = 'Bangladesh Topup Charge Receive from '.$master_user_name;
         $data->step = 3;
         $data->order_detail_parent_id = $orderDetailStore->getKey();
-        $orderDetailStoreForCharge = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
+        $orderDetailStoreForCharge = transaction()->orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStoreForChargeForMaster = $orderDetailStoreForCharge->replicate();
         $orderDetailStoreForChargeForMaster->user_id = $data->sender_receiver_id;
         $orderDetailStoreForChargeForMaster->sender_receiver_id = $data->user_id;
@@ -389,7 +388,7 @@ class BangladeshTopUpService
         $data->step = 5;
         // $data->order_detail_parent_id = $orderDetailStore->getKey();
         $updateData['order_data']['previous_amount'] = 0;
-        $orderDetailStoreForDiscount = Transaction::orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
+        $orderDetailStoreForDiscount = transaction()->orderDetail()->create(Transaction::orderDetail()->orderDetailsDataArrange($data));
         $orderDetailStoreForDiscountForMaster = $orderDetailStoreForCharge->replicate();
         $orderDetailStoreForDiscountForMaster->user_id = $data->sender_receiver_id;
         $orderDetailStoreForDiscountForMaster->sender_receiver_id = $data->user_id;
@@ -403,13 +402,13 @@ class BangladeshTopUpService
         // 'Point Transfer Commission Send to ' . $masterUser->name;
         // 'Point Transfer Commission Receive from ' . $receiver->name;
 
-        $userAccountData['current_amount'] = Transaction::orderDetail()->list([
+        $userAccountData['current_amount'] = transaction()->orderDetail()->list([
             'get_order_detail_amount_sum' => true,
             'user_id' => $data->user_id,
             'order_detail_currency' => $data->currency,
         ]);
 
-        $userAccountData['spent_amount'] = Transaction::orderDetail()->list([
+        $userAccountData['spent_amount'] = transaction()->orderDetail()->list([
             'get_order_detail_amount_sum' => true,
             'user_id' => $data->user_id,
             'order_id' => $data->getKey(),

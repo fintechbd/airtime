@@ -4,7 +4,6 @@ namespace Fintech\Airtime\Vendors;
 
 use ErrorException;
 use Fintech\Airtime\Contracts\AirtimeTransfer;
-use Fintech\Business\Facades\Business;
 use Fintech\Core\Abstracts\BaseModel;
 use Fintech\Core\Supports\AssignVendorVerdict;
 use Fintech\MetaData\Facades\MetaData;
@@ -55,7 +54,7 @@ class SSLVirtualRecharge implements AirtimeTransfer
 
     private function injectAuthKeys($order, &$params): void
     {
-        $serviceStat = Business::serviceStat()->findWhere([
+        $serviceStat = business()->serviceStat()->findWhere([
             'role_id' => $order->order_data['role_id'],
             'service_id' => $order->service_id,
             'source_country_id' => $order->source_country_id,
@@ -222,12 +221,12 @@ class SSLVirtualRecharge implements AirtimeTransfer
             : $this->post('/vr/package-list');
 
         $packages = [];
-        $operators[1] = Business::service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
-        $operators[2] = Business::service()->findWhere(['service_slug' => 'banglalink_bd'])->id;
-        $operators[3] = Business::service()->findWhere(['service_slug' => 'robi_bd'])->id;
-        $operators[5] = Business::service()->findWhere(['service_slug' => 'teletalk_bd'])->id;
-        $operators[6] = Business::service()->findWhere(['service_slug' => 'airtel_bd'])->id;
-        $operators[13] = Business::service()->findWhere(['service_slug' => 'gp_skitto_bd'])->id;
+        $operators[1] = business()->service()->findWhere(['service_slug' => 'grameen_phone_bd'])->id;
+        $operators[2] = business()->service()->findWhere(['service_slug' => 'banglalink_bd'])->id;
+        $operators[3] = business()->service()->findWhere(['service_slug' => 'robi_bd'])->id;
+        $operators[5] = business()->service()->findWhere(['service_slug' => 'teletalk_bd'])->id;
+        $operators[6] = business()->service()->findWhere(['service_slug' => 'airtel_bd'])->id;
+        $operators[13] = business()->service()->findWhere(['service_slug' => 'gp_skitto_bd'])->id;
 
         $bangladesh = MetaData::country()->findWhere(['iso2' => 'BD']);
 
