@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Collection;
 class Airtime
 {
     /**
-     * @param $filters
      * @return BangladeshTopUpService|Collection|BaseModel
      */
     public function bangladeshTopUp($filters = null)
@@ -20,7 +19,6 @@ class Airtime
     }
 
     /**
-     * @param $filters
      * @return InternationalTopUpService|Collection|BaseModel
      */
     public function internationalTopUp($filters = null)
@@ -29,7 +27,7 @@ class Airtime
     }
 
     /**
-     * @param $filters
+     * @param  $filters
      * @return AssignVendorService
      */
     public function assignVendor()
